@@ -14,6 +14,9 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import Logout from "./pages/Logout";
+import UploadForm from "./pages/tour";
+// import TourList from "./components/TourList";
+// import TourView from "./components/TourView";
 
 const theme = createTheme({
   typography: {
@@ -36,7 +39,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/logout" component={Logout} />
+          <Route path="/upload" element={<UploadForm />} />
+          {/* <Route path="/tour/:id" component={TourView} />
+            <Route path="/logout" component={Logout} /> */}
         </Routes>
       </ThemeProvider>
     </Provider>

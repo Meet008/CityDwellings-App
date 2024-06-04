@@ -12,6 +12,7 @@ import Footer from "../components/Footer";
 import { grey } from "@mui/material/colors";
 import DiscoverSection from "../components/DiscoverSection";
 import MultiItemsCarousel from "../components/MultiItemsCarousel/MultiItemsCarousel";
+import Searchbar from "./Searchbar";
 
 function Home() {
   return (
@@ -20,6 +21,10 @@ function Home() {
 
       <Box sx={{ backgroundColor: grey[100] }}>
         <HeaderCarousel />
+      </Box>
+
+      <Box>
+        <Searchbar />
       </Box>
 
       <Box
