@@ -1,13 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import authReducer from "../auth/authSlice";
-import authSaga from "../auth/authSaga";
+import authReducer from "../Auth/authSlice";
+import errorReducer from "../Error/errorSlice";
+import userReducer from "../UserProfile/userSlice";
+import rootSaga from "./rootSaga";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    error: errorReducer,
+    user: userReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -16,6 +20,6 @@ const store = configureStore({
     }).concat(sagaMiddleware),
 });
 
-sagaMiddleware.run(authSaga);
+sagaMiddleware.run(rootSaga);
 
 export default store;

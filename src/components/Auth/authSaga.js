@@ -1,5 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
+import { toast } from "react-toastify";
 import {
   registerRequest,
   registerSuccess,
@@ -18,8 +19,10 @@ function* registerUser(action) {
       action.payload
     );
     yield put(registerSuccess(res.data));
+    toast.success("Registration successful"); // Display success message using toast
   } catch (err) {
-    yield put(registerFail(err.response.data.msg));
+    yield put(registerFail(err.response.data));
+    toast.error(err.response.data.msg); // Display error message using toast
   }
 }
 
@@ -31,15 +34,15 @@ function* loginUser(action) {
       action.payload
     );
     yield put(loginSuccess(res.data));
+    toast.success("Login successful"); // Display success message using toast
   } catch (err) {
-    yield put(loginFail(err.response.data.msg));
+    yield put(loginFail(err.response.data));
+    toast.error(err.response.data.msg); // Display error message using toast
   }
 }
 
 // Watcher Sagas
-function* watchAuthRequests() {
+export default function* watchAuthRequests() {
   yield takeLatest(registerRequest.type, registerUser);
   yield takeLatest(loginRequest.type, loginUser);
 }
-
-export default watchAuthRequests;

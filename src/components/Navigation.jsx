@@ -253,7 +253,7 @@ import { useSelector } from "react-redux";
 import logo from "../assets/icons/buildings.svg";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { orange } from "@mui/material/colors";
-import Logout from "../pages/Logout";
+import Logout from "./Auth/Logout";
 
 const Navigation = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);

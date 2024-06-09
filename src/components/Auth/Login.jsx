@@ -14,7 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { loginRequest } from "../auth/authSlice";
+import { loginRequest } from "./authSlice";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 

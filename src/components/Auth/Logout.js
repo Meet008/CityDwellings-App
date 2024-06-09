@@ -2,7 +2,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Button } from "@mui/material";
-import { logout } from "../auth/authSlice";
+import { logout } from "../Auth/authSlice"; // Ensure correct casing
 
 const Logout = () => {
   const dispatch = useDispatch();
