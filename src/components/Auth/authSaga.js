@@ -9,6 +9,7 @@ import {
   loginSuccess,
   loginFail,
 } from "./authSlice";
+import { fetchProfileRequest } from "../Profile/userSlice"; // Import fetchUserProfile action
 
 // Worker Sagas
 function* registerUser(action) {
@@ -34,6 +35,7 @@ function* loginUser(action) {
       action.payload
     );
     yield put(loginSuccess(res.data));
+    yield put(fetchProfileRequest()); // Dispatch fetchUserProfile action after successful login
     toast.success("Login successful"); // Display success message using toast
   } catch (err) {
     yield put(loginFail(err.response.data));

@@ -3,7 +3,7 @@ import { setError, clearError } from "./errorSlice";
 import {
   fetchProfileFailure,
   updateProfileFailure,
-} from "../UserProfile/userSlice.js";
+} from "../Profile/userSlice.js";
 
 function* handleError(action) {
   yield put(setError(action.payload));
