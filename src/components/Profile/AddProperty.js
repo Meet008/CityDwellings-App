@@ -57,7 +57,6 @@ export default function AddProperty() {
       });
     }
   };
-
   const handleAddProperty = (e) => {
     e.preventDefault();
 
@@ -81,7 +80,16 @@ export default function AddProperty() {
         propertyData.append(key, formData[key]);
       }
     }
-    propertyData.append("ownerId", user._id);
+
+    // Check if user is defined before accessing user._id
+    const ownerId = user && user._id;
+
+    if (!ownerId) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    propertyData.append("ownerId", ownerId);
 
     dispatch(addPropertyRequest({ formData: propertyData, navigate }));
   };

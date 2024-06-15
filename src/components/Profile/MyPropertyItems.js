@@ -26,11 +26,14 @@ function MyPropertyItems({
   itemBathrooms,
   itemLivingrooms,
   itemImg,
-  onEdit,
-  onDelete,
+  handleEditProperty,
+  handleDeleteProperty,
 }) {
-  const encodedFilename = encodeURIComponent(itemImg.split("/").pop());
-  const encodedImgUrl = `http://localhost:5000/uploads/${encodedFilename}`;
+  let encodedImgUrl = null;
+  if (itemImg) {
+    const encodedFilename = encodeURIComponent(itemImg.split("/").pop());
+    encodedImgUrl = `http://localhost:5000/uploads/${encodedFilename}`;
+  }
 
   return (
     <Box
@@ -108,10 +111,16 @@ function MyPropertyItems({
             </Button>
           </Link>
           <Box>
-            <IconButton color="primary" onClick={() => onEdit(itemId)}>
+            <IconButton
+              color="primary"
+              onClick={() => handleEditProperty(itemId)}
+            >
               <EditIcon />
             </IconButton>
-            <IconButton color="secondary" onClick={() => onDelete(itemId)}>
+            <IconButton
+              color="secondary"
+              onClick={() => handleDeleteProperty(itemId)}
+            >
               <DeleteIcon />
             </IconButton>
           </Box>
@@ -131,12 +140,18 @@ function MyPropertyItems({
           style={{ display: "flex", justifyContent: "center" }}
         >
           <Card sx={{ maxWidth: "90%" }}>
-            <CardMedia
-              component="img"
-              height="200"
-              image={encodedImgUrl}
-              alt="Property image"
-            />
+            {encodedImgUrl ? (
+              <CardMedia
+                component="img"
+                height="200"
+                image={encodedImgUrl}
+                alt="Property image"
+              />
+            ) : (
+              <CardContent>
+                <Typography variant="body1">No Image Available</Typography>
+              </CardContent>
+            )}
           </Card>
         </Link>
       </Box>

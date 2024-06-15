@@ -23,6 +23,8 @@ import Main from "./components/Profile/Main";
 import AddProperty from "./components/Profile/AddProperty";
 import UserProfile from "./components/Profile/UserProfile";
 import { ToastContainer, toast } from "react-toastify";
+import EditProperty from "./components/Profile/EditProperty";
+import Dashboard from "./components/Profile/Dashboard";
 
 const theme = createTheme({
   typography: {
@@ -45,9 +47,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Main />}>
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="add-property" element={<AddProperty />} />
             <Route path="my-properties" element={<MyProperty />} />
             <Route path="userProfile" element={<UserProfile />} />
+            <Route
+              path="edit-property/:propertyId"
+              element={<EditProperty />}
+            />
           </Route>
           <Route path="/upload" element={<UploadForm />} />
         </Routes>

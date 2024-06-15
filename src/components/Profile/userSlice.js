@@ -5,6 +5,7 @@ const initialState = {
   isLoading: false,
   error: null,
   properties: [],
+  propertyDetails: [],
 };
 
 const userSlice = createSlice({
@@ -59,6 +60,19 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    fetchPropertyDetailsRequest: (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.propertyDetails = [];
+    },
+    fetchPropertyDetailsSuccess: (state, action) => {
+      state.isLoading = false;
+      state.propertyDetails = action.payload;
+    },
+    fetchPropertyDetailsFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
     deletePropertyRequest: (state) => {
       state.isLoading = true;
       state.error = null;
@@ -70,6 +84,23 @@ const userSlice = createSlice({
       );
     },
     deletePropertyFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    editPropertyRequest: (state) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    editPropertySuccess: (state, action) => {
+      state.isLoading = false;
+      const index = state.properties.findIndex(
+        (property) => property.id === action.payload.id
+      );
+      if (index !== -1) {
+        state.properties[index] = action.payload;
+      }
+    },
+    editPropertyFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
@@ -92,6 +123,12 @@ export const {
   deletePropertyRequest,
   deletePropertySuccess,
   deletePropertyFailure,
+  editPropertyRequest,
+  editPropertySuccess,
+  editPropertyFailure,
+  fetchPropertyDetailsRequest,
+  fetchPropertyDetailsSuccess,
+  fetchPropertyDetailsFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;
