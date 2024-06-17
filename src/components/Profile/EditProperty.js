@@ -7,11 +7,7 @@ import {
   Button,
   Checkbox,
   Container,
-  FormControl,
   FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Typography,
   CircularProgress,
@@ -30,6 +26,9 @@ export default function EditProperty() {
     title: "",
     description: "",
     address: "",
+    city: "",
+    state: "",
+    postalCode: "",
     listingType: "apartments",
     category: "rent",
     price: 70,
@@ -37,6 +36,8 @@ export default function EditProperty() {
     bathrooms: 1,
     furnished: false,
     parking: false,
+    area: 0,
+    yearBuilt: 2000,
     images: [], // New images to be uploaded
     existingImages: [], // Existing images URLs
     removedImages: [], // Images to be removed
@@ -52,19 +53,23 @@ export default function EditProperty() {
         title: propertyDetails.title || "",
         description: propertyDetails.description || "",
         address: propertyDetails.address || "",
+        city: propertyDetails.city || "",
+        state: propertyDetails.state || "",
+        postalCode: propertyDetails.postalCode || "",
         listingType: propertyDetails.listingType || "",
         category: propertyDetails.category || "",
-        price: propertyDetails.price || "",
-        bedrooms: propertyDetails.bedrooms || "",
-        bathrooms: propertyDetails.bathrooms || "",
+        price: propertyDetails.price || 0,
+        bedrooms: propertyDetails.bedrooms || 0,
+        bathrooms: propertyDetails.bathrooms || 0,
         furnished: propertyDetails.furnished || false,
         parking: propertyDetails.parking || false,
+        area: propertyDetails.area || 0,
+        yearBuilt: propertyDetails.yearBuilt || 0,
         images: [], // Reset for new images
         existingImages: propertyDetails.images || [], // Store existing images
         removedImages: [], // Reset removed images
       });
 
-      // Construct image URLs based on the paths received from API
       if (propertyDetails.images && Array.isArray(propertyDetails.images)) {
         const imageUrls = propertyDetails.images.map((imagePath) => {
           const encodedFilename = encodeURIComponent(
@@ -98,24 +103,16 @@ export default function EditProperty() {
   };
 
   const handleRemoveImage = (imageUrl) => {
-    console.log("Image URL:", imageUrl);
-
-    // Decode the image path
     const decodedPath = decodeURIComponent(imageUrl.split("/").pop());
-    console.log("Decoded Path:", decodedPath);
 
-    // Remove the image from display
     setImagesForDisplay((prevImages) =>
       prevImages.filter((image) => image !== imageUrl)
     );
 
-    // Find removed image in existingImages
     const removedImage = formData.existingImages.find(
       (img) => decodeURIComponent(img.split("/").pop()) === decodedPath
     );
-    console.log("Removed Image:", removedImage);
 
-    // Add the removed image path to removedImages array
     if (removedImage) {
       setFormData({
         ...formData,
@@ -138,27 +135,20 @@ export default function EditProperty() {
     }
 
     const propertyData = new FormData();
-    propertyData.append("title", formData.title);
-    propertyData.append("description", formData.description);
-    propertyData.append("address", formData.address);
-    propertyData.append("listingType", formData.listingType);
-    propertyData.append("category", formData.category);
-    propertyData.append("price", formData.price);
-    propertyData.append("bedrooms", formData.bedrooms);
-    propertyData.append("bathrooms", formData.bathrooms);
-    propertyData.append("furnished", formData.furnished);
-    propertyData.append("parking", formData.parking);
-
-    // Append new images
-    formData.images.forEach((image) => {
-      propertyData.append("images", image);
-    });
-
-    // Convert removedImages array to JSON string before appending
-    propertyData.append(
-      "removedImages",
-      JSON.stringify(formData.removedImages)
-    );
+    for (const key in formData) {
+      if (key === "images") {
+        formData.images.forEach((image) =>
+          propertyData.append("images", image)
+        );
+      } else if (key === "removedImages") {
+        propertyData.append(
+          "removedImages",
+          JSON.stringify(formData.removedImages)
+        );
+      } else {
+        propertyData.append(key, formData[key]);
+      }
+    }
 
     try {
       await dispatch(
@@ -208,6 +198,39 @@ export default function EditProperty() {
               label="Address"
               name="address"
               value={formData.address}
+              onChange={handleChange}
+              variant="outlined"
+              required
+            />
+          </Box>
+          <Box sx={{ mb: 3 }}>
+            <TextField
+              fullWidth
+              label="City"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              variant="outlined"
+              required
+            />
+          </Box>
+          <Box sx={{ mb: 3 }}>
+            <TextField
+              fullWidth
+              label="State"
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+              variant="outlined"
+              required
+            />
+          </Box>
+          <Box sx={{ mb: 3 }}>
+            <TextField
+              fullWidth
+              label="Postal Code"
+              name="postalCode"
+              value={formData.postalCode}
               onChange={handleChange}
               variant="outlined"
               required
@@ -315,13 +338,35 @@ export default function EditProperty() {
               sx={{ flexGrow: 1 }}
             />
           </Box>
+          <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
+            <TextField
+              label="Area (sq ft)"
+              name="area"
+              type="number"
+              value={formData.area}
+              onChange={handleChange}
+              variant="outlined"
+              required
+              sx={{ flexGrow: 1, mr: 2 }}
+            />
+            <TextField
+              label="Year Built"
+              name="yearBuilt"
+              type="number"
+              value={formData.yearBuilt}
+              onChange={handleChange}
+              variant="outlined"
+              required
+              sx={{ flexGrow: 1 }}
+            />
+          </Box>
           <Box sx={{ mb: 3 }}>
             <FormControlLabel
               control={
                 <Checkbox
-                  name="furnished"
                   checked={formData.furnished}
                   onChange={handleChange}
+                  name="furnished"
                 />
               }
               label="Furnished"
@@ -329,26 +374,57 @@ export default function EditProperty() {
             <FormControlLabel
               control={
                 <Checkbox
-                  name="parking"
                   checked={formData.parking}
                   onChange={handleChange}
+                  name="parking"
                 />
               }
               label="Parking"
             />
           </Box>
-          <Box sx={{ textAlign: "center" }}>
+          <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
+            <TextField
+              select
+              label="Listing Type"
+              name="listingType"
+              value={formData.listingType}
+              onChange={handleChange}
+              SelectProps={{
+                native: true,
+              }}
+              variant="outlined"
+              required
+              sx={{ flexGrow: 1, mr: 2 }}
+            >
+              <option value="apartments">Apartments</option>
+              <option value="houses">Houses</option>
+              <option value="land">Land</option>
+            </TextField>
+            <TextField
+              select
+              label="Category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              SelectProps={{
+                native: true,
+              }}
+              variant="outlined"
+              required
+              sx={{ flexGrow: 1 }}
+            >
+              <option value="rent">Rent</option>
+              <option value="sale">Sale</option>
+            </TextField>
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Button
               type="submit"
               variant="contained"
               color="primary"
               disabled={isLoading}
             >
-              {isLoading ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                "Update Property"
-              )}
+              {isLoading ? <CircularProgress size={24} /> : "Update Property"}
             </Button>
           </Box>
         </form>

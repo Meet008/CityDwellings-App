@@ -54,35 +54,35 @@ const PropertyPage = () => {
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <Grid container spacing={3}>
+        <Grid spacing={3}>
           {properties.length === 0 && !isLoading && (
             <Typography variant="body1">No properties found.</Typography>
           )}
           {properties.map((property) => (
-            <MyPropertyItems
-              key={property._id}
-              itemURL="profile/"
-              itemId={property._id}
-              itemTitle={property.title}
-              itemAddress={property.address}
-              itemPrice={property.price}
-              itemShortDescription={property.description}
-              itemBedrooms={property.bedrooms}
-              itemBathrooms={property.bathrooms}
-              itemLivingrooms={property.livingrooms || 1} // Default to 1 if not provided
-              itemImg={
-                property.images && property.images.length > 0
-                  ? property.images[0]
-                  : null
-              } // Check if property.images exists and has elements
-              handleEditProperty={handleEditProperty}
-              handleDeleteProperty={() => handleDeleteProperty(property._id)}
-            />
+            <Grid item xs={12} key={property._id}>
+              <MyPropertyItems
+                itemURL="profile/"
+                itemId={property._id}
+                itemTitle={property.title}
+                itemAddress={property.address}
+                itemPrice={property.price}
+                itemShortDescription={property.description}
+                itemBedrooms={property.bedrooms}
+                itemBathrooms={property.bathrooms}
+                itemLivingrooms={property.livingrooms || 1}
+                itemImg={
+                  property.images && property.images.length > 0
+                    ? property.images[0]
+                    : null
+                }
+                handleEditProperty={handleEditProperty}
+                handleDeleteProperty={() => handleDeleteProperty(property._id)}
+              />
+            </Grid>
           ))}
         </Grid>
       )}
 
-      {/* Confirmation Dialog */}
       <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
