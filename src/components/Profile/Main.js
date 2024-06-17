@@ -72,7 +72,7 @@ const Main = () => {
           mt: 8,
         }}
       >
-        <Container component="main" maxWidth="md">
+        <Container component="main" maxWidth="lg">
           <Outlet />
         </Container>
       </Box>
