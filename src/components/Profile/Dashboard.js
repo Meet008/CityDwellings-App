@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Chart from "react-apexcharts";
 const { RangePicker } = DatePicker;
 const Dashboard = () => {
+  // id Pass admin@city.com
   // Mock data (replace with actual data fetching logic)
   const occupancyRate = 82; // in percentage
   const rentalYield = 5.2; // in percentage
@@ -14,8 +15,12 @@ const Dashboard = () => {
   const [city, setCity] = useState("ahmedabad");
   const [series, setSeries] = useState([
     {
-      name: "Total Sales",
+      name: "Total Profit",
       data: [50, 20, 2, 15, 67, 24, 90],
+    },
+    {
+      name: "Sold Properties",
+      data: [10, 4, 2, 16, 32, 78, 21],
     },
   ]);
   const options = {
@@ -33,11 +38,32 @@ const Dashboard = () => {
       curve: "smooth",
     },
 
-    colors: ["#2E93fA"],
+    colors: ["#1976d2", "#f07917"],
 
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
   };
-
+  const pieSeries = [44, 55, 13];
+  const pieChartOptions = {
+    chart: {
+      width: 380,
+      type: "pie",
+    },
+    labels: ["Total Properties", "Properties Rented", "Properties Sold"],
+    colors: ["#1976d2", "#f07917", "#789f57"],
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+          },
+          legend: {
+            position: "bottom",
+          },
+        },
+      },
+    ],
+  };
   return (
     <>
       <div style={{ border: "1px solid transparent" }}>
@@ -91,7 +117,7 @@ const Dashboard = () => {
               </div>
               <div>
                 <div>
-                  <label style={{ fontWeight: "bold" }}>Total Apartment</label>
+                  <label style={{ fontWeight: "bold" }}>Total Commercial</label>
                 </div>
                 <div>{"200"}</div>
               </div>
@@ -113,7 +139,9 @@ const Dashboard = () => {
               </div>
               <div>
                 <div>
-                  <label style={{ fontWeight: "bold" }}>Total House</label>
+                  <label style={{ fontWeight: "bold" }}>
+                    Total Residential
+                  </label>
                 </div>
                 <div>{"200"}</div>
               </div>
@@ -142,23 +170,77 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
-        <div
-          className="row mt-3 mx-0 px-0"
-          style={{
-            border: "1px solid #cbcbcb",
-            background: "#f3f3f3",
-            borderRadius: "6px",
-          }}
-        >
+        <div className="row px-0 mx-0 mt-4">
           <div
-            className="col-12 p-3"
-            style={{ borderBottom: "1px dashed grey" }}
+            className="col-12 "
+            style={{
+              border: "1px solid #cbcbcb",
+              background: "#f3f3f3",
+              borderRadius: "6px",
+            }}
           >
-            <label style={{ fontWeight: "bold" }}>Booking Status</label>
+            {" "}
+            <div className="row mt-3 mx-0 px-0">
+              <div
+                className="col-12 p-3"
+                style={{ borderBottom: "1px dashed grey" }}
+              >
+                <label style={{ fontWeight: "bold" }}>Booking Status</label>
+              </div>
+              <div className="col-12">
+                <Chart
+                  options={options}
+                  series={series}
+                  type="area"
+                  height={350}
+                />
+              </div>
+            </div>
           </div>
-          <div className="col-12">
-            <Chart options={options} series={series} type="area" height={350} />
+        </div>
+        <div className="row px-0 mx-0 mt-4">
+          <div
+            className="col-12 col-lg-6"
+            style={{
+              border: "1px solid #cbcbcb",
+              background: "#f3f3f3",
+              borderRadius: "6px",
+            }}
+          >
+            <div className="row mt-3 mx-0 px-0">
+              <div
+                className="col-12 p-3"
+                style={{ borderBottom: "1px dashed grey" }}
+              >
+                <label style={{ fontWeight: "bold" }}>Booking Status</label>
+              </div>
+              <div className="col-12">
+                <Chart
+                  options={pieChartOptions}
+                  series={pieSeries}
+                  type="pie"
+                  height={350}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="col-12 col-lg-6">
+            <div
+              className="row mx-0 px-0"
+              // style={{
+              //   border: "1px solid #cbcbcb",
+              //   background: "#f3f3f3",
+              //   borderRadius: "6px",
+              // }}
+            >
+              <div
+                className="col-12 p-3"
+                style={{ borderBottom: "1px dashed grey" }}
+              >
+                <label style={{ fontWeight: "bold" }}>Lattest Sales</label>
+              </div>
+              <div className="col-12"></div>
+            </div>
           </div>
         </div>
       </div>
