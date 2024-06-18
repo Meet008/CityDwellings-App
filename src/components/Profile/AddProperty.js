@@ -401,7 +401,13 @@ import {
   TextField,
   Typography,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
 } from "@mui/material";
+import { Close as CloseIcon } from "@mui/icons-material";
 import { addPropertyRequest } from "./userSlice";
 
 const AddProperty = () => {
@@ -431,7 +437,8 @@ const AddProperty = () => {
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const [paymentConfirmed, setPaymentConfirmed] = useState(false); // New state for payment confirmation
+  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -452,6 +459,16 @@ const AddProperty = () => {
       URL.createObjectURL(image)
     );
     setImagesForDisplay(imagePreviews);
+  };
+
+  const handleRemoveImage = (index) => {
+    const updatedImages = imagesForDisplay.filter((_, i) => i !== index);
+    const updatedFormImages = formValues.images.filter((_, i) => i !== index);
+    setImagesForDisplay(updatedImages);
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      images: updatedFormImages,
+    }));
   };
 
   const validate = () => {
@@ -481,12 +498,6 @@ const AddProperty = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handlePaymentConfirmation = () => {
-    // Simulate a successful payment
-    setPaymentConfirmed(true);
-    toast.success("Payment confirmed. You can now add your property.");
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!user || !user._id) {
@@ -495,7 +506,7 @@ const AddProperty = () => {
     }
 
     if (!paymentConfirmed) {
-      toast.error("Please confirm payment before adding the property.");
+      setPaymentDialogOpen(true);
       return;
     }
 
@@ -515,6 +526,12 @@ const AddProperty = () => {
     propertyData.append("ownerId", user._id);
 
     dispatch(addPropertyRequest({ formData: propertyData, navigate }));
+  };
+
+  const handlePaymentConfirmation = () => {
+    setPaymentConfirmed(true);
+    setPaymentDialogOpen(false);
+    toast.success("Payment confirmed. You can now add your property.");
   };
 
   return (
@@ -622,7 +639,7 @@ const AddProperty = () => {
               }}
             >
               {imagesForDisplay.map((image, index) => (
-                <Box key={index} sx={{ width: 100 }}>
+                <Box key={index} sx={{ position: "relative", width: 100 }}>
                   <img
                     src={image}
                     alt={`Image ${index + 1}`}
@@ -632,6 +649,24 @@ const AddProperty = () => {
                       borderRadius: 4,
                     }}
                   />
+                  <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    sx={{
+                      position: "absolute",
+                      top: -10,
+                      right: -10,
+                      borderRadius: "50%",
+                      minWidth: "auto",
+                      width: 24,
+                      height: 24,
+                      padding: 0,
+                    }}
+                    onClick={() => handleRemoveImage(index)}
+                  >
+                    &times;
+                  </Button>
                 </Box>
               ))}
             </Box>
@@ -673,8 +708,9 @@ const AddProperty = () => {
               </Select>
             </FormControl>
           </Box>
-          <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ mb: 3 }}>
             <TextField
+              fullWidth
               label="Price"
               name="price"
               type="number"
@@ -684,10 +720,11 @@ const AddProperty = () => {
               helperText={formErrors.price}
               variant="outlined"
               required
-              sx={{ flex: 1, mr: 2 }}
             />
-
+          </Box>
+          <Box sx={{ mb: 3 }}>
             <TextField
+              fullWidth
               label="Bedrooms"
               name="bedrooms"
               type="number"
@@ -697,10 +734,11 @@ const AddProperty = () => {
               helperText={formErrors.bedrooms}
               variant="outlined"
               required
-              sx={{ flex: 1, mr: 2 }}
             />
-
+          </Box>
+          <Box sx={{ mb: 3 }}>
             <TextField
+              fullWidth
               label="Bathrooms"
               name="bathrooms"
               type="number"
@@ -710,7 +748,6 @@ const AddProperty = () => {
               helperText={formErrors.bathrooms}
               variant="outlined"
               required
-              sx={{ flex: 1 }}
             />
           </Box>
           <Box sx={{ mb: 3 }}>
@@ -741,7 +778,7 @@ const AddProperty = () => {
               required
             />
           </Box>
-          <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ mb: 3 }}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -752,6 +789,8 @@ const AddProperty = () => {
               }
               label="Furnished"
             />
+          </Box>
+          <Box sx={{ mb: 3 }}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -763,34 +802,44 @@ const AddProperty = () => {
               label="Parking"
             />
           </Box>
-
-          {/* Payment Confirmation */}
-          <Box sx={{ mb: 3 }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={paymentConfirmed}
-                  onChange={() => setPaymentConfirmed(!paymentConfirmed)}
-                />
-              }
-              label="I confirm payment"
-            />
-          </Box>
-
-          {/* Submit Button */}
-          <Box sx={{ textAlign: "center", mt: 4 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
             <Button
               type="submit"
               variant="contained"
               color="primary"
-              disabled={!paymentConfirmed || isLoading}
-              startIcon={isLoading ? <CircularProgress size="1rem" /> : null}
+              disabled={isLoading}
             >
-              {isLoading ? "Loading..." : "Add Property"}
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Submit"
+              )}
             </Button>
           </Box>
         </form>
       </Box>
+
+      <Dialog
+        open={paymentDialogOpen}
+        onClose={() => setPaymentDialogOpen(false)}
+      >
+        <DialogTitle>Confirm Payment</DialogTitle>
+        <DialogContent>
+          <Typography>Do you confirm the payment of $70?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPaymentDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handlePaymentConfirmation}
+            color="primary"
+            variant="contained"
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

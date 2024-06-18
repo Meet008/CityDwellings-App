@@ -22,6 +22,7 @@ import Main from "./components/Profile/Main";
 import MyProperty from "./components/Profile/MyProperty";
 import UserProfile from "./components/Profile/UserProfile";
 import { ConfigProvider } from "antd";
+import Message from "./components/Profile/Messages";
 
 const theme = createTheme({
   typography: {
@@ -56,6 +57,7 @@ function App() {
               <Route path="add-property" element={<AddProperty />} />
               <Route path="my-properties" element={<MyProperty />} />
               <Route path="userProfile" element={<UserProfile />} />
+              <Route path="message" element={<Message />} />
               <Route
                 path="edit-property/:propertyId"
                 element={<EditProperty />}
