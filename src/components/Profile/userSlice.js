@@ -6,6 +6,7 @@ const initialState = {
   error: null,
   properties: [],
   propertyDetails: [],
+  messages: [],
 };
 
 const userSlice = createSlice({

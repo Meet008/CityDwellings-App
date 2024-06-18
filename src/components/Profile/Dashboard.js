@@ -49,7 +49,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Average Rent Price
             </Typography>
-            <Typography variant="h4">£{averageRentPrice}</Typography>
+            <Typography variant="h4">${averageRentPrice}</Typography>
           </Paper>
         </Grid>
 
@@ -59,7 +59,7 @@ const Dashboard = () => {
             <Typography variant="h6" gutterBottom>
               Average Sale Price
             </Typography>
-            <Typography variant="h4">£{averageSalePrice}</Typography>
+            <Typography variant="h4">${averageSalePrice}</Typography>
           </Paper>
         </Grid>
 

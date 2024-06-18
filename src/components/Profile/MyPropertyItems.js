@@ -115,7 +115,7 @@ const MyPropertyItems = ({
               marginTop: "0.5rem",
             }}
           >
-            £{itemPrice} per month
+            ${itemPrice} per month
           </Typography>
           <Typography variant="body1" sx={{ marginY: "1rem" }}>
             {itemShortDescription}
