@@ -1,5 +1,5 @@
 import { Box, Card, CardContent, Grid, Paper, Typography } from "@mui/material";
-import { DatePicker, Select } from "antd";
+import { DatePicker, Select, Tag } from "antd";
 import React, { useState } from "react";
 import Chart from "react-apexcharts";
 const { RangePicker } = DatePicker;
@@ -239,7 +239,110 @@ const Dashboard = () => {
               >
                 <label style={{ fontWeight: "bold" }}>Lattest Sales</label>
               </div>
-              <div className="col-12"></div>
+              <div className="col-12 d-flex align-items-center justify-content-between mt-3">
+                <div className="d-flex align-items-center">
+                  <div
+                    style={{ width: "40px", height: "40px" }}
+                    className="d-flex me-3"
+                  >
+                    <img
+                      src="/assets/images/ds1.jpeg"
+                      style={{ objectFit: "contain", width: "100%" }}
+                    />
+                  </div>
+                  <div>
+                    <div>
+                      <label className="fw-bold">New Apartment</label>
+                    </div>
+                    <div>North East UK</div>
+                  </div>
+                </div>
+                <div>
+                  <Tag color="green">$5000</Tag>
+                </div>
+              </div>
+              <div
+                className="col-12 my-3"
+                style={{ borderBottom: "1px dashed lightgrey" }}
+              ></div>
+              <div className="col-12 d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center">
+                  <div
+                    style={{ width: "40px", height: "40px" }}
+                    className="d-flex me-3"
+                  >
+                    <img
+                      src="/assets/images/ds5.jpg"
+                      style={{ objectFit: "contain", width: "100%" }}
+                    />
+                  </div>
+                  <div>
+                    <div>
+                      <label className="fw-bold">New Apartment</label>
+                    </div>
+                    <div>North East UK</div>
+                  </div>
+                </div>
+                <div>
+                  <Tag color="green">$5000</Tag>
+                </div>
+              </div>{" "}
+              <div
+                className="col-12 my-3"
+                style={{ borderBottom: "1px dashed lightgrey" }}
+              ></div>
+              <div className="col-12 d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center">
+                  <div
+                    style={{ width: "40px", height: "40px" }}
+                    className="d-flex me-3"
+                  >
+                    <img
+                      src="/assets/images/ds3.jpg"
+                      style={{ objectFit: "contain", width: "100%" }}
+                    />
+                  </div>
+                  <div>
+                    <div>
+                      <label className="fw-bold">New Apartment</label>
+                    </div>
+                    <div>North East UK</div>
+                  </div>
+                </div>
+                <div>
+                  <Tag color="green">$5000</Tag>
+                </div>
+              </div>{" "}
+              <div
+                className="col-12 my-3"
+                style={{ borderBottom: "1px dashed lightgrey" }}
+              ></div>
+              <div className="col-12 d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center">
+                  <div
+                    style={{ width: "40px", height: "40px" }}
+                    className="d-flex me-3"
+                  >
+                    <img
+                      src="/assets/images/bath1.jpg"
+                      style={{ objectFit: "contain", width: "100%" }}
+                    />
+                  </div>
+                  <div>
+                    <div>
+                      <label className="fw-bold">New Apartment</label>
+                    </div>
+                    <div>North East UK</div>
+                  </div>
+                </div>
+                <div>
+                  <Tag color="green">$5000</Tag>
+                </div>
+              </div>
+              <div
+                className="col-12 my-3"
+                style={{ borderBottom: "1px dashed lightgrey" }}
+              ></div>
             </div>
           </div>
         </div>
