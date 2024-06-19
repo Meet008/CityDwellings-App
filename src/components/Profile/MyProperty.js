@@ -51,12 +51,35 @@ const PropertyPage = () => {
       <Typography variant="h4" gutterBottom>
         My Properties
       </Typography>
+      <Typography variant="body1">
+        <div className="text-center">
+          <div className="mb-3">
+            <img src="/assets/images/no-data.png" style={{ width: "200px" }} />
+          </div>
+          <label>No Properties Found</label>
+          <div className="mt-3">
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={() => {
+                navigate("/profile/add-property");
+              }}
+            >
+              Add Properties
+            </button>
+          </div>
+        </div>
+      </Typography>
       {isLoading ? (
         <CircularProgress />
       ) : (
         <Grid spacing={3}>
-          {properties.length === 0 && !isLoading && (
-            <Typography variant="body1">No properties found.</Typography>
+          {!properties.length === 0 && !isLoading && (
+            <Typography variant="body1">
+              <img
+                src="/assets/images/no-data.png"
+                style={{ width: "200px" }}
+              />
+            </Typography>
           )}
           {properties.map((property) => (
             <Grid item xs={12} key={property._id}>
