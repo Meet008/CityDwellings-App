@@ -248,7 +248,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import logo from "../assets/icons/buildings.svg";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -256,6 +256,7 @@ import { orange } from "@mui/material/colors";
 import Logout from "./Auth/Logout";
 
 const Navigation = () => {
+  const location = useLocation();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const { isAuthenticated } = useSelector((state) => state.auth);
 
@@ -446,6 +447,10 @@ const Navigation = () => {
                   fontWeight: "bold",
                   textTransform: "uppercase",
                   textDecoration: "none",
+                  borderBottom:
+                    location?.pathname === "/"
+                      ? "2px solid #fff"
+                      : "2px solid #f07917",
                 }}
               >
                 Home
@@ -457,11 +462,15 @@ const Navigation = () => {
                   onClick={handleCloseNavMenu}
                   to={`/${page}`}
                   style={{
-                    color: "white",
+                    color: `${page}` === "login" ? "#3c5edb" : "white",
                     fontWeight: "bold",
                     textTransform: "uppercase",
-                    marginLeft: "8px",
+                    marginLeft: "15px",
                     textDecoration: "none",
+                    borderBottom:
+                      location?.pathname === `/${page}`
+                        ? "2px solid #fff"
+                        : "2px solid #f07917",
                   }}
                 >
                   {page}
