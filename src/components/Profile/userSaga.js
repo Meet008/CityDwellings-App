@@ -17,6 +17,12 @@ import {
   deletePropertyRequest,
   deletePropertySuccess,
   deletePropertyFailure,
+  editPropertyRequest,
+  editPropertySuccess,
+  editPropertyFailure,
+  fetchPropertyDetailsRequest,
+  fetchPropertyDetailsSuccess,
+  fetchPropertyDetailsFailure,
 } from "./userSlice";
 
 // API base URL
@@ -136,6 +142,38 @@ function* fetchPropertiesSaga() {
   }
 }
 
+// Fetch property details by ID
+function* fetchPropertyDetailsSaga(action) {
+  try {
+    const { propertyId } = action.payload;
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
+
+    console.log("api call", `${API_BASE_URL}/property/${propertyId}`);
+    const response = yield call(
+      axios.get,
+      `${API_BASE_URL}/property/${propertyId}`,
+      config
+    );
+
+    yield put(fetchPropertyDetailsSuccess(response.data));
+  } catch (error) {
+    yield put(
+      fetchPropertyDetailsFailure(
+        error.response?.data?.message || "Failed to fetch property details"
+      )
+    );
+    toast.error(
+      error.response?.data?.message || "Failed to fetch property details"
+    );
+  }
+}
+
 // Delete property
 function* deletePropertySaga(action) {
   try {
@@ -150,6 +188,9 @@ function* deletePropertySaga(action) {
     yield call(axios.delete, `${API_BASE_URL}/property/${propertyId}`, config);
     yield put(deletePropertySuccess(propertyId));
     toast.success("Property deleted successfully");
+
+    // Dispatch fetch properties action to update the list after deletion
+    yield put(fetchPropertiesRequest());
   } catch (error) {
     yield put(
       deletePropertyFailure(
@@ -160,6 +201,38 @@ function* deletePropertySaga(action) {
   }
 }
 
+// Edit property
+function* editPropertySaga(action) {
+  try {
+    const { propertyId, formData, navigate } = action.payload;
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        token: `${token}`,
+      },
+    };
+
+    const response = yield call(
+      axios.put,
+      `${API_BASE_URL}/property/edit/${propertyId}`,
+      formData,
+      config
+    );
+
+    yield put(editPropertySuccess(response.data));
+    toast.success("Property updated successfully");
+    if (navigate) navigate("/profile/my-properties"); // Redirect after success
+  } catch (error) {
+    yield put(
+      editPropertyFailure(
+        error.response?.data?.message || "Failed to update property"
+      )
+    );
+    toast.error(error.response?.data?.message || "Failed to update property");
+  }
+}
+
 // Watcher Sagas
 export default function* userSaga() {
   yield takeLatest(fetchProfileRequest.type, fetchProfileSaga);
@@ -167,4 +240,6 @@ export default function* userSaga() {
   yield takeLatest(addPropertyRequest.type, addPropertySaga);
   yield takeLatest(fetchPropertiesRequest.type, fetchPropertiesSaga);
   yield takeLatest(deletePropertyRequest.type, deletePropertySaga);
+  yield takeLatest(editPropertyRequest.type, editPropertySaga);
+  yield takeLatest(fetchPropertyDetailsRequest.type, fetchPropertyDetailsSaga);
 }

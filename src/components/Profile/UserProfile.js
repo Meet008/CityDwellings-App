@@ -1,28 +1,21 @@
-import React, { useState, useEffect, useCallback } from "react";
 import {
   Avatar,
-  AppBar,
   Box,
   Button,
-  Container,
-  CssBaseline,
-  Grid,
-  IconButton,
-  TextField,
-  Toolbar,
-  Typography,
+  Checkbox,
   CircularProgress,
+  FormControlLabel,
+  Grid,
+  TextField,
+  Typography,
   useMediaQuery,
   useTheme,
-  FormControlLabel,
-  Checkbox,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import Sidebar from "./Sidebar";
-import { useDispatch, useSelector } from "react-redux";
-import { updateProfileRequest, fetchProfileRequest } from "./userSlice";
-import { useNavigate } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchProfileRequest, updateProfileRequest } from "./userSlice";
 
 const drawerWidth = 240;
 

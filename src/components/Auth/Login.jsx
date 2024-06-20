@@ -48,7 +48,7 @@ export default function SignIn() {
 
   useEffect(() => {
     if (isAuthenticated && token) {
-      navigate("/");
+      navigate("/profile/dashboard");
     }
   }, [isAuthenticated]);
 
