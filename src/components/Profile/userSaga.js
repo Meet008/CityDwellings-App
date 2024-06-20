@@ -23,6 +23,9 @@ import {
   fetchPropertyDetailsRequest,
   fetchPropertyDetailsSuccess,
   fetchPropertyDetailsFailure,
+  fetchDashboardDataStart,
+  fetchDashboardDataSuccess,
+  fetchDashboardDataFailure,
 } from "./userSlice";
 
 // API base URL
@@ -233,6 +236,34 @@ function* editPropertySaga(action) {
   }
 }
 
+// Fetch dashboard data
+function* fetchDashboardDataSaga() {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
+    const response = yield call(
+      axios.get,
+      `${API_BASE_URL}/property/dashboard`,
+      config
+    );
+    yield put(fetchDashboardDataSuccess(response.data));
+  } catch (error) {
+    yield put(
+      fetchDashboardDataFailure(
+        error.response?.data?.message || "Failed to fetch dashboard data"
+      )
+    );
+    toast.error(
+      error.response?.data?.message || "Failed to fetch dashboard data"
+    );
+  }
+}
+
 // Watcher Sagas
 export default function* userSaga() {
   yield takeLatest(fetchProfileRequest.type, fetchProfileSaga);
@@ -242,4 +273,5 @@ export default function* userSaga() {
   yield takeLatest(deletePropertyRequest.type, deletePropertySaga);
   yield takeLatest(editPropertyRequest.type, editPropertySaga);
   yield takeLatest(fetchPropertyDetailsRequest.type, fetchPropertyDetailsSaga);
+  yield takeLatest(fetchDashboardDataStart.type, fetchDashboardDataSaga); // Added for dashboard data
 }

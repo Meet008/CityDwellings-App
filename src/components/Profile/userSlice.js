@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Dashboard from "./Dashboard";
 
 const initialState = {
   user: null,
@@ -7,6 +8,14 @@ const initialState = {
   properties: [],
   propertyDetails: [],
   messages: [],
+  dashboardData: {
+    totalCommercial: 0,
+    totalResidential: 0,
+    totalLand: 0,
+    propertiesList: [],
+    series: [],
+    pieSeries: [],
+  },
 };
 
 const userSlice = createSlice({
@@ -105,6 +114,18 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    fetchDashboardDataStart(state, action) {
+      state.isLoading = true;
+      state.error = action.payload;
+    },
+    fetchDashboardDataSuccess(state, action) {
+      state.isLoading = false;
+      state.dashboardData = action.payload;
+    },
+    fetchDashboardDataFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -130,6 +151,9 @@ export const {
   fetchPropertyDetailsRequest,
   fetchPropertyDetailsSuccess,
   fetchPropertyDetailsFailure,
+  fetchDashboardDataStart,
+  fetchDashboardDataSuccess,
+  fetchDashboardDataFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

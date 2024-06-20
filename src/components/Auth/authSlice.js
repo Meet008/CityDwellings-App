@@ -1,4 +1,3 @@
-// slices/authSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -6,6 +5,8 @@ const initialState = {
   isAuthenticated: false,
   loading: false,
   user: null,
+  forgotPasswordSuccess: false,
+  updatePasswordSuccess: false,
 };
 
 const authSlice = createSlice({
@@ -38,7 +39,29 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = false;
     },
-    logout(state) {
+    forgotPasswordRequest: (state) => {
+      state.loading = true;
+    },
+    forgotPasswordSuccess: (state, action) => {
+      state.loading = false;
+      state.forgotPasswordSuccess = true;
+      state.user = action.payload;
+    },
+    forgotPasswordFail: (state) => {
+      state.loading = false;
+      state.forgotPasswordSuccess = false;
+    },
+    updatePasswordRequest: (state) => {
+      state.loading = true;
+    },
+    updatePasswordSuccess: (state) => {
+      state.loading = false;
+      state.updatePasswordSuccess = true;
+    },
+    updatePasswordFail: (state) => {
+      state.loading = false;
+    },
+    logout: (state) => {
       state.token = null;
       state.isAuthenticated = false;
       state.user = null;
@@ -55,6 +78,12 @@ export const {
   loginRequest,
   loginSuccess,
   loginFail,
+  forgotPasswordRequest,
+  forgotPasswordSuccess,
+  forgotPasswordFail,
+  updatePasswordRequest,
+  updatePasswordSuccess,
+  updatePasswordFail,
   logout,
 } = authSlice.actions;
 

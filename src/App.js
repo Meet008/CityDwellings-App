@@ -24,6 +24,7 @@ import UserProfile from "./components/Profile/UserProfile";
 import { ConfigProvider } from "antd";
 import Message from "./components/Profile/Messages";
 import Reviews from "./components/Profile/Reviews";
+import ForgotPassword from "./components/Auth/ForgotPassword";
 
 const theme = createTheme({
   typography: {
@@ -53,6 +54,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgotPassword" element={<ForgotPassword />} />
             <Route path="/profile" element={<Main />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="add-property" element={<AddProperty />} />

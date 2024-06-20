@@ -1,28 +1,29 @@
 import { Box, Card, CardContent, Grid, Paper, Typography } from "@mui/material";
-import { DatePicker, Popover, Select, Table, Tag, Tooltip } from "antd";
-import React, { useState } from "react";
+import { DatePicker, Select, Tag } from "antd";
+import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
-import moment from "moment";
 import { useNavigate } from "react-router-dom";
-const { RangePicker } = DatePicker;
-const Dashboard = () => {
-  // id Pass admin@city.com
-  // Mock data (replace with actual data fetching logic)
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDashboardDataStart } from "./userSlice";
 
+const { RangePicker } = DatePicker;
+
+const Dashboard = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { series, totalCommercial, totalResidential, pieSeries } = useSelector(
+    (state) => state.user.dashboardData
+  );
+  const propertiesList = useSelector((state) => state.user.propertiesList);
+  const { isLoading, error } = useSelector((state) => state.user);
+
   const [city, setCity] = useState("ahmedabad");
-  const [propertiesList, setPropertiesList] = useState([]);
-  const [series, setSeries] = useState([
-    {
-      name: "Total Revenue",
-      data: [50, 20, 2, 15, 67, 24, 90],
-    },
-    {
-      name: "Sold Properties",
-      data: [10, 0, 0, 0, 0, 78, 21],
-    },
-  ]);
+
+  useEffect(() => {
+    dispatch(fetchDashboardDataStart());
+  }, [dispatch]);
+
   const options = {
     chart: {
       type: "area",
@@ -44,12 +45,11 @@ const Dashboard = () => {
       offsetX: 0,
       offsetY: 0,
     },
-
     colors: ["#1976d2", "#f07917"],
-
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
   };
-  const pieSeries = [44, 55, 13];
+
+  // const pieSeries = [44, 55, 13];
   const pieChartOptions = {
     chart: {
       width: 380,
@@ -88,7 +88,6 @@ const Dashboard = () => {
             borderBottom: "1px dashed grey",
             display: "flex",
             padding: "9px",
-            // borderRadius: "6px",
           }}
         >
           <div style={{ width: "250px" }}>
@@ -100,9 +99,9 @@ const Dashboard = () => {
               size="large"
               placeholder="Select City"
               value={city}
-              onChange={(e) => {
-                setCity(e);
-                // Make api call when city change
+              onChange={(value) => {
+                setCity(value);
+                dispatch(fetchDashboardDataStart(value)); //make Api call on city changes
               }}
               options={[
                 { label: "Ahmedabad", value: "ahmedabad" },
@@ -128,14 +127,14 @@ const Dashboard = () => {
                 <img
                   src="/assets/images/residential.png"
                   style={{ width: "30px" }}
+                  alt="Residential"
                 />
               </div>
               <div>
                 <div>
                   <label style={{ fontWeight: "bold" }}>Total Commercial</label>
                 </div>
-                {/* add you state with total Commercial key insted of 200 m if key have null or "" value then 0 will be set automatically and saame for all 2 header card */}
-                <div>{"200" || 0}</div>
+                <div>{totalCommercial || 0}</div>
               </div>
             </div>
           </div>
@@ -151,7 +150,11 @@ const Dashboard = () => {
               className="p-2"
             >
               <div className="me-2">
-                <img src="/assets/images/house.png" style={{ width: "30px" }} />
+                <img
+                  src="/assets/images/house.png"
+                  style={{ width: "30px" }}
+                  alt="House"
+                />
               </div>
               <div>
                 <div>
@@ -159,32 +162,10 @@ const Dashboard = () => {
                     Total Residential
                   </label>
                 </div>
-                <div>{"200" || 0}</div>
+                <div>{totalResidential || 0}</div>
               </div>
             </div>
           </div>
-          {/* <div className="col-12 col-md-6 col-lg-4 mt-2">
-            <div
-              style={{
-                border: "1px solid #4aad4a",
-                display: "flex",
-                alignItems: "center",
-                borderRadius: "6px",
-                background: "#d9ecd9",
-              }}
-              className="p-2"
-            >
-              <div className="me-2">
-                <img src="/assets/images/land.png" style={{ width: "30px" }} />
-              </div>
-              <div>
-                <div>
-                  <label style={{ fontWeight: "bold" }}>Total Land</label>
-                </div>
-                <div>{"200" || 0}</div>
-              </div>
-            </div>
-          </div> */}
         </div>
         <div className="row px-0 mx-0 mt-4">
           <div
@@ -195,7 +176,6 @@ const Dashboard = () => {
               borderRadius: "6px",
             }}
           >
-            {" "}
             <div className="row mt-3 mx-0 px-0">
               <div
                 className="col-12 p-3"
@@ -241,14 +221,7 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="col-12 col-lg-6">
-            <div
-              className="row mx-0 px-0"
-              // style={{
-              //   border: "1px solid #cbcbcb",
-              //   background: "#f3f3f3",
-              //   borderRadius: "6px",
-              // }}
-            >
+            <div className="row mx-0 px-0">
               <div
                 className="col-12 p-3"
                 style={{ borderBottom: "1px dashed grey" }}
@@ -256,122 +229,50 @@ const Dashboard = () => {
                 <label style={{ fontWeight: "bold" }}>Latest Sales</label>
               </div>
               {propertiesList?.length > 0 ? (
-                <>
-                  <div className="col-12 d-flex align-items-center justify-content-between mt-3">
-                    <div className="d-flex align-items-center">
-                      <div
-                        style={{ width: "40px", height: "40px" }}
-                        className="d-flex me-3"
-                      >
-                        <img
-                          src="/assets/images/ds1.jpeg"
-                          style={{ objectFit: "contain", width: "100%" }}
-                        />
+                propertiesList.slice(0, 5).map((property, index) => (
+                  <div key={index}>
+                    <div className="col-12 d-flex align-items-center justify-content-between mt-3">
+                      <div className="d-flex align-items-center">
+                        <div
+                          style={{ width: "40px", height: "40px" }}
+                          className="d-flex me-3"
+                        >
+                          <img
+                            src={property.imageUrl}
+                            style={{ objectFit: "contain", width: "100%" }}
+                            alt={property.name}
+                          />
+                        </div>
+                        <div>
+                          <div>
+                            <label className="fw-bold">{property.name}</label>
+                          </div>
+                          <div>{property.location}</div>
+                        </div>
                       </div>
                       <div>
-                        <div>
-                          <label className="fw-bold">New Apartment</label>
-                        </div>
-                        <div>North East UK</div>
+                        <Tag color="green">${property.price}</Tag>
                       </div>
                     </div>
-                    <div>
-                      <Tag color="green">$5000</Tag>
-                    </div>
+                    {index < propertiesList.length - 1 && (
+                      <div
+                        className="col-12 my-3"
+                        style={{ borderBottom: "1px dashed lightgrey" }}
+                      ></div>
+                    )}
                   </div>
-                  <div
-                    className="col-12 my-3"
-                    style={{ borderBottom: "1px dashed lightgrey" }}
-                  ></div>
-                  <div className="col-12 d-flex align-items-center justify-content-between">
-                    <div className="d-flex align-items-center">
-                      <div
-                        style={{ width: "40px", height: "40px" }}
-                        className="d-flex me-3"
-                      >
-                        <img
-                          src="/assets/images/ds5.jpg"
-                          style={{ objectFit: "contain", width: "100%" }}
-                        />
-                      </div>
-                      <div>
-                        <div>
-                          <label className="fw-bold">New Apartment</label>
-                        </div>
-                        <div>North East UK</div>
-                      </div>
-                    </div>
-                    <div>
-                      <Tag color="green">$5000</Tag>
-                    </div>
-                  </div>{" "}
-                  <div
-                    className="col-12 my-3"
-                    style={{ borderBottom: "1px dashed lightgrey" }}
-                  ></div>
-                  <div className="col-12 d-flex align-items-center justify-content-between">
-                    <div className="d-flex align-items-center">
-                      <div
-                        style={{ width: "40px", height: "40px" }}
-                        className="d-flex me-3"
-                      >
-                        <img
-                          src="/assets/images/ds3.jpg"
-                          style={{ objectFit: "contain", width: "100%" }}
-                        />
-                      </div>
-                      <div>
-                        <div>
-                          <label className="fw-bold">New Apartment</label>
-                        </div>
-                        <div>North East UK</div>
-                      </div>
-                    </div>
-                    <div>
-                      <Tag color="green">$5000</Tag>
-                    </div>
-                  </div>{" "}
-                  <div
-                    className="col-12 my-3"
-                    style={{ borderBottom: "1px dashed lightgrey" }}
-                  ></div>
-                  <div className="col-12 d-flex align-items-center justify-content-between">
-                    <div className="d-flex align-items-center">
-                      <div
-                        style={{ width: "40px", height: "40px" }}
-                        className="d-flex me-3"
-                      >
-                        <img
-                          src="/assets/images/bath1.jpg"
-                          style={{ objectFit: "contain", width: "100%" }}
-                        />
-                      </div>
-                      <div>
-                        <div>
-                          <label className="fw-bold">New Apartment</label>
-                        </div>
-                        <div>North East UK</div>
-                      </div>
-                    </div>
-                    <div>
-                      <Tag color="green">$5000</Tag>
-                    </div>
-                  </div>
-                  <div
-                    className="col-12 my-3"
-                    style={{ borderBottom: "1px dashed lightgrey" }}
-                  ></div>{" "}
-                </>
+                ))
               ) : (
                 <div className="text-center">
                   <img
                     src="/assets/images/no-data.png"
                     style={{ width: "200px" }}
+                    alt="No Data"
                   />
                   <div className="mt-5">
                     <label>
-                      After your properties will sale , you can find your
-                      lattest sale properties here...
+                      After your properties will sale, you can find your latest
+                      sale properties here...
                     </label>
                   </div>
                   <div className="mt-3">
@@ -386,14 +287,10 @@ const Dashboard = () => {
                   </div>
                 </div>
               )}
-
-              {/* below design is for found lattest sale properties  only display lattst 5 properties ( filter using sale by date )*/}
-              {/* */}
             </div>
           </div>
         </div>
       </div>
-      {/* Umangi */}
     </>
   );
 };
