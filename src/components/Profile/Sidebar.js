@@ -1,24 +1,22 @@
-import React from "react";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import HomeWorkIcon from "@mui/icons-material/HomeWork";
+import MessageIcon from "@mui/icons-material/Message";
+import PersonIcon from "@mui/icons-material/Person";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 import {
+  Divider,
   Drawer,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Toolbar,
-  Box,
-  Typography,
-  Divider,
 } from "@mui/material";
+import React from "react";
 import { Link } from "react-router-dom";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import MessageIcon from "@mui/icons-material/Message";
-import HomeWorkIcon from "@mui/icons-material/HomeWork";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import PersonIcon from "@mui/icons-material/Person";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import Logout from "../Auth/Logout";
 
 const drawerWidth = 240;
