@@ -284,6 +284,25 @@ const Navigation = () => {
     ? ["sale", "rent", "about", "contact", "profile"]
     : ["sale", "rent", "about", "contact", "login"];
 
+  const ConditionalLink = ({ page }) => {
+    const linkTo = page === "profile" ? "/profile/dashboard" : `/${page}`;
+
+    return (
+      <Link
+        to={linkTo}
+        style={{
+          color: "white",
+          fontWeight: "bold",
+          textTransform: "uppercase",
+          marginLeft: "8px",
+          textDecoration: "none",
+        }}
+      >
+        {page === "profile" ? "Profile" : page}
+      </Link>
+    );
+  };
+
   return (
     <ThemeProvider theme={darkTheme}>
       <AppBar
@@ -357,9 +376,10 @@ const Navigation = () => {
                     style={{
                       textAlign: "center",
                       color: "white",
-                      textDecoration: "none",
-                      textTransform: "uppercase",
                       fontWeight: "bold",
+                      textTransform: "uppercase",
+                      marginLeft: "8px",
+                      textDecoration: "none",
                     }}
                   >
                     Home
@@ -368,18 +388,7 @@ const Navigation = () => {
 
                 {pages.map((page) => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Link
-                      to={`/${page}`}
-                      style={{
-                        textAlign: "center",
-                        color: "white",
-                        textDecoration: "none",
-                        textTransform: "uppercase",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {page}
-                    </Link>
+                    <ConditionalLink page={page} />
                   </MenuItem>
                 ))}
                 {isAuthenticated && (
@@ -443,9 +452,11 @@ const Navigation = () => {
               <Link
                 to="/"
                 style={{
+                  textAlign: "center",
                   color: "white",
                   fontWeight: "bold",
                   textTransform: "uppercase",
+                  marginLeft: "8px",
                   textDecoration: "none",
                   borderBottom:
                     location?.pathname === "/"
@@ -457,24 +468,21 @@ const Navigation = () => {
               </Link>
 
               {pages.map((page) => (
-                <Link
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  to={`/${page}`}
-                  style={{
-                    color: `${page}` === "login" ? "#3c5edb" : "white",
-                    fontWeight: "bold",
-                    textTransform: "uppercase",
-                    marginLeft: "15px",
-                    textDecoration: "none",
-                    borderBottom:
-                      location?.pathname === `/${page}`
-                        ? "2px solid #fff"
-                        : "2px solid #f07917",
-                  }}
-                >
-                  {page}
-                </Link>
+                <ConditionalLink page={page} />
+                // <Link
+                //   key={page}
+                //   onClick={handleCloseNavMenu}
+                //   to={`/${page}`}
+                //   style={{
+                //     color: "white",
+                //     fontWeight: "bold",
+                //     textTransform: "uppercase",
+                //     marginLeft: "8px",
+                //     textDecoration: "none",
+                //   }}
+                // >
+                //   {page}
+                // </Link>
               ))}
               {isAuthenticated && <Logout />}
             </Box>
