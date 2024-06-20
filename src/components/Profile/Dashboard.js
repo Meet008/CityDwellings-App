@@ -8,23 +8,19 @@ const { RangePicker } = DatePicker;
 const Dashboard = () => {
   // id Pass admin@city.com
   // Mock data (replace with actual data fetching logic)
-  const occupancyRate = 82; // in percentage
-  const rentalYield = 5.2; // in percentage
-  const averageRentPrice = 2200; // per month
-  const averageSalePrice = 550000; // per property
-  const marketTrend = "Upward"; // Example trend indicator
+
   const navigate = useNavigate();
 
   const [city, setCity] = useState("ahmedabad");
   const [propertiesList, setPropertiesList] = useState([]);
   const [series, setSeries] = useState([
     {
-      name: "Total Profit",
+      name: "Total Revenue",
       data: [50, 20, 2, 15, 67, 24, 90],
     },
     {
       name: "Sold Properties",
-      data: [10, 4, 2, 16, 32, 78, 21],
+      data: [10, 0, 0, 0, 0, 78, 21],
     },
   ]);
   const options = {
@@ -167,7 +163,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="col-12 col-md-6 col-lg-4 mt-2">
+          {/* <div className="col-12 col-md-6 col-lg-4 mt-2">
             <div
               style={{
                 border: "1px solid #4aad4a",
@@ -188,7 +184,7 @@ const Dashboard = () => {
                 <div>{"200" || 0}</div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="row px-0 mx-0 mt-4">
           <div
