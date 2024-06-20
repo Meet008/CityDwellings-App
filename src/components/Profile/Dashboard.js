@@ -14,109 +14,7 @@ const Dashboard = () => {
   const averageSalePrice = 550000; // per property
   const marketTrend = "Upward"; // Example trend indicator
   const navigate = useNavigate();
-  const [review_list, set_review_list] = useState([
-    {
-      id: 29,
-      user_id: 194,
 
-      review: "Excellent",
-      suggestion: null,
-      created_at: 1717156983,
-      updated_at: 1717156983,
-      user_name: "excellent ",
-    },
-    {
-      id: 28,
-      user_id: 186,
-
-      review: "Average",
-      suggestion: null,
-      created_at: 1713049550,
-      updated_at: 1713049550,
-      user_name: "fikkobemli@gufum.com",
-    },
-    {
-      id: 27,
-      user_id: 182,
-
-      review: "Poor",
-      suggestion: null,
-      created_at: 1710666750,
-      updated_at: 1710666750,
-      user_name: "Dieter",
-    },
-    {
-      id: 26,
-      user_id: 84,
-
-      review: "Poor",
-      suggestion: "absolutely nothing was working after spending £30",
-      created_at: 1706906292,
-      updated_at: 1706906292,
-      user_name: "Ben Jones",
-    },
-    {
-      id: 25,
-      user_id: 92,
-
-      review: "Poor",
-      suggestion: "the profit  is massively wrong for this asin\nB0CH3SRR3L",
-      created_at: 1699264519,
-      updated_at: 1699264519,
-      user_name: "Eamonn",
-    },
-    {
-      id: 24,
-      user_id: 81,
-
-      review: "Poor",
-      suggestion: null,
-      created_at: 1697890859,
-      updated_at: 1697890859,
-      user_name: "amit",
-    },
-    {
-      id: 23,
-      user_id: 63,
-
-      review: "Poor",
-      suggestion: null,
-      created_at: 1694847697,
-      updated_at: 1694847697,
-      user_name: "vraj",
-    },
-    {
-      id: 22,
-      user_id: 21,
-      title: "My List",
-      review: "Excellent",
-      suggestion: null,
-      created_at: 1692458930,
-      updated_at: 1692458930,
-      user_name: "Shashi Patel",
-    },
-    {
-      id: 21,
-      user_id: 43,
-
-      review: "Poor",
-      suggestion: null,
-      created_at: 1689875225,
-      updated_at: 1689875225,
-      user_name: "Esat",
-    },
-    {
-      id: 20,
-      user_id: 39,
-
-      review: null,
-      suggestion:
-        "Hi,\nI have still facing 404 issue in this module. Can you please update this issue ASAP.",
-      created_at: 1689597210,
-      updated_at: 1689597210,
-      user_name: "Aaqib",
-    },
-  ]);
   const [city, setCity] = useState("ahmedabad");
   const [series, setSeries] = useState([
     {
@@ -184,98 +82,6 @@ const Dashboard = () => {
     ],
   };
 
-  const reviewListColor = {
-    Excellent: "success",
-    Good: "processing",
-    Average: "warning",
-    Poor: "error",
-  };
-  const reviewListColorIcon = {
-    Excellent: "#52c41a",
-    Good: "#1677ff",
-    Average: "#faad14",
-    Poor: "#ff4d4f",
-  };
-
-  const reviewColumns = [
-    {
-      title: "Sr.No.",
-      width: 80,
-      ellipsis: true,
-      render: (_, __, i) => {
-        return <span>{1 + i}</span>;
-      },
-    },
-    {
-      title: "Date",
-      width: 220,
-      // ellipsis: true,
-      render: (text) => {
-        return (
-          <div>
-            <span>
-              {moment(new Date(text.updated_at * 1000)).format(
-                "MMM DD, YYYY hh:mm A"
-              )}
-            </span>
-          </div>
-        );
-      },
-    },
-    {
-      title: "User Name",
-      width: 200,
-      // ellipsis: true,
-      render: (text) => {
-        return <b>{text?.user_name || "N/A"}</b>;
-      },
-    },
-    {
-      title: "Feedback",
-      width: 130,
-      // ellipsis: false,
-      render: (text) => {
-        if (!text?.review) {
-          return "-";
-        }
-        return <Tag color={reviewListColor[text?.review]}>{text?.review}</Tag>;
-      },
-    },
-
-    {
-      title: "User Comment",
-      width: 600,
-      // ellipsis: false,
-      render: (text) => {
-        if (!text.suggestion) {
-          return "-";
-        }
-        return (
-          <Popover
-            placement="right"
-            title=""
-            getPopupContainer={(triger) => triger.parentNode}
-            content={
-              <div
-                style={{
-                  maxWidth: "400px",
-                  wordBreak: "break-word",
-                  minHeight: "20px",
-                  maxHeight: "100px",
-                  overflow: "auto",
-                }}
-              >
-                {text?.suggestion}
-              </div>
-            }
-            trigger="click"
-          >
-            <div className="actionIcon">{text?.suggestion}</div>
-          </Popover>
-        );
-      },
-    },
-  ];
   return (
     <>
       <div style={{ border: "1px solid transparent" }}>
@@ -450,7 +256,7 @@ const Dashboard = () => {
                 className="col-12 p-3"
                 style={{ borderBottom: "1px dashed grey" }}
               >
-                <label style={{ fontWeight: "bold" }}>Lattest Sales</label>
+                <label style={{ fontWeight: "bold" }}>Latest Sales</label>
               </div>
               <div className="text-center">
                 <img
@@ -582,72 +388,8 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
-        <div className="fw-bold" style={{ marginTop: "50px" }}>
-          Review List
-        </div>
-        <div className="row">
-          <div className="col-12">
-            <Table columns={reviewColumns} dataSource={review_list} />
-          </div>
-        </div>
       </div>
       {/* Umangi */}
-      {/* <Box sx={{ flexGrow: 1, p: 3 }}>
-        <Typography variant="h4" gutterBottom>
-          Dashboard
-        </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={3}>
-            <Paper sx={{ p: 2, textAlign: "center" }}>
-              <Typography variant="h6" gutterBottom>
-                Occupancy Rate
-              </Typography>
-              <Typography variant="h4">{occupancyRate}%</Typography>
-            </Paper>
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={3}>
-            <Paper sx={{ p: 2, textAlign: "center" }}>
-              <Typography variant="h6" gutterBottom>
-                Rental Yield
-              </Typography>
-              <Typography variant="h4">{rentalYield}%</Typography>
-            </Paper>
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={3}>
-            <Paper sx={{ p: 2, textAlign: "center" }}>
-              <Typography variant="h6" gutterBottom>
-                Average Rent Price
-              </Typography>
-              <Typography variant="h4">£{averageRentPrice}</Typography>
-            </Paper>
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={3}>
-            <Paper sx={{ p: 2, textAlign: "center" }}>
-              <Typography variant="h6" gutterBottom>
-                Average Sale Price
-              </Typography>
-              <Typography variant="h4">£{averageSalePrice}</Typography>
-            </Paper>
-          </Grid>
-
-          <Grid item xs={12}>
-            <Card sx={{ p: 2 }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Market Trend
-                </Typography>
-                <Typography variant="h5" color="primary">
-                  {marketTrend}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box> */}
     </>
   );
 };
