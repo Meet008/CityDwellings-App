@@ -16,6 +16,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const [city, setCity] = useState("ahmedabad");
+  const [propertiesList, setPropertiesList] = useState([]);
   const [series, setSeries] = useState([
     {
       name: "Total Profit",
@@ -258,133 +259,140 @@ const Dashboard = () => {
               >
                 <label style={{ fontWeight: "bold" }}>Latest Sales</label>
               </div>
-              <div className="text-center">
-                <img
-                  src="/assets/images/no-data.png"
-                  style={{ width: "200px" }}
-                />
-                <div className="mt-5">
-                  <label>
-                    After your properties will sale , you can find your lattest
-                    sale properties here...
-                  </label>
+              {propertiesList?.length > 0 ? (
+                <>
+                  <div className="col-12 d-flex align-items-center justify-content-between mt-3">
+                    <div className="d-flex align-items-center">
+                      <div
+                        style={{ width: "40px", height: "40px" }}
+                        className="d-flex me-3"
+                      >
+                        <img
+                          src="/assets/images/ds1.jpeg"
+                          style={{ objectFit: "contain", width: "100%" }}
+                        />
+                      </div>
+                      <div>
+                        <div>
+                          <label className="fw-bold">New Apartment</label>
+                        </div>
+                        <div>North East UK</div>
+                      </div>
+                    </div>
+                    <div>
+                      <Tag color="green">$5000</Tag>
+                    </div>
+                  </div>
+                  <div
+                    className="col-12 my-3"
+                    style={{ borderBottom: "1px dashed lightgrey" }}
+                  ></div>
+                  <div className="col-12 d-flex align-items-center justify-content-between">
+                    <div className="d-flex align-items-center">
+                      <div
+                        style={{ width: "40px", height: "40px" }}
+                        className="d-flex me-3"
+                      >
+                        <img
+                          src="/assets/images/ds5.jpg"
+                          style={{ objectFit: "contain", width: "100%" }}
+                        />
+                      </div>
+                      <div>
+                        <div>
+                          <label className="fw-bold">New Apartment</label>
+                        </div>
+                        <div>North East UK</div>
+                      </div>
+                    </div>
+                    <div>
+                      <Tag color="green">$5000</Tag>
+                    </div>
+                  </div>{" "}
+                  <div
+                    className="col-12 my-3"
+                    style={{ borderBottom: "1px dashed lightgrey" }}
+                  ></div>
+                  <div className="col-12 d-flex align-items-center justify-content-between">
+                    <div className="d-flex align-items-center">
+                      <div
+                        style={{ width: "40px", height: "40px" }}
+                        className="d-flex me-3"
+                      >
+                        <img
+                          src="/assets/images/ds3.jpg"
+                          style={{ objectFit: "contain", width: "100%" }}
+                        />
+                      </div>
+                      <div>
+                        <div>
+                          <label className="fw-bold">New Apartment</label>
+                        </div>
+                        <div>North East UK</div>
+                      </div>
+                    </div>
+                    <div>
+                      <Tag color="green">$5000</Tag>
+                    </div>
+                  </div>{" "}
+                  <div
+                    className="col-12 my-3"
+                    style={{ borderBottom: "1px dashed lightgrey" }}
+                  ></div>
+                  <div className="col-12 d-flex align-items-center justify-content-between">
+                    <div className="d-flex align-items-center">
+                      <div
+                        style={{ width: "40px", height: "40px" }}
+                        className="d-flex me-3"
+                      >
+                        <img
+                          src="/assets/images/bath1.jpg"
+                          style={{ objectFit: "contain", width: "100%" }}
+                        />
+                      </div>
+                      <div>
+                        <div>
+                          <label className="fw-bold">New Apartment</label>
+                        </div>
+                        <div>North East UK</div>
+                      </div>
+                    </div>
+                    <div>
+                      <Tag color="green">$5000</Tag>
+                    </div>
+                  </div>
+                  <div
+                    className="col-12 my-3"
+                    style={{ borderBottom: "1px dashed lightgrey" }}
+                  ></div>{" "}
+                </>
+              ) : (
+                <div className="text-center">
+                  <img
+                    src="/assets/images/no-data.png"
+                    style={{ width: "200px" }}
+                  />
+                  <div className="mt-5">
+                    <label>
+                      After your properties will sale , you can find your
+                      lattest sale properties here...
+                    </label>
+                  </div>
+                  <div className="mt-3">
+                    <button
+                      className="btn btn-sm btn-primary"
+                      onClick={() => {
+                        navigate("/profile/add-property");
+                      }}
+                    >
+                      Add Properties
+                    </button>
+                  </div>
                 </div>
-                <div className="mt-3">
-                  <button
-                    className="btn btn-sm btn-primary"
-                    onClick={() => {
-                      navigate("/profile/add-property");
-                    }}
-                  >
-                    Add Properties
-                  </button>
-                </div>
-              </div>
+              )}
+
               {/* below design is for found lattest sale properties  only display lattst 5 properties ( filter using sale by date )*/}
-              {/* <div className="col-12 d-flex align-items-center justify-content-between mt-3">
-                <div className="d-flex align-items-center">
-                  <div
-                    style={{ width: "40px", height: "40px" }}
-                    className="d-flex me-3"
-                  >
-                    <img
-                      src="/assets/images/ds1.jpeg"
-                      style={{ objectFit: "contain", width: "100%" }}
-                    />
-                  </div>
-                  <div>
-                    <div>
-                      <label className="fw-bold">New Apartment</label>
-                    </div>
-                    <div>North East UK</div>
-                  </div>
-                </div>
-                <div>
-                  <Tag color="green">$5000</Tag>
-                </div>
-              </div>
-              <div
-                className="col-12 my-3"
-                style={{ borderBottom: "1px dashed lightgrey" }}
-              ></div>
-              <div className="col-12 d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <div
-                    style={{ width: "40px", height: "40px" }}
-                    className="d-flex me-3"
-                  >
-                    <img
-                      src="/assets/images/ds5.jpg"
-                      style={{ objectFit: "contain", width: "100%" }}
-                    />
-                  </div>
-                  <div>
-                    <div>
-                      <label className="fw-bold">New Apartment</label>
-                    </div>
-                    <div>North East UK</div>
-                  </div>
-                </div>
-                <div>
-                  <Tag color="green">$5000</Tag>
-                </div>
-              </div>{" "}
-              <div
-                className="col-12 my-3"
-                style={{ borderBottom: "1px dashed lightgrey" }}
-              ></div>
-              <div className="col-12 d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <div
-                    style={{ width: "40px", height: "40px" }}
-                    className="d-flex me-3"
-                  >
-                    <img
-                      src="/assets/images/ds3.jpg"
-                      style={{ objectFit: "contain", width: "100%" }}
-                    />
-                  </div>
-                  <div>
-                    <div>
-                      <label className="fw-bold">New Apartment</label>
-                    </div>
-                    <div>North East UK</div>
-                  </div>
-                </div>
-                <div>
-                  <Tag color="green">$5000</Tag>
-                </div>
-              </div>{" "}
-              <div
-                className="col-12 my-3"
-                style={{ borderBottom: "1px dashed lightgrey" }}
-              ></div>
-              <div className="col-12 d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <div
-                    style={{ width: "40px", height: "40px" }}
-                    className="d-flex me-3"
-                  >
-                    <img
-                      src="/assets/images/bath1.jpg"
-                      style={{ objectFit: "contain", width: "100%" }}
-                    />
-                  </div>
-                  <div>
-                    <div>
-                      <label className="fw-bold">New Apartment</label>
-                    </div>
-                    <div>North East UK</div>
-                  </div>
-                </div>
-                <div>
-                  <Tag color="green">$5000</Tag>
-                </div>
-              </div>
-              <div
-                className="col-12 my-3"
-                style={{ borderBottom: "1px dashed lightgrey" }}
-              ></div> */}
+              {/* */}
             </div>
           </div>
         </div>
