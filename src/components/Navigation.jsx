@@ -248,7 +248,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import logo from "../assets/icons/buildings.svg";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -256,6 +256,7 @@ import { orange } from "@mui/material/colors";
 import Logout from "./Auth/Logout";
 
 const Navigation = () => {
+  const location = useLocation();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const { isAuthenticated } = useSelector((state) => state.auth);
 
@@ -457,6 +458,10 @@ const Navigation = () => {
                   textTransform: "uppercase",
                   marginLeft: "8px",
                   textDecoration: "none",
+                  borderBottom:
+                    location?.pathname === "/"
+                      ? "2px solid #fff"
+                      : "2px solid #f07917",
                 }}
               >
                 Home

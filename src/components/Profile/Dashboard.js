@@ -1,28 +1,54 @@
-import { Box, Card, CardContent, Grid, Paper, Typography } from "@mui/material";
-import { DatePicker, Popover, Select, Table, Tag, Tooltip } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
-import moment from "moment";
+import { DatePicker, Select, Spin, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
-const { RangePicker } = DatePicker;
-const Dashboard = () => {
-  // id Pass admin@city.com
-  // Mock data (replace with actual data fetching logic)
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDashboardDataStart } from "./userSlice";
 
+const { RangePicker } = DatePicker;
+
+const Dashboard = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [city, setCity] = useState("Toronto");
-  const [series, setSeries] = useState([
+  const {
+    // series,
+    totalCommercial,
+    totalResidential,
+    pieSeries,
+    propertiesList,
+  } = useSelector((state) => state.user.dashboardData);
+
+  const series = [
     {
-      name: "Total Revenue",
+      name: "Total Profit",
+      // data: [],
       data: [50, 20, 2, 15, 67, 24, 90],
     },
     {
       name: "Sold Properties",
-      data: [10, 0, 0, 0, 0, 78, 21],
+      // data: [],
+      data: [10, 4, 2, 16, 32, 78, 21],
     },
-  ]);
-  const options = {
+  ];
+
+  // // const pieSeries = []; // Example data
+  // const pieSeries = [44, 55, 13]; // Example data
+
+  const { isLoading, error } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    console.log(series);
+  }, [series]);
+
+  const [city, setCity] = useState("toronto");
+
+  useEffect(() => {
+    dispatch(fetchDashboardDataStart());
+  }, [dispatch]);
+
+  // Example options for ApexCharts
+  const optionsAreaChart = {
     chart: {
       type: "area",
       height: 350,
@@ -43,13 +69,11 @@ const Dashboard = () => {
       offsetX: 0,
       offsetY: 0,
     },
-
     colors: ["#1976d2", "#f07917"],
-
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
   };
-  const pieSeries = [44, 55, 13];
-  const pieChartOptions = {
+
+  const optionsPieChart = {
     chart: {
       width: 380,
       type: "pie",
@@ -87,7 +111,6 @@ const Dashboard = () => {
             borderBottom: "1px dashed grey",
             display: "flex",
             padding: "9px",
-            // borderRadius: "6px",
           }}
         >
           <div style={{ width: "250px" }}>
@@ -99,293 +122,211 @@ const Dashboard = () => {
               size="large"
               placeholder="Select City"
               value={city}
-              onChange={(e) => {
-                setCity(e);
-                // Make api call when city change
+              onChange={(value) => {
+                setCity(value);
+                dispatch(fetchDashboardDataStart(value));
               }}
               options={[
-                { label: "Ahmedabad", value: "ahmedabad" },
-                { label: "Surat", value: "surat" },
-                { label: "Baroda", value: "baroda" },
+                { label: "Toronto", value: "toronto" },
+                { label: "Vancouver", value: "vancouver" },
+                { label: "Ottawa", value: "ottawa" },
               ]}
             />
           </div>
         </div>
-        <div className="row mt-3">
-          <div className="col-12 col-md-6 col-lg-4 mt-2">
-            <div
-              style={{
-                border: "1px solid #c89851",
-                display: "flex",
-                alignItems: "center",
-                borderRadius: "6px",
-                background: "#f8f2e8",
-              }}
-              className="p-2"
-            >
-              <div className="me-2">
-                <img
-                  src="/assets/images/residential.png"
-                  style={{ width: "30px" }}
-                />
-              </div>
-              <div>
-                <div>
-                  <label style={{ fontWeight: "bold" }}>Total Commercial</label>
-                </div>
-                {/* add you state with total Commercial key insted of 200 m if key have null or "" value then 0 will be set automatically and saame for all 2 header card */}
-                <div>{"200" || 0}</div>
-              </div>
-            </div>
+        {isLoading ? (
+          <div className="text-center mt-5">
+            <Spin size="large" />
+            <p>Loading...</p>
           </div>
-          <div className="col-12 col-md-6 col-lg-4 mt-2">
-            <div
-              style={{
-                border: "1px solid #5c5cf5",
-                display: "flex",
-                alignItems: "center",
-                borderRadius: "6px",
-                background: "#e3e3ff",
-              }}
-              className="p-2"
-            >
-              <div className="me-2">
-                <img src="/assets/images/house.png" style={{ width: "30px" }} />
-              </div>
-              <div>
-                <div>
-                  <label style={{ fontWeight: "bold" }}>
-                    Total Residential
-                  </label>
+        ) : (
+          <>
+            {/* Example of area chart */}
+            <div className="row mt-3">
+              <div className="col-12 col-md-6 col-lg-4 mt-2">
+                <div
+                  style={{
+                    border: "1px solid #c89851",
+                    display: "flex",
+                    alignItems: "center",
+                    borderRadius: "6px",
+                    background: "#f8f2e8",
+                  }}
+                  className="p-2"
+                >
+                  <div className="me-2">
+                    <img
+                      src="/assets/images/residential.png"
+                      style={{ width: "30px" }}
+                      alt="Residential"
+                    />
+                  </div>
+                  <div>
+                    <div>
+                      <label style={{ fontWeight: "bold" }}>
+                        Total Commercial
+                      </label>
+                    </div>
+                    <div>{totalCommercial || 0}</div>
+                  </div>
                 </div>
-                <div>{"200" || 0}</div>
+              </div>
+              <div className="col-12 col-md-6 col-lg-4 mt-2">
+                <div
+                  style={{
+                    border: "1px solid #5c5cf5",
+                    display: "flex",
+                    alignItems: "center",
+                    borderRadius: "6px",
+                    background: "#e3e3ff",
+                  }}
+                  className="p-2"
+                >
+                  <div className="me-2">
+                    <img
+                      src="/assets/images/house.png"
+                      style={{ width: "30px" }}
+                      alt="House"
+                    />
+                  </div>
+                  <div>
+                    <div>
+                      <label style={{ fontWeight: "bold" }}>
+                        Total Residential
+                      </label>
+                    </div>
+                    <div>{totalResidential || 0}</div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          {/* <div className="col-12 col-md-6 col-lg-4 mt-2">
-            <div
-              style={{
-                border: "1px solid #4aad4a",
-                display: "flex",
-                alignItems: "center",
-                borderRadius: "6px",
-                background: "#d9ecd9",
-              }}
-              className="p-2"
-            >
-              <div className="me-2">
-                <img src="/assets/images/land.png" style={{ width: "30px" }} />
-              </div>
-              <div>
-                <div>
-                  <label style={{ fontWeight: "bold" }}>Total Land</label>
+            {/* Area Chart */}
+            {series.length > 0 ? (
+              <div className="row px-0 mx-0 mt-4">
+                <div
+                  className="col-12 "
+                  style={{
+                    border: "1px solid #cbcbcb",
+                    background: "#f3f3f3",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <div className="row mt-3 mx-0 px-0">
+                    <div
+                      className="col-12 p-3"
+                      style={{ borderBottom: "1px dashed grey" }}
+                    >
+                      <label style={{ fontWeight: "bold" }}>
+                        Booking Status
+                      </label>
+                    </div>
+                    <div className="col-12">
+                      <Chart
+                        options={{ ...optionsAreaChart }}
+                        series={[...series]} // Ensure series is a new array to avoid mutation
+                        type="area"
+                        height={350}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>{"200" || 0}</div>
               </div>
-            </div>
-          </div> */}
-        </div>
-        <div className="row px-0 mx-0 mt-4">
-          <div
-            className="col-12 "
-            style={{
-              border: "1px solid #cbcbcb",
-              background: "#f3f3f3",
-              borderRadius: "6px",
-            }}
-          >
-            {" "}
-            <div className="row mt-3 mx-0 px-0">
+            ) : (
+              <div className="text-center mt-3">
+                <p>No data available for area chart</p>
+              </div>
+            )}
+
+            {/* Pie Chart */}
+            <div className="row px-0 mx-0 mt-4">
               <div
-                className="col-12 p-3"
-                style={{ borderBottom: "1px dashed grey" }}
+                className="col-12 col-lg-6"
+                style={{
+                  border: "1px solid #cbcbcb",
+                  background: "#f3f3f3",
+                  borderRadius: "6px",
+                }}
               >
-                <label style={{ fontWeight: "bold" }}>Booking Status</label>
+                <div className="row mt-3 mx-0 px-0">
+                  <div
+                    className="col-12 p-3"
+                    style={{ borderBottom: "1px dashed grey" }}
+                  >
+                    <label style={{ fontWeight: "bold" }}>Booking Status</label>
+                  </div>
+                  <div className="col-12">
+                    {pieSeries.length > 0 ? (
+                      <Chart
+                        options={{ ...optionsPieChart }}
+                        series={[...pieSeries]} // Ensure pieSeries is a new array to avoid mutation
+                        type="pie"
+                        height={350}
+                      />
+                    ) : (
+                      <div className="text-center mt-3">
+                        <p>No data available for pie chart</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="col-12">
-                <Chart
-                  options={options}
-                  series={series}
-                  type="area"
-                  height={350}
-                />
+              {/* Latest Sales */}
+              <div className="col-12 col-lg-6">
+                <div className="row mx-0 px-0">
+                  <div
+                    className="col-12 p-3"
+                    style={{ borderBottom: "1px dashed grey" }}
+                  >
+                    <label style={{ fontWeight: "bold" }}>Latest Sales</label>
+                  </div>
+                  {propertiesList?.length > 0 ? (
+                    propertiesList.slice(0, 5).map((property, index) => (
+                      <div key={index} className="col-12">
+                        <div className="d-flex align-items-center justify-content-between mt-3">
+                          <div>
+                            <div>
+                              <label className="fw-bold">
+                                {property.title}
+                              </label>
+                            </div>
+                            <div>{property.location}</div>
+                          </div>
+                          <div>
+                            <Tag color="green">${property.price}</Tag>
+                          </div>
+                        </div>
+                        {index < propertiesList.length - 1 && (
+                          <div
+                            className="col-12 my-3"
+                            style={{ borderBottom: "1px dashed lightgrey" }}
+                          ></div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center mt-3">
+                      <p>No latest sales data available</p>
+                      <img
+                        src="/assets/images/no-data.png"
+                        style={{ width: "200px" }}
+                        alt="No Data"
+                      />
+                      <div className="mt-3">
+                        <button
+                          className="btn btn-sm btn-primary"
+                          onClick={() => navigate("/profile/add-property")}
+                        >
+                          Add Properties
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="row px-0 mx-0 mt-4">
-          <div
-            className="col-12 col-lg-6"
-            style={{
-              border: "1px solid #cbcbcb",
-              background: "#f3f3f3",
-              borderRadius: "6px",
-            }}
-          >
-            <div className="row mt-3 mx-0 px-0">
-              <div
-                className="col-12 p-3"
-                style={{ borderBottom: "1px dashed grey" }}
-              >
-                <label style={{ fontWeight: "bold" }}>Booking Status</label>
-              </div>
-              <div className="col-12">
-                <Chart
-                  options={pieChartOptions}
-                  series={pieSeries}
-                  type="pie"
-                  height={350}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="col-12 col-lg-6">
-            <div
-              className="row mx-0 px-0"
-              // style={{
-              //   border: "1px solid #cbcbcb",
-              //   background: "#f3f3f3",
-              //   borderRadius: "6px",
-              // }}
-            >
-              <div
-                className="col-12 p-3"
-                style={{ borderBottom: "1px dashed grey" }}
-              >
-                <label style={{ fontWeight: "bold" }}>Latest Sales</label>
-              </div>
-              <div className="text-center">
-                <img
-                  src="/assets/images/no-data.png"
-                  style={{ width: "200px" }}
-                />
-                <div className="mt-5">
-                  <label>
-                    After your properties will sale , you can find your lattest
-                    sale properties here...
-                  </label>
-                </div>
-                <div className="mt-3">
-                  <button
-                    className="btn btn-sm btn-primary"
-                    onClick={() => {
-                      navigate("/profile/add-property");
-                    }}
-                  >
-                    Add Properties
-                  </button>
-                </div>
-              </div>
-              {/* below design is for found lattest sale properties  only display lattst 5 properties ( filter using sale by date )*/}
-              {/* <div className="col-12 d-flex align-items-center justify-content-between mt-3">
-                <div className="d-flex align-items-center">
-                  <div
-                    style={{ width: "40px", height: "40px" }}
-                    className="d-flex me-3"
-                  >
-                    <img
-                      src="/assets/images/ds1.jpeg"
-                      style={{ objectFit: "contain", width: "100%" }}
-                    />
-                  </div>
-                  <div>
-                    <div>
-                      <label className="fw-bold">New Apartment</label>
-                    </div>
-                    <div>North East UK</div>
-                  </div>
-                </div>
-                <div>
-                  <Tag color="green">$5000</Tag>
-                </div>
-              </div>
-              <div
-                className="col-12 my-3"
-                style={{ borderBottom: "1px dashed lightgrey" }}
-              ></div>
-              <div className="col-12 d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <div
-                    style={{ width: "40px", height: "40px" }}
-                    className="d-flex me-3"
-                  >
-                    <img
-                      src="/assets/images/ds5.jpg"
-                      style={{ objectFit: "contain", width: "100%" }}
-                    />
-                  </div>
-                  <div>
-                    <div>
-                      <label className="fw-bold">New Apartment</label>
-                    </div>
-                    <div>North East UK</div>
-                  </div>
-                </div>
-                <div>
-                  <Tag color="green">$5000</Tag>
-                </div>
-              </div>{" "}
-              <div
-                className="col-12 my-3"
-                style={{ borderBottom: "1px dashed lightgrey" }}
-              ></div>
-              <div className="col-12 d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <div
-                    style={{ width: "40px", height: "40px" }}
-                    className="d-flex me-3"
-                  >
-                    <img
-                      src="/assets/images/ds3.jpg"
-                      style={{ objectFit: "contain", width: "100%" }}
-                    />
-                  </div>
-                  <div>
-                    <div>
-                      <label className="fw-bold">New Apartment</label>
-                    </div>
-                    <div>North East UK</div>
-                  </div>
-                </div>
-                <div>
-                  <Tag color="green">$5000</Tag>
-                </div>
-              </div>{" "}
-              <div
-                className="col-12 my-3"
-                style={{ borderBottom: "1px dashed lightgrey" }}
-              ></div>
-              <div className="col-12 d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <div
-                    style={{ width: "40px", height: "40px" }}
-                    className="d-flex me-3"
-                  >
-                    <img
-                      src="/assets/images/bath1.jpg"
-                      style={{ objectFit: "contain", width: "100%" }}
-                    />
-                  </div>
-                  <div>
-                    <div>
-                      <label className="fw-bold">New Apartment</label>
-                    </div>
-                    <div>North East UK</div>
-                  </div>
-                </div>
-                <div>
-                  <Tag color="green">$5000</Tag>
-                </div>
-              </div>
-              <div
-                className="col-12 my-3"
-                style={{ borderBottom: "1px dashed lightgrey" }}
-              ></div> */}
-            </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
-      {/* Umangi */}
     </>
   );
 };

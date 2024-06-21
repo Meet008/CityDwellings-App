@@ -18,8 +18,37 @@ import {
   Tune,
   Search as SearchIcon,
 } from "@mui/icons-material";
+import { Select } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const SearchBarForm = () => {
+  const navigate = useNavigate();
+  return (
+    <div
+      className="row mx-20"
+      style={{
+        paddingTop: "150px",
+        backgroundImage: `url("/assets/images/chicagoskyline-.jpg")`,
+        height: "300px",
+        objectFit: "contain",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
+      <div className="d-flex justify-content-center">
+        <Select
+          options={[{ label: "Ahmedabad", value: "ahmedabad" }]}
+          style={{ width: "50%" }}
+          size="large"
+          placeholder="Select City"
+          showSearch
+          onChange={(e) => {
+            navigate("/profile/dashboard");
+          }}
+        />
+      </div>
+    </div>
+  );
   return (
     <form
       style={{
