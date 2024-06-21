@@ -11,7 +11,6 @@ const initialState = {
   dashboardData: {
     totalCommercial: 0,
     totalResidential: 0,
-    totalLand: 0,
     propertiesList: [],
     series: [],
     pieSeries: [],
@@ -116,7 +115,6 @@ const userSlice = createSlice({
     },
     fetchDashboardDataStart(state, action) {
       state.isLoading = true;
-      state.error = action.payload;
     },
     fetchDashboardDataSuccess(state, action) {
       state.isLoading = false;

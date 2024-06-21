@@ -2,6 +2,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import store from "./components/App/store";
+import { Helmet } from "react-helmet";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import About from "./pages/About";
@@ -44,6 +45,21 @@ function App() {
         }}
       >
         <ThemeProvider theme={theme}>
+          <Helmet>
+            <script type="text/javascript">
+              {`
+                  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+                  (function(){
+                  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                  s1.async=true;
+                  s1.src='https://embed.tawk.to/667595679d7f358570d2014d/1i0tkv7f2';
+                  s1.charset='UTF-8';
+                  s1.setAttribute('crossorigin','*');
+                  s0.parentNode.insertBefore(s1,s0);
+                  })();
+              `}
+            </script>
+          </Helmet>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/sale" element={<Sale />} />
