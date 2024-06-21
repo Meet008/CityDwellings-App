@@ -30,17 +30,17 @@ const Sidebar = ({ isMobile, mobileOpen, handleDrawerToggle }) => {
         {[
           { text: "Dashboard", icon: <DashboardIcon />, path: "dashboard" },
           { text: "Add Property", icon: <AddBoxIcon />, path: "add-property" },
-          { text: "Message", icon: <MessageIcon />, path: "message" },
+          // { text: "Message", icon: <MessageIcon />, path: "message" },
           {
             text: "My Properties",
             icon: <HomeWorkIcon />,
             path: "my-properties",
           },
-          {
-            text: "My Favorites",
-            icon: <FavoriteIcon />,
-            path: "my-favorites",
-          },
+          // {
+          //   text: "My Favorites",
+          //   icon: <FavoriteIcon />,
+          //   path: "my-favorites",
+          // },
           { text: "Reviews", icon: <RateReviewIcon />, path: "reviews" },
           { text: "Profile", icon: <PersonIcon />, path: "userProfile" },
           { text: "Signout", icon: <ExitToAppIcon />, path: "/" },

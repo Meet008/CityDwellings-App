@@ -33,6 +33,24 @@ const theme = createTheme({
   },
 });
 
+const TawkToScript = () => (
+  <Helmet>
+    <script type="text/javascript">
+      {`
+      var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+      (function(){
+      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+      s1.async=true;
+      s1.src='https://embed.tawk.to/667595679d7f358570d2014d/1i0tkv7f2';
+      s1.charset='UTF-8';
+      s1.setAttribute('crossorigin','*');
+      s0.parentNode.insertBefore(s1,s0);
+      })();
+  `}
+    </script>
+  </Helmet>
+);
+
 function App() {
   return (
     <Provider store={store}>
@@ -45,21 +63,7 @@ function App() {
         }}
       >
         <ThemeProvider theme={theme}>
-          <Helmet>
-            <script type="text/javascript">
-              {`
-                  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-                  (function(){
-                  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-                  s1.async=true;
-                  s1.src='https://embed.tawk.to/667595679d7f358570d2014d/1i0tkv7f2';
-                  s1.charset='UTF-8';
-                  s1.setAttribute('crossorigin','*');
-                  s0.parentNode.insertBefore(s1,s0);
-                  })();
-              `}
-            </script>
-          </Helmet>
+          <TawkToScript />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/sale" element={<Sale />} />

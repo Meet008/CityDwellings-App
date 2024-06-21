@@ -12,25 +12,25 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const {
-    series,
+    // series,
     totalCommercial,
     totalResidential,
     pieSeries,
     propertiesList,
   } = useSelector((state) => state.user.dashboardData);
 
-  // const series = [
-  //   {
-  //     name: "Total Profit",
-  //     // data: [],
-  //     data: [50, 20, 2, 15, 67, 24, 90],
-  //   },
-  //   {
-  //     name: "Sold Properties",
-  //     // data: [],
-  //     data: [10, 4, 2, 16, 32, 78, 21],
-  //   },
-  // ];
+  const series = [
+    {
+      name: "Total Profit",
+      // data: [],
+      data: [50, 20, 2, 15, 67, 24, 90],
+    },
+    {
+      name: "Sold Properties",
+      // data: [],
+      data: [10, 4, 2, 16, 32, 78, 21],
+    },
+  ];
 
   // // const pieSeries = []; // Example data
   // const pieSeries = [44, 55, 13]; // Example data
@@ -41,7 +41,7 @@ const Dashboard = () => {
     console.log(series);
   }, [series]);
 
-  const [city, setCity] = useState("ahmedabad");
+  const [city, setCity] = useState("toronto");
 
   useEffect(() => {
     dispatch(fetchDashboardDataStart());
@@ -127,9 +127,9 @@ const Dashboard = () => {
                 dispatch(fetchDashboardDataStart(value));
               }}
               options={[
-                { label: "Ahmedabad", value: "ahmedabad" },
-                { label: "Surat", value: "surat" },
-                { label: "Baroda", value: "baroda" },
+                { label: "Toronto", value: "toronto" },
+                { label: "Vancouver", value: "vancouver" },
+                { label: "Ottawa", value: "ottawa" },
               ]}
             />
           </div>
