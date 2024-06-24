@@ -296,6 +296,10 @@ const Navigation = () => {
           textTransform: "uppercase",
           marginLeft: "8px",
           textDecoration: "none",
+          borderBottom:
+            location?.pathname === `/${page}`
+              ? "2px solid #fff"
+              : "2px solid #f07917",
         }}
       >
         {page === "profile" ? "Profile" : page}

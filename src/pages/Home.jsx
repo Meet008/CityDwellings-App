@@ -19,9 +19,9 @@ function Home() {
     <div>
       <Navigation />
 
-      <Box sx={{ backgroundColor: grey[100] }}>
+      {/* <Box sx={{ backgroundColor: grey[100] }}>
         <HeaderCarousel />
-      </Box>
+      </Box> */}
 
       <Box>
         <Searchbar />
