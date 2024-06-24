@@ -45,9 +45,14 @@ const Dashboard = () => {
 
   const [bookingStatusSeries, setBookingStatusSeries] = useState([]);
 
+  const deepClone = (obj) => {
+    return JSON.parse(JSON.stringify(obj));
+  };
+
   const updateBookingStatusSeries = useCallback(() => {
     console.log("Updating booking status series", series);
-    setBookingStatusSeries([...series]);
+    const clonedSeries = deepClone(series);
+    setBookingStatusSeries(clonedSeries);
   }, [series]);
 
   useEffect(() => {

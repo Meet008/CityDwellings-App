@@ -25,6 +25,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { registerRequest } from "./authSlice";
 import { useNavigate } from "react-router-dom";
+import { faker } from "@faker-js/faker";
 
 function Copyright(props) {
   return (
@@ -279,11 +280,43 @@ export default function SignUp() {
     }
   };
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/");
+  // Function to generate fake user data
+  const generateFakeUser = () => {
+    return {
+      firstname: faker.name.firstName(),
+      lastname: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+      phone: faker.phone.number(),
+      address: faker.address.streetAddress(),
+      city: faker.address.city(),
+      state: faker.address.state(),
+      zipCode: faker.address.zipCode(),
+      profilePicture: faker.image.avatar(),
+      userType: faker.helpers.arrayElement(["buyer", "seller", "agent"]),
+      preferredContactMethod: faker.helpers.arrayElement(["email", "phone"]),
+      receiveNewsletter: faker.datatype.boolean(),
+    };
+  };
+
+  // Function to handle generating and submitting fake users
+  const handleGenerateAndSubmitFakeUsers = async (numUsers) => {
+    for (let i = 0; i < numUsers; i++) {
+      const fakeUser = generateFakeUser();
+      try {
+        await dispatch(registerRequest(fakeUser));
+        console.log(`Fake user ${i + 1} added successfully`);
+      } catch (error) {
+        console.error(`Error adding fake user ${i + 1}:`, error);
+      }
     }
-  }, [isAuthenticated]);
+  };
+
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     navigate("/");
+  //   }
+  // }, [isAuthenticated]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -349,6 +382,14 @@ export default function SignUp() {
               </Grid>
             )}
           </Box>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleGenerateAndSubmitFakeUsers(10)}
+            sx={{ mt: 3 }}
+          >
+            Generate and Submit 10 Fake Users
+          </Button>
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>
