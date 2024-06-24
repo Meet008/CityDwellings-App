@@ -55,7 +55,7 @@ const PropertyPage = () => {
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <Grid spacing={3}>
+        <Grid>
           {properties.length === 0 && !isLoading && (
             <div className="text-center ">
               <div className="mb-3">

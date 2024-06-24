@@ -154,11 +154,9 @@ export default function EditProperty() {
       await dispatch(
         editPropertyRequest({ propertyId, formData: propertyData, navigate })
       );
-      toast.success("Property updated successfully");
+
       navigate(`/property/${propertyId}`);
-    } catch (error) {
-      toast.error("Failed to update property");
-    }
+    } catch (error) {}
   };
 
   return (
