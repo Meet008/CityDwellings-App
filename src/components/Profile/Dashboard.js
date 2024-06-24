@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Chart from "react-apexcharts";
 import { DatePicker, Select, Spin, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -12,40 +12,52 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const {
-    // series,
+    series = [],
     totalCommercial,
     totalResidential,
-    pieSeries,
-    propertiesList,
+    pieSeries = [],
+    propertiesList = [],
   } = useSelector((state) => state.user.dashboardData);
 
-  const series = [
-    {
-      name: "Total Profit",
-      // data: [],
-      data: [50, 20, 2, 15, 67, 24, 90],
-    },
-    {
-      name: "Sold Properties",
-      // data: [],
-      data: [10, 4, 2, 16, 32, 78, 21],
-    },
-  ];
+  // const series = [
+  //   {
+  //     name: "Total Profit",
+  //     // data: [],
+  //     data: [50, 20, 2, 15, 67, 24, 90],
+  //   },
+  //   {
+  //     name: "Sold Properties",
+  //     // data: [],
+  //     data: [10, 4, 2, 16, 32, 78, 21],
+  //   },
+  // ];
 
   // // const pieSeries = []; // Example data
   // const pieSeries = [44, 55, 13]; // Example data
 
   const { isLoading, error } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    console.log(series);
-  }, [series]);
-
   const [city, setCity] = useState("toronto");
 
   useEffect(() => {
     dispatch(fetchDashboardDataStart());
   }, [dispatch]);
+
+  const [bookingStatusSeries, setBookingStatusSeries] = useState([]);
+
+  const deepClone = (obj) => {
+    return JSON.parse(JSON.stringify(obj));
+  };
+
+  const updateBookingStatusSeries = useCallback(() => {
+    console.log("Updating booking status series", series);
+    const clonedSeries = deepClone(series);
+    setBookingStatusSeries(clonedSeries);
+  }, [series]);
+
+  useEffect(() => {
+    updateBookingStatusSeries();
+  }, [updateBookingStatusSeries]);
 
   // Example options for ApexCharts
   const optionsAreaChart = {
@@ -222,8 +234,8 @@ const Dashboard = () => {
                     </div>
                     <div className="col-12">
                       <Chart
-                        options={{ ...optionsAreaChart }}
-                        series={[...series]} // Ensure series is a new array to avoid mutation
+                        options={optionsAreaChart}
+                        series={bookingStatusSeries} // Ensure series is a new array to avoid mutation
                         type="area"
                         height={350}
                       />
