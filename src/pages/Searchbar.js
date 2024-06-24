@@ -25,27 +25,36 @@ const SearchBarForm = () => {
   const navigate = useNavigate();
   return (
     <div
-      className="row mx-20"
+      className="row mx-20 px-0"
       style={{
-        paddingTop: "150px",
-        backgroundImage: `url("/assets/images/chicagoskyline-.jpg")`,
-        height: "300px",
+        backgroundImage: `url("/assets/images/review-img.jpg")`,
+        height: "500px",
         objectFit: "contain",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
     >
-      <div className="d-flex justify-content-center">
-        <Select
-          options={[{ label: "Ahmedabad", value: "ahmedabad" }]}
-          style={{ width: "50%" }}
-          size="large"
-          placeholder="Select City"
-          showSearch
-          onChange={(e) => {
-            navigate("/profile/dashboard");
-          }}
-        />
+      <div
+        className="col-12"
+        style={{ paddingTop: "200px", background: "#00000082" }}
+      >
+        <div className="d-flex justify-content-center">
+          <Select
+            options={[
+              { label: "Ahmedabad", value: "ahmedabad" },
+              { label: "Surat", value: "surat" },
+              { label: "Rajkot", value: "rajkot" },
+              { label: "Baroda", value: "baroda" },
+            ]}
+            style={{ width: "50%" }}
+            size="large"
+            placeholder="Select City"
+            showSearch
+            onChange={(e) => {
+              navigate(`/sale`, { state: { city: e } });
+            }}
+          />
+        </div>
       </div>
     </div>
   );
