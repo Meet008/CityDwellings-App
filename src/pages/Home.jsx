@@ -23,9 +23,9 @@ function Home() {
         <HeaderCarousel />
       </Box>
 
-      <Box>
+      {/* <Box>
         <Searchbar />
-      </Box>
+      </Box> */}
 
       <Box
         sx={{

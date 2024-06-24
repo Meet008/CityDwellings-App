@@ -23,7 +23,7 @@ const drawerWidth = 240;
 
 const Sidebar = ({ isMobile, mobileOpen, handleDrawerToggle }) => {
   const drawer = (
-    <div>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <Toolbar />
       <Divider />
       <List>
@@ -73,6 +73,9 @@ const Sidebar = ({ isMobile, mobileOpen, handleDrawerToggle }) => {
           width: drawerWidth,
           backgroundColor: "#f5f5f5",
           color: "#f07917",
+          height: "100%", // Ensure drawer takes full height of its container
+          display: "flex",
+          flexDirection: "column",
         },
       }}
     >
