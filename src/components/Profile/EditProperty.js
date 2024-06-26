@@ -394,9 +394,9 @@ export default function EditProperty() {
               required
               sx={{ flexGrow: 1, mr: 2 }}
             >
-              <option value="apartments">Apartments</option>
               <option value="houses">Houses</option>
-              <option value="land">Land</option>
+              <option value="apartments">Apartments</option>
+              <option value="land">offices</option>
             </TextField>
             <TextField
               select
