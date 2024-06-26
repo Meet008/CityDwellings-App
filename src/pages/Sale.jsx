@@ -35,7 +35,7 @@ function Sale() {
   );
 
   const initialState = {
-    category: "rent",
+    category: "sale",
     city: city || "",
     state: "",
     listingType: "",
