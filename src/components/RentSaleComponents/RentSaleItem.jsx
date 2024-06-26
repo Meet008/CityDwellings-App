@@ -5,6 +5,15 @@ import { orange } from "@mui/material/colors";
 import PropertyIcons from "../PropertyIcons";
 
 function RentSaleItem(props) {
+  const { itemImg } = props;
+  console.log("itemImg", itemImg);
+
+  let encodedImgUrl = null;
+  if (itemImg) {
+    const encodedFilename = encodeURIComponent(itemImg.split("/").pop());
+    encodedImgUrl = `http://localhost:5000/uploads/${encodedFilename}`;
+  }
+
   return (
     <Box>
       <Box
@@ -97,7 +106,7 @@ function RentSaleItem(props) {
             }}
           >
             <img
-              src={props.itemImg}
+              src={encodedImgUrl}
               alt="property img"
               style={{
                 height: "auto",

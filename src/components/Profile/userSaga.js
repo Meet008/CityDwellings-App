@@ -131,7 +131,7 @@ function* fetchPropertiesSaga() {
     };
     const response = yield call(
       axios.get,
-      `${API_BASE_URL}/property/all`,
+      `${API_BASE_URL}/property/user-properties`,
       config
     );
     yield put(fetchPropertiesSuccess(response.data));
