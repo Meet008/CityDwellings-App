@@ -1,28 +1,37 @@
 import React, { useState } from "react";
-
-import { DatePicker, Popover, Select, Table, Tag, Tooltip } from "antd";
-
-import Chart from "react-apexcharts";
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Chip,
+  Tooltip,
+  TablePagination,
+  useMediaQuery,
+  IconButton,
+} from "@mui/material";
+import { Info as InfoIcon } from "@mui/icons-material";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
-const { RangePicker } = DatePicker;
 
 function Reviews() {
-  const [review_list, set_review_list] = useState([
+  const [reviewList, setReviewList] = useState([
     {
       id: 29,
       user_id: 194,
-
       review: "Excellent",
       suggestion: null,
       created_at: 1717156983,
       updated_at: 1717156983,
-      user_name: "excellent ",
+      user_name: "excellent",
     },
     {
       id: 28,
       user_id: 186,
-
       review: "Average",
       suggestion: null,
       created_at: 1713049550,
@@ -32,7 +41,6 @@ function Reviews() {
     {
       id: 27,
       user_id: 182,
-
       review: "Poor",
       suggestion: null,
       created_at: 1710666750,
@@ -42,7 +50,6 @@ function Reviews() {
     {
       id: 26,
       user_id: 84,
-
       review: "Poor",
       suggestion: "absolutely nothing was working after spending £30",
       created_at: 1706906292,
@@ -52,9 +59,8 @@ function Reviews() {
     {
       id: 25,
       user_id: 92,
-
       review: "Poor",
-      suggestion: "the profit  is massively wrong for this asin\nB0CH3SRR3L",
+      suggestion: "the profit is massively wrong for this asin\nB0CH3SRR3L",
       created_at: 1699264519,
       updated_at: 1699264519,
       user_name: "Eamonn",
@@ -62,7 +68,6 @@ function Reviews() {
     {
       id: 24,
       user_id: 81,
-
       review: "Poor",
       suggestion: null,
       created_at: 1697890859,
@@ -72,7 +77,6 @@ function Reviews() {
     {
       id: 23,
       user_id: 63,
-
       review: "Poor",
       suggestion: null,
       created_at: 1694847697,
@@ -82,7 +86,6 @@ function Reviews() {
     {
       id: 22,
       user_id: 21,
-      title: "My List",
       review: "Excellent",
       suggestion: null,
       created_at: 1692458930,
@@ -92,7 +95,6 @@ function Reviews() {
     {
       id: 21,
       user_id: 43,
-
       review: "Poor",
       suggestion: null,
       created_at: 1689875225,
@@ -102,7 +104,6 @@ function Reviews() {
     {
       id: 20,
       user_id: 39,
-
       review: null,
       suggestion:
         "Hi,\nI have still facing 404 issue in this module. Can you please update this issue ASAP.",
@@ -112,111 +113,104 @@ function Reviews() {
     },
   ]);
 
-  const reviewListColorIcon = {
-    Excellent: "#52c41a",
-    Good: "#1677ff",
-    Average: "#faad14",
-    Poor: "#ff4d4f",
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const isTablet = useMediaQuery("(max-width:960px)");
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
   };
 
-  const reviewColumns = [
-    {
-      title: "Sr.No.",
-      width: 80,
-      ellipsis: true,
-      render: (_, __, i) => {
-        return <span>{1 + i}</span>;
-      },
-    },
-    {
-      title: "Date",
-      width: 220,
-      // ellipsis: true,
-      render: (text) => {
-        return (
-          <div>
-            <span>
-              {moment(new Date(text.updated_at * 1000)).format(
-                "MMM DD, YYYY hh:mm A"
-              )}
-            </span>
-          </div>
-        );
-      },
-    },
-    {
-      title: "User Name",
-      width: 200,
-      // ellipsis: true,
-      render: (text) => {
-        return <b>{text?.user_name || "N/A"}</b>;
-      },
-    },
-    {
-      title: "Feedback",
-      width: 130,
-      // ellipsis: false,
-      render: (text) => {
-        if (!text?.review) {
-          return "-";
-        }
-        return <Tag color={reviewListColor[text?.review]}>{text?.review}</Tag>;
-      },
-    },
-
-    {
-      title: "User Comment",
-      width: 600,
-      // ellipsis: false,
-      render: (text) => {
-        if (!text.suggestion) {
-          return "-";
-        }
-        return (
-          <Popover
-            placement="right"
-            title=""
-            getPopupContainer={(triger) => triger.parentNode}
-            content={
-              <div
-                style={{
-                  maxWidth: "400px",
-                  wordBreak: "break-word",
-                  minHeight: "20px",
-                  maxHeight: "100px",
-                  overflow: "auto",
-                }}
-              >
-                {text?.suggestion}
-              </div>
-            }
-            trigger="click"
-          >
-            <div className="actionIcon">{text?.suggestion}</div>
-          </Popover>
-        );
-      },
-    },
-  ];
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const reviewListColor = {
     Excellent: "success",
-    Good: "processing",
+    Good: "primary",
     Average: "warning",
     Poor: "error",
   };
 
+  const renderReviewTag = (review) => {
+    if (!review) return "-";
+    return <Chip label={review} color={reviewListColor[review]} />;
+  };
+
+  const renderSuggestion = (suggestion) => {
+    if (!suggestion) return "-";
+    if (suggestion.length > 50) {
+      return (
+        <Tooltip title={suggestion} placement="top">
+          <span>{`${suggestion.substring(0, 50)}...`}</span>
+        </Tooltip>
+      );
+    }
+    return suggestion;
+  };
+
   return (
-    <div>
-      <div className="fw-bold" style={{ marginTop: "10px" }}>
+    <Box sx={{ padding: 2 }}>
+      <Typography variant="h6" gutterBottom>
         Review List
-      </div>
-      <div className="row">
-        <div className="col-12">
-          <Table columns={reviewColumns} dataSource={review_list} />
-        </div>
-      </div>
-    </div>
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table
+          sx={{
+            minWidth: isMobile ? 300 : isTablet ? 500 : 650,
+          }}
+          aria-label="review table"
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold" }}>Sr.No.</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Date</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>User Name</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Feedback</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>User Comment</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {reviewList
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => (
+                <TableRow key={row.id}>
+                  <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+                  <TableCell>
+                    {moment(new Date(row.updated_at * 1000)).format(
+                      "MMM DD, YYYY hh:mm A"
+                    )}
+                  </TableCell>
+                  <TableCell>{row.user_name || "N/A"}</TableCell>
+                  <TableCell>{renderReviewTag(row.review)}</TableCell>
+                  <TableCell>
+                    {isMobile ? (
+                      <Tooltip title={row.suggestion} placement="top">
+                        <IconButton>
+                          <InfoIcon />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      renderSuggestion(row.suggestion)
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 15]}
+          component="div"
+          count={reviewList.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </TableContainer>
+    </Box>
   );
 }
 

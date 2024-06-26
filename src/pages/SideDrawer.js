@@ -31,9 +31,7 @@ const Sidebar = (props) => {
 
   const { open } = props;
 
-  useEffect(() => {
-    console.log(open);
-  }, [open]);
+
 
   const [profile, setProfile] = useState({
     name: "",
