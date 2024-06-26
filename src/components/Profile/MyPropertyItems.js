@@ -8,6 +8,7 @@ import {
   CardContent,
   CardMedia,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import EditIcon from "@mui/icons-material/Edit";
@@ -34,13 +35,17 @@ const MyPropertyItems = ({
     encodedImgUrl = `http://localhost:5000/uploads/${encodedFilename}`;
   }
 
+  const truncateText = (text, length) => {
+    if (text.length <= length) return text;
+    return text.substring(0, length) + "...";
+  };
+
   return (
-    <Box
+    <Card
       sx={{
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
-        marginTop: "2rem",
-        marginBottom: "3rem",
+        margin: "2rem 0",
         padding: "1rem",
         boxShadow: 3,
         borderRadius: 2,
@@ -54,31 +59,52 @@ const MyPropertyItems = ({
           alignItems: "center",
         }}
       >
+        {/* <Link
+          to={`/${itemURL}property/${itemId}`}
+          style={{ display: "flex", justifyContent: "center", width: "100%" }}
+        >
+          <CardMedia
+            component="img"
+            height="200"
+            image={encodedImgUrl}
+            alt="Property image"
+            sx={{
+              borderRadius: 2,
+              width: "100%",
+              objectFit: "cover",
+              maxHeight: { xs: "300px", md: "100%" },
+            }}
+          />
+        </Link> */}
+
         <Link
           to={`/${itemURL}property/${itemId}`}
-          style={{ display: "flex", justifyContent: "center" }}
+          style={{ display: "flex", justifyContent: "center", width: "100%" }}
         >
-          <Card sx={{ maxWidth: "100%", borderRadius: 2 }}>
-            {encodedImgUrl ? (
-              <CardMedia
-                component="img"
-                height="200"
-                image={encodedImgUrl}
-                alt="Property image"
-                sx={{ borderRadius: 2 }}
-              />
-            ) : (
-              <CardContent>
-                <Typography variant="body1">No Image Available</Typography>
-              </CardContent>
-            )}
-          </Card>
+          {encodedImgUrl ? (
+            <CardMedia
+              component="img"
+              height="200"
+              image={encodedImgUrl}
+              alt="Property image"
+              sx={{
+                borderRadius: 2,
+                width: "90%",
+                objectFit: "cover",
+                maxHeight: { xs: "300px", md: "100%" },
+              }}
+            />
+          ) : (
+            <CardContent>
+              <Typography variant="body1">No Image Available</Typography>
+            </CardContent>
+          )}
         </Link>
       </Box>
-      <Box
+      <CardContent
         sx={{
           width: { xs: "100%", md: "50%" },
-          padding: { xs: "1rem", md: "1rem 2rem" },
+          padding: { xs: "1rem", md: "2rem" },
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -94,7 +120,7 @@ const MyPropertyItems = ({
               component="h2"
               sx={{
                 fontWeight: "bold",
-                color: "black",
+                color: "text.primary",
                 textTransform: "capitalize",
               }}
             >
@@ -102,7 +128,8 @@ const MyPropertyItems = ({
             </Typography>
           </Link>
           <Typography
-            variant="h6"
+            variant="subtitle1"
+            color="text.secondary"
             sx={{ textTransform: "uppercase", marginTop: "0.3rem" }}
           >
             {itemAddress}
@@ -117,9 +144,11 @@ const MyPropertyItems = ({
           >
             ${itemPrice} per month
           </Typography>
-          <Typography variant="body1" sx={{ marginY: "1rem" }}>
-            {itemShortDescription}
-          </Typography>
+          <Tooltip title={itemShortDescription} arrow>
+            <Typography variant="body1" sx={{ marginY: "1rem" }}>
+              {truncateText(itemShortDescription, 100)}
+            </Typography>
+          </Tooltip>
           <Box
             sx={{
               display: "flex",
@@ -143,7 +172,7 @@ const MyPropertyItems = ({
           }}
         >
           <Link to={`/${itemURL}property/${itemId}`}>
-            <Button variant="contained" color="warning" size="large">
+            <Button variant="contained" color="primary" size="large">
               Full Details
             </Button>
           </Link>
@@ -151,6 +180,7 @@ const MyPropertyItems = ({
             <IconButton
               color="primary"
               onClick={() => handleEditProperty(itemId)}
+              sx={{ marginRight: 1 }}
             >
               <EditIcon />
             </IconButton>
@@ -162,8 +192,8 @@ const MyPropertyItems = ({
             </IconButton>
           </Box>
         </Box>
-      </Box>
-    </Box>
+      </CardContent>
+    </Card>
   );
 };
 

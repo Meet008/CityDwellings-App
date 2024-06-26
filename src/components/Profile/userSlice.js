@@ -59,7 +59,6 @@ const userSlice = createSlice({
     fetchPropertiesRequest: (state) => {
       state.isLoading = true;
       state.error = null;
-      state.properties = [];
     },
     fetchPropertiesSuccess: (state, action) => {
       state.isLoading = false;

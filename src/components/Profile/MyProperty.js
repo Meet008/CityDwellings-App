@@ -62,6 +62,7 @@ const PropertyPage = () => {
                 <img
                   src="/assets/images/no-data.png"
                   style={{ width: "200px" }}
+                  alt="No Data Found"
                 />
               </div>
               <label>No Properties Found</label>

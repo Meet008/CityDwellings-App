@@ -1,9 +1,7 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import HomeWorkIcon from "@mui/icons-material/HomeWork";
-import MessageIcon from "@mui/icons-material/Message";
 import PersonIcon from "@mui/icons-material/Person";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import {
@@ -14,6 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
+  useMediaQuery,
 } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -21,7 +20,9 @@ import Logout from "../Auth/Logout";
 
 const drawerWidth = 240;
 
-const Sidebar = ({ isMobile, mobileOpen, handleDrawerToggle }) => {
+const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
   const drawer = (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <Toolbar />
@@ -73,7 +74,7 @@ const Sidebar = ({ isMobile, mobileOpen, handleDrawerToggle }) => {
           width: drawerWidth,
           backgroundColor: "#f5f5f5",
           color: "#f07917",
-          height: "100%", // Ensure drawer takes full height of its container
+          height: "100%",
           display: "flex",
           flexDirection: "column",
         },
