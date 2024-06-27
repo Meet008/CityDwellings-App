@@ -5,6 +5,7 @@ const initialState = {
   error: null,
   properties: [],
   filterOptions: {},
+  property: null,
 };
 
 const RentSaleSlice = createSlice({
@@ -34,6 +35,18 @@ const RentSaleSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    fetchPropertyByIdRequest: (state, action) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    fetchPropertyByIdSuccess: (state, action) => {
+      state.property = action.payload;
+      state.isLoading = false;
+    },
+    fetchPropertyByIdFailure: (state, action) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
   },
 });
 
@@ -44,6 +57,9 @@ export const {
   fetchFilterOptionsRequest,
   fetchFilterOptionsSuccess,
   fetchFilterOptionsFailure,
+  fetchPropertyByIdRequest,
+  fetchPropertyByIdSuccess,
+  fetchPropertyByIdFailure,
 } = RentSaleSlice.actions;
 
 export default RentSaleSlice.reducer;
