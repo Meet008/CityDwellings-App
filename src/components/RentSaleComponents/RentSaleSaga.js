@@ -9,6 +9,9 @@ import {
   fetchFilterOptionsRequest,
   fetchFilterOptionsSuccess,
   fetchFilterOptionsFailure,
+  fetchPropertyByIdRequest,
+  fetchPropertyByIdSuccess,
+  fetchPropertyByIdFailure,
 } from "./RentSaleSlice";
 import { toast } from "react-toastify";
 
@@ -77,7 +80,40 @@ function* fetchFilterOptionsSaga() {
   }
 }
 
+function* fetchPropertyByIdSaga(action) {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
+
+    const { id } = action.payload;
+
+    const response = yield call(
+      axios.get,
+      `${API_BASE_URL}/property/${id}`,
+      config
+    );
+
+    yield put(fetchPropertyByIdSuccess(response.data));
+  } catch (error) {
+    console.error("Fetch property by ID error:", error.response);
+
+    if (error.response && error.response.data) {
+      yield put(fetchPropertyByIdFailure(error.response.data));
+      toast.error(error.response.data);
+    } else {
+      yield put(fetchPropertyByIdFailure("Server error"));
+      toast.error("Failed to fetch property details. Please try again.");
+    }
+  }
+}
+
 export default function* watchFetchProperties() {
   yield takeLatest(fetchPropertiesRequest.type, fetchPropertiesSaga);
   yield takeLatest(fetchFilterOptionsRequest.type, fetchFilterOptionsSaga);
+  yield takeLatest(fetchPropertyByIdRequest.type, fetchPropertyByIdSaga);
 }

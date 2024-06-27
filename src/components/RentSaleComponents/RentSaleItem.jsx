@@ -6,7 +6,6 @@ import PropertyIcons from "../PropertyIcons";
 
 function RentSaleItem(props) {
   const { itemImg } = props;
-  console.log("itemImg", itemImg);
 
   let encodedImgUrl = null;
   if (itemImg) {

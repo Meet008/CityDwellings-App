@@ -277,7 +277,7 @@ function Sale() {
             />
           ))
         )}
-        {/* {saleItems.map((item) => (
+        {saleItems.map((item) => (
           <SaleItem
             key={item.id}
             id={item.id}
@@ -290,7 +290,7 @@ function Sale() {
             livingrooms={item.livingrooms}
             img={item.image1}
           />
-        ))} */}
+        ))}
       </Container>
       <Footer />
     </div>
