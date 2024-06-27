@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -18,11 +18,17 @@ import {
   Tune,
   Search as SearchIcon,
 } from "@mui/icons-material";
-import { Select } from "antd";
+import { Select, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const SearchBarForm = () => {
   const navigate = useNavigate();
+  const [all_filter, set_all_filter] = useState({
+    city: null,
+    type: "Residential",
+    priceMax: "",
+    beds: null,
+  });
   return (
     <div
       className="row mx-20 px-0"
@@ -35,25 +41,94 @@ const SearchBarForm = () => {
       }}
     >
       <div
-        className="col-12"
+        className="col-12 d-flex justify-content-center"
         style={{ paddingTop: "200px", background: "#00000082" }}
       >
-        <div className="d-flex justify-content-center">
-          <Select
-            options={[
-              { label: "Ahmedabad", value: "ahmedabad" },
-              { label: "Surat", value: "surat" },
-              { label: "Rajkot", value: "rajkot" },
-              { label: "Baroda", value: "baroda" },
-            ]}
-            style={{ width: "50%" }}
-            size="large"
-            placeholder="Select City"
-            showSearch
-            onChange={(e) => {
-              navigate(`/sale`, { state: { city: e } });
-            }}
-          />
+        <div className="searchBarCustom">
+          <div style={{ background: "#00000082", padding: "16px 22px" }}>
+            <div>
+              <Select
+                options={[
+                  { label: "Ahmedabad", value: "ahmedabad" },
+                  { label: "Surat", value: "surat" },
+                  { label: "Rajkot", value: "rajkot" },
+                  { label: "Baroda", value: "baroda" },
+                ]}
+                style={{ width: "100%" }}
+                size="large"
+                value={all_filter?.city}
+                placeholder="Select City"
+                showSearch
+                allowClear
+                onChange={(e) => {
+                  set_all_filter({ ...all_filter, city: e });
+                }}
+              />
+            </div>
+            <div className="d-flex mt-3">
+              <Select
+                options={[
+                  { label: "Residential", value: "residential" },
+                  { label: "Commercial", value: "commercial" },
+                ]}
+                className="me-3"
+                style={{ width: "30%" }}
+                size="large"
+                placeholder="Select Type"
+                showSearch
+                allowClear
+                value={all_filter?.type}
+                onChange={(e) => {
+                  set_all_filter({ ...all_filter, type: e });
+                }}
+              />
+              <Select
+                options={[
+                  { label: "1", value: "1" },
+                  { label: "2", value: "2" },
+                  { label: "3", value: "3" },
+                  { label: "4", value: "4" },
+                  { label: "5", value: "5" },
+                ]}
+                className="me-3"
+                style={{ width: "30%" }}
+                size="large"
+                placeholder="Select Beds"
+                showSearch
+                allowClear
+                value={all_filter?.beds}
+                onChange={(e) => {
+                  set_all_filter({ ...all_filter, beds: e });
+                }}
+              />{" "}
+              <Input
+                className="me-3"
+                style={{ width: "30%" }}
+                size="large"
+                placeholder="Enter priceMax"
+                value={all_filter?.priceMax}
+                onChange={(e) => {
+                  set_all_filter({ ...all_filter, priceMax: e.target.value });
+                }}
+              />
+              <div>
+                <img
+                  src="/assets/images/search.png"
+                  style={{ width: "42px" }}
+                  onClick={() => {
+                    navigate("/sale", {
+                      state: {
+                        city: all_filter?.city,
+                        type: all_filter?.type,
+                        priceMax: all_filter?.priceMax,
+                        beds: all_filter?.beds,
+                      },
+                    });
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
