@@ -24,10 +24,11 @@ import SecondHeader from "../components/SecondHeader";
 import SaleHeaderImg from "../assets/images/sale-header-img.jpg";
 import Footer from "../components/Footer";
 import saleItems from "../assets/saleItems";
+import { Skeleton } from "antd";
 
 function Sale() {
   const location = useLocation();
-  const { city } = location.state || {};
+  const { city, type } = location.state || {};
 
   const dispatch = useDispatch();
   const { properties, isLoading, filterOptions } = useSelector(
@@ -46,8 +47,10 @@ function Sale() {
     furnished: "",
     parking: "",
     yearBuilt: "",
+    type: "",
   };
   const [filters, setFilters] = useState(initialState);
+  const [isOpenOtherFilter, setIsOpenOtherFilter] = useState(false);
 
   useEffect(() => {
     dispatch(fetchFilterOptionsRequest());
@@ -66,6 +69,10 @@ function Sale() {
     return text.substring(0, length) + "...";
   };
 
+  const [numOfRowsForSkeleton, setNumOfRowsForSkeleton] = useState([
+    1, 2, 3, 4,
+  ]);
+
   return (
     <div>
       <Navigation />
@@ -74,8 +81,258 @@ function Sale() {
         img={SaleHeaderImg}
         imgPosition="bottom"
       />
+
       <Container sx={{ marginTop: 4, marginBottom: 4 }}>
-        <Paper elevation={3} sx={{ padding: 3, marginBottom: 4 }}>
+        <div
+          className="row mb-4 mx-0 px-0"
+          style={{
+            padding: "18px",
+            background: "#00000014",
+            borderRadius: "7px",
+            // border: "1px dashed #f07917",
+            // boxShadow: "0px 0px 20px -10px #ed6c02",
+          }}
+        >
+          <div className="col-12  my-2">
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Select City</InputLabel>
+              <Select
+                name="city"
+                value={filters.city}
+                onChange={handleFilterChange}
+                label="Select City"
+              >
+                {filterOptions.cities?.map((city) => (
+                  <MenuItem key={city} value={city}>
+                    {city}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="col-6 col-md-3 col-lg-2 my-2">
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Transaction</InputLabel>
+              <Select
+                name="listingType"
+                value={filters.listingType}
+                onChange={handleFilterChange}
+                label="Transaction"
+              >
+                {filterOptions.listingTypes?.map((type) => (
+                  <MenuItem key={type} value={type}>
+                    {type}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="col-6 col-md-3 col-lg-2 my-2">
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Bedrooms</InputLabel>
+              <Select
+                name="bedrooms"
+                value={filters.bedrooms}
+                onChange={handleFilterChange}
+                label="Bedrooms"
+              >
+                <MenuItem value="">Any</MenuItem>
+                <MenuItem value="1">1</MenuItem>
+                <MenuItem value="1+">1+</MenuItem>
+                <MenuItem value="2">2</MenuItem>
+                <MenuItem value="2+">2+</MenuItem>
+                <MenuItem value="3">3</MenuItem>
+                <MenuItem value="3+">3+</MenuItem>
+                <MenuItem value="4">4</MenuItem>
+                <MenuItem value="4+">4+</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="col-6 col-md-3 col-lg-2 my-2">
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Bathrooms</InputLabel>
+              <Select
+                name="bathrooms"
+                value={filters.bathrooms}
+                onChange={handleFilterChange}
+                label="Bathrooms"
+              >
+                <MenuItem value="">Any</MenuItem>
+                <MenuItem value="1">1</MenuItem>
+                <MenuItem value="1+">1+</MenuItem>
+                <MenuItem value="2">2</MenuItem>
+                <MenuItem value="2+">2+</MenuItem>
+                <MenuItem value="3">3</MenuItem>
+                <MenuItem value="3+">3+</MenuItem>
+                <MenuItem value="4">4</MenuItem>
+                <MenuItem value="4+">4+</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="col-6 col-md-3 col-lg-2 my-2">
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Select Type</InputLabel>
+              <Select
+                name="type"
+                value={filters.type}
+                onChange={handleFilterChange}
+                label="Select Type"
+              >
+                <MenuItem key="residential" value="residential">
+                  Residential
+                </MenuItem>
+                <MenuItem key="residential" value="residential">
+                  Commercial
+                </MenuItem>
+                {/* {filterOptions.type?.map((type) => (
+                    <MenuItem key={type} value={type}>
+                      {type}
+                    </MenuItem>
+                  ))} */}
+              </Select>
+            </FormControl>
+          </div>
+          {isOpenOtherFilter && (
+            <>
+              {" "}
+              <div className="col-6 col-md-2 col-lg-2 my-2 fadeContentDiv">
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel>Furnished?</InputLabel>
+                  <Select
+                    name="furnished"
+                    value={filters.furnished}
+                    onChange={handleFilterChange}
+                    label="Furnished?"
+                  >
+                    <MenuItem value="true">Yes</MenuItem>
+                    <MenuItem value="false">No</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="col-6 col-md-3 col-lg-2 my-2 fadeContentDiv">
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel>Parking?</InputLabel>
+                  <Select
+                    name="parking"
+                    value={filters.parking}
+                    onChange={handleFilterChange}
+                    label="Parking?"
+                  >
+                    <MenuItem value="true">Yes</MenuItem>
+                    <MenuItem value="false">No</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="col-6 col-md-3 col-lg-2 my-2 fadeContentDiv">
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel>Year Built</InputLabel>
+                  <Select
+                    name="yearBuilt"
+                    value={filters.yearBuilt}
+                    onChange={handleFilterChange}
+                    label="Year Built"
+                  >
+                    {filterOptions.yearsBuilt?.map((year) => (
+                      <MenuItem key={year} value={year}>
+                        {year}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="col-6 col-md-3 col-lg-2 my-2 fadeContentDiv">
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel>Min Price</InputLabel>
+                  <Select
+                    name="priceMin"
+                    value={filters.priceMin}
+                    onChange={handleFilterChange}
+                    label="Min Price"
+                  >
+                    <MenuItem value="">Any</MenuItem>
+                    <MenuItem value="0">0</MenuItem>
+                    <MenuItem value="25000">25,000</MenuItem>
+                    <MenuItem value="50000">50,000</MenuItem>
+                    <MenuItem value="75000">75,000</MenuItem>
+                    <MenuItem value="100000">100,000</MenuItem>
+                    <MenuItem value="125000">125,000</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="col-6 col-md-3 col-lg-2 my-2 fadeContentDiv">
+                <FormControl fullWidth variant="outlined">
+                  <InputLabel>Max Price</InputLabel>
+                  <Select
+                    name="priceMax"
+                    value={filters.priceMax}
+                    onChange={handleFilterChange}
+                    label="Max Price"
+                  >
+                    <MenuItem value="">Any</MenuItem>
+                    <MenuItem value="25000">25,000</MenuItem>
+                    <MenuItem value="50000">50,000</MenuItem>
+                    <MenuItem value="75000">75,000</MenuItem>
+                    <MenuItem value="100000">100,000</MenuItem>
+                    <MenuItem value="125000">125,000</MenuItem>
+                    <MenuItem value="9999999">Above 125,000</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+            </>
+          )}
+
+          <div className="col-12 col-md-5 col-lg-4 my-2 d-flex align-items-center">
+            <div className="d-flex">
+              {" "}
+              <div
+                className="me-2"
+                onClick={() => setIsOpenOtherFilter(!isOpenOtherFilter)}
+              >
+                {" "}
+                <Button
+                  variant="contained"
+                  color="warning"
+                  onClick={() => setFilters(initialState)}
+                >
+                  {/* <img
+                    src="/assets/images/down-arrow.png"
+                    style={{
+                      width: "30px",
+                      transform: isOpenOtherFilter ? "rotate(179deg)" : "",
+                    }}
+                    className="me-2"
+                  />{" "} */}
+                  More Filters
+                </Button>
+              </div>
+              <div>
+                <img
+                  src="/assets/images/search.png"
+                  style={{ width: "42px" }}
+                  className="me-2"
+                  onClick={() => {
+                    setFilters({ ...filters });
+                  }}
+                />
+              </div>
+              <div
+                className="text-center"
+                onClick={() => setFilters(initialState)}
+              >
+                <img
+                  src="/assets/images/refreshing.png"
+                  style={{ width: "42px", transform: "rotate(253deg)" }}
+                  className="me-2"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          style={{ borderBottom: "1px dashed #bdbdbd" }}
+          className="my-3"
+        ></div>
+        {/* <Paper elevation={3} sx={{ padding: 3, marginBottom: 4 }}>
           <Typography variant="h5" gutterBottom>
             Refine Your Search
           </Typography>
@@ -202,7 +459,7 @@ function Sale() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <Grid container spacing={2} alignItems="center">
                 <Grid item xs={6}>
                   <FormControl fullWidth variant="outlined">
@@ -244,7 +501,25 @@ function Sale() {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} md={6} sx={{ textAlign: "right" }}>
+            <Grid item xs={12} sm={6} md={2}>
+              <FormControl fullWidth variant="outlined">
+                <InputLabel>Select Type</InputLabel>
+                <Select
+                  name="type"
+                  value={filters.type}
+                  onChange={handleFilterChange}
+                  label="Select Type"
+                >
+                  <MenuItem key="residential" value="residential">
+                    Residential
+                  </MenuItem>
+                  <MenuItem key="residential" value="residential">
+                    Commercial
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
               <Button
                 variant="contained"
                 color="primary"
@@ -252,13 +527,61 @@ function Sale() {
               >
                 Reset Filters
               </Button>
+              <img src="/assets/images/search.png" style={{ width: "42px" }} />
             </Grid>
           </Grid>
-        </Paper>
+        </Paper> */}
+        <div className="row d-flex align-items-center justify-content-center mb-3">
+          <label
+            className="fw-bold"
+            style={{ fontSize: "22px", color: "#ff700d" }}
+          >
+            Properties List
+          </label>
+        </div>
         {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          properties.map((property) => (
+          <>
+            {numOfRowsForSkeleton?.map((d) => {
+              return (
+                <>
+                  {" "}
+                  <div className="row d-flex align-items-center justify-content-center">
+                    <div className="col-8">
+                      <div className="row">
+                        <div className="col-12 my-1">
+                          <Skeleton.Button active />
+                        </div>
+                        <div className="col-12 my-1">
+                          <Skeleton.Button block active />
+                        </div>
+                        <div className="col-12 my-1">
+                          <Skeleton.Button block active />
+                        </div>
+                        <div className="col-12 my-1">
+                          <Skeleton.Button block active />
+                        </div>
+                        <div className="col-6 my-1">
+                          <Skeleton.Button block active />
+                        </div>
+                        <div className="col-6 my-1 text-end">
+                          <Skeleton.Button active />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-4 d-flex align-items-center justify-content-center">
+                      <Skeleton.Image block active />
+                    </div>
+                  </div>{" "}
+                  <div
+                    style={{ borderBottom: "1px dashed #bdbdbd" }}
+                    className="my-3"
+                  ></div>
+                </>
+              );
+            })}
+          </>
+        ) : properties?.length > 0 ? (
+          properties?.map((property) => (
             <SaleItem
               key={property._id}
               id={property._id}
@@ -276,8 +599,25 @@ function Sale() {
               }
             />
           ))
+        ) : (
+          <div className="row">
+            <div className="col-12">
+              <div className="text-center mt-3">
+                <label className="fw-bold" style={{ fontSize: "20px" }}>
+                  Properties not available
+                </label>
+                <div className="mt-5">
+                  <img
+                    src="/assets/images/no-data.png"
+                    style={{ width: "300px" }}
+                    alt="No Data"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         )}
-        {saleItems.map((item) => (
+        {/* {saleItems.map((item) => (
           <SaleItem
             key={item.id}
             id={item.id}
@@ -290,7 +630,7 @@ function Sale() {
             livingrooms={item.livingrooms}
             img={item.image1}
           />
-        ))}
+        ))} */}
       </Container>
       <Footer />
     </div>
