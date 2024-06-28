@@ -1,4 +1,3 @@
-// Main.js
 import React, { useState, useEffect } from "react";
 import {
   AppBar,
@@ -12,10 +11,10 @@ import {
   Container,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 import Sidebar from "./Sidebar";
-import { Outlet } from "react-router-dom";
-
-import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { fetchProfileRequest } from "./userSlice";
 
 const MemoizedSidebar = React.memo(Sidebar);
@@ -26,15 +25,26 @@ const Main = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleDrawerToggle = React.useCallback(() => {
     setMobileOpen(!mobileOpen);
   }, [mobileOpen]);
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const shouldShowBackButton = () => {
+    const pathsWithoutBackButton = ["/", "/profile/dashboard"];
+    return !pathsWithoutBackButton.includes(location.pathname);
+  };
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchProfileRequest());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -44,6 +54,16 @@ const Main = () => {
         sx={{ zIndex: theme.zIndex.drawer + 1, backgroundColor: "#f07917" }}
       >
         <Toolbar>
+          {shouldShowBackButton() && (
+            <IconButton
+              color="inherit"
+              edge="start"
+              onClick={handleBack}
+              sx={{ mr: 2 }}
+            >
+              <ArrowBack />
+            </IconButton>
+          )}
           <IconButton
             color="inherit"
             edge="start"
