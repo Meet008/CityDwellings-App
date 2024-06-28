@@ -5,7 +5,8 @@ import { fetchPropertyByIdRequest } from "../components/RentSaleComponents/RentS
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 import RentSaleProperty from "../components/RentSaleComponents/RentSaleProperty";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
+import { Skeleton } from "antd";
 
 function RentProperty() {
   const { id } = useParams();
@@ -21,7 +22,44 @@ function RentProperty() {
       <Navigation />
 
       {isLoading ? (
-        <p>Loading...</p>
+        <Box>
+          <Container>
+            <div>
+              <div className="row ">
+                <div className="col-6 mt-2 d-flex justify-content-center">
+                  <Skeleton.Image size="large" active block />
+                </div>{" "}
+                <div className="col-6">
+                  <div className="mt-2">
+                    <Skeleton.Button size="large" active block />
+                  </div>{" "}
+                  <div className="mt-2">
+                    <Skeleton.Button size="large" active block />
+                  </div>{" "}
+                  <div className="mt-2">
+                    <Skeleton size="large" active block />
+                  </div>
+                </div>
+              </div>{" "}
+              <div className="row mt-5">
+                <div className="col-6 mt-2 d-flex justify-content-center">
+                  <Skeleton.Image size="large" active block />
+                </div>{" "}
+                <div className="col-6">
+                  <div className="mt-2">
+                    <Skeleton.Button size="large" active block />
+                  </div>{" "}
+                  <div className="mt-2">
+                    <Skeleton.Button size="large" active block />
+                  </div>{" "}
+                  <div className="mt-2">
+                    <Skeleton size="large" active block />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Container>
+        </Box>
       ) : (
         property && (
           <RentSaleProperty
