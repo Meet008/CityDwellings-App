@@ -86,7 +86,7 @@ function RentSaleItem(props) {
             />
             <Link to={`/${props.itemURL}property/${props.itemId}`}>
               <Button variant="contained" color="warning" size="large">
-                Full details
+                Book Property
               </Button>
             </Link>
           </Box>
