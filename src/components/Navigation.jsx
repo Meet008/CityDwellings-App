@@ -248,15 +248,18 @@ import {
   MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import logo from "../assets/icons/buildings.svg";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { orange } from "@mui/material/colors";
 import Logout from "./Auth/Logout";
+import ArrowBack from "@mui/icons-material/ArrowBack";
 
 const Navigation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const { isAuthenticated } = useSelector((state) => state.auth);
 
@@ -266,6 +269,10 @@ const Navigation = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleBack = () => {
+    navigate(-1);
   };
 
   const darkTheme = createTheme({
@@ -307,6 +314,11 @@ const Navigation = () => {
     );
   };
 
+  const shouldShowBackButton = () => {
+    const pathsWithoutBackButton = ["/", "/profile/dashboard"];
+    return !pathsWithoutBackButton.includes(location.pathname);
+  };
+
   return (
     <ThemeProvider theme={darkTheme}>
       <AppBar
@@ -318,6 +330,18 @@ const Navigation = () => {
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
+            {shouldShowBackButton() && (
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="back"
+                onClick={handleBack}
+                sx={{ marginRight: 2 }}
+              >
+                <ArrowBack />
+              </IconButton>
+            )}
             <Link to="/" style={{ textDecoration: "none" }}>
               <Box sx={{ display: "flex" }}>
                 <Box

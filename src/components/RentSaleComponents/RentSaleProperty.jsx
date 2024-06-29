@@ -1,14 +1,26 @@
-import React from "react";
-// import SecondHeader from '../SecondHeader';
+import React, { useEffect, useState } from "react";
 import { Box, Container, Typography } from "@mui/material";
 import ImageGallerySlider from "../ImageGallerySlider";
 import { orange } from "@mui/material/colors";
 import PropertyIcons from "../PropertyIcons";
+import RentalForm from "./RentalForm";
+import Itour from "./Itour";
 
 function RentSaleProperty(props) {
+  const [imagesForDisplay, setImagesForDisplay] = useState([]);
+
+  useEffect(() => {
+    if (props.propertyImages && Array.isArray(props.propertyImages)) {
+      const imageUrls = props.propertyImages.map((imagePath) => {
+        const encodedFilename = encodeURIComponent(imagePath.split("/").pop());
+        return `http://localhost:5000/uploads/${encodedFilename}`;
+      });
+      setImagesForDisplay(imageUrls);
+    }
+  }, [props.propertyImages]);
+
   return (
     <Box>
-      {/* <SecondHeader title={props.propertyAddress} img={props.propertyImage}  /> */}
       <Container>
         <Box
           sx={{
@@ -22,7 +34,7 @@ function RentSaleProperty(props) {
               width: { xs: "100%", md: "60%" },
             }}
           >
-            <ImageGallerySlider images={props.propertyImages} />
+            <ImageGallerySlider images={imagesForDisplay} imageHeight="400px" />
           </Box>
           <Box
             sx={{
@@ -66,6 +78,15 @@ function RentSaleProperty(props) {
             />
           </Box>
         </Box>
+        <div
+          style={{ borderBottom: "1px dashed #bdbdbd" }}
+          className="my-3"
+        ></div>
+        {props.tourId && (
+          <Itour tourId={props.tourId} filename={"index.html"} />
+        )}
+
+        <RentalForm />
       </Container>
     </Box>
   );
