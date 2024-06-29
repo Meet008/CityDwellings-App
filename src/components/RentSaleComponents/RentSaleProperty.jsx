@@ -3,7 +3,8 @@ import { Box, Container, Typography } from "@mui/material";
 import ImageGallerySlider from "../ImageGallerySlider";
 import { orange } from "@mui/material/colors";
 import PropertyIcons from "../PropertyIcons";
-import RentalForm from "./rental-form";
+import RentalForm from "./RentalForm";
+import Itour from "./Itour";
 
 function RentSaleProperty(props) {
   const [imagesForDisplay, setImagesForDisplay] = useState([]);
@@ -81,6 +82,7 @@ function RentSaleProperty(props) {
           style={{ borderBottom: "1px dashed #bdbdbd" }}
           className="my-3"
         ></div>
+        <Itour tourId={props.tourId} filename={"index.html"} />
         <RentalForm />
       </Container>
     </Box>
