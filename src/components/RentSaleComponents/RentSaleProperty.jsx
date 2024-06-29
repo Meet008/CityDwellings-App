@@ -82,7 +82,10 @@ function RentSaleProperty(props) {
           style={{ borderBottom: "1px dashed #bdbdbd" }}
           className="my-3"
         ></div>
-        <Itour tourId={props.tourId} filename={"index.html"} />
+        {props.tourId && (
+          <Itour tourId={props.tourId} filename={"index.html"} />
+        )}
+
         <RentalForm />
       </Container>
     </Box>
