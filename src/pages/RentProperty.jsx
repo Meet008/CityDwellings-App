@@ -71,6 +71,7 @@ function RentProperty() {
             propertyBedrooms={property.bedrooms}
             propertyBathrooms={property.bathrooms}
             propertyLivingrooms={property.livingrooms || 1}
+            tourId={property.tourId}
           />
         )
       )}
