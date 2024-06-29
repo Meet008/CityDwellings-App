@@ -22,8 +22,8 @@ import {
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { addPropertyRequest } from "./userSlice";
-
 import { faker } from "@faker-js/faker";
+import api from "../../api";
 
 const generateFakeData = () => {
   return {
@@ -50,37 +50,36 @@ const generateFakeData = () => {
       max: new Date().getFullYear(),
     }),
     images: [], // This will remain empty as we are not generating fake images here
+    hasTour: false,
+    tourFile: null,
+    tourId: null,
   };
 };
+
+const generateFakePayment = () => {
+  return {
+    cardNumber: faker.finance.creditCardNumber(),
+    expirationDate: `${faker.datatype
+      .number({ min: 1, max: 12 })
+      .toString()
+      .padStart(2, "0")}/${faker.datatype.number({ min: 22, max: 30 })}`,
+    cvv: faker.finance.creditCardCVV(),
+  };
+};
+
 const AddProperty = () => {
   const fileRef = useRef(null);
+  const tourFileRef = useRef(null);
   const { isLoading, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [imagesForDisplay, setImagesForDisplay] = useState([]);
-  // const [formValues, setFormValues] = useState({
-  //   title: "",
-  //   description: "",
-  //   address: "",
-  //   city: "",
-  //   state: "",
-  //   postalCode: "",
-  //   listingType: "apartments",
-  //   category: "rent",
-  //   price: 70,
-  //   bedrooms: 1,
-  //   bathrooms: 1,
-  //   furnished: false,
-  //   parking: false,
-  //   area: 50,
-  //   yearBuilt: 2020,
-  //   images: [],
-  // });
 
   const [formValues, setFormValues] = useState(generateFakeData());
 
   const [formErrors, setFormErrors] = useState({});
+  const [cardDetails, setCardDetails] = useState(generateFakePayment());
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
 
@@ -103,6 +102,14 @@ const AddProperty = () => {
       URL.createObjectURL(image)
     );
     setImagesForDisplay(imagePreviews);
+  };
+
+  const handleTourFileChange = (e) => {
+    const tourFile = e.target.files[0];
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      tourFile: tourFile,
+    }));
   };
 
   const handleRemoveImage = (index) => {
@@ -142,7 +149,22 @@ const AddProperty = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const uploadTour = async (tourFile) => {
+    const tourData = new FormData();
+
+    tourData.append("name", tourFile.name);
+    tourData.append("description", formValues.title);
+    tourData.append("tourFile", tourFile);
+
+    try {
+      const res = await api.post("tours/tours", tourData);
+      return res.data._id; // Use the returned data to get the tour ID
+    } catch (err) {
+      throw new Error("Failed to upload tour");
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user || !user._id) {
       toast.error("User not authenticated");
@@ -156,23 +178,53 @@ const AddProperty = () => {
 
     if (!validate()) return;
 
-    const propertyData = new FormData();
-    for (const key in formValues) {
-      if (key === "images") {
-        formValues[key].forEach((image) => {
-          propertyData.append("images", image);
-        });
-      } else {
-        propertyData.append(key, formValues[key]);
+    try {
+      let tourId = null;
+      if (formValues.hasTour && formValues.tourFile) {
+        tourId = await uploadTour(formValues.tourFile);
       }
+
+      const propertyData = new FormData();
+      for (const key in formValues) {
+        if (key === "images") {
+          formValues[key].forEach((image) => {
+            propertyData.append("images", image);
+          });
+        } else if (key !== "tourFile" && key !== "tourId") {
+          propertyData.append(key, formValues[key]);
+        }
+      }
+
+      if (tourId) {
+        propertyData.append("tourId", tourId);
+      }
+
+      propertyData.append("ownerId", user._id);
+
+      dispatch(addPropertyRequest({ formData: propertyData, navigate }));
+    } catch (error) {
+      toast.error(error.message);
     }
+  };
 
-    propertyData.append("ownerId", user._id);
-
-    dispatch(addPropertyRequest({ formData: propertyData, navigate }));
+  const handleCardDetailsChange = (e) => {
+    const { name, value } = e.target;
+    setCardDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
   };
 
   const handlePaymentConfirmation = () => {
+    if (
+      !cardDetails.cardNumber ||
+      !cardDetails.expirationDate ||
+      !cardDetails.cvv
+    ) {
+      toast.error("Please fill in all card details");
+      return;
+    }
+
     setPaymentConfirmed(true);
     setPaymentDialogOpen(false);
     toast.success("Payment confirmed. You can now add your property.");
@@ -440,6 +492,35 @@ const AddProperty = () => {
               label="Parking"
             />
           </Box>
+          <Box sx={{ mb: 3 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formValues.hasTour}
+                  onChange={handleChange}
+                  name="hasTour"
+                />
+              }
+              label="Include a tour file"
+            />
+            {formValues.hasTour && (
+              <Button
+                variant="contained"
+                component="label"
+                color="primary"
+                sx={{ mt: 1 }}
+              >
+                Upload Tour File
+                <input
+                  type="file"
+                  hidden
+                  ref={tourFileRef}
+                  accept=".zip,.rar,.7z"
+                  onChange={handleTourFileChange}
+                />
+              </Button>
+            )}
+          </Box>
           <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
             <Button
               type="submit"
@@ -461,22 +542,45 @@ const AddProperty = () => {
         open={paymentDialogOpen}
         onClose={() => setPaymentDialogOpen(false)}
       >
-        <DialogTitle>Confirm Payment</DialogTitle>
+        <DialogTitle>Payment Confirmation</DialogTitle>
         <DialogContent>
-          <Typography variant="body1">
-            Do you confirm the payment of $70?
-          </Typography>
+          <Box sx={{ mb: 2 }}>
+            <TextField
+              fullWidth
+              label="Card Number"
+              name="cardNumber"
+              value={cardDetails.cardNumber}
+              onChange={handleCardDetailsChange}
+              variant="outlined"
+            />
+          </Box>
+          <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+            <TextField
+              fullWidth
+              label="Expiration Date (MM/YY)"
+              name="expirationDate"
+              value={cardDetails.expirationDate}
+              onChange={handleCardDetailsChange}
+              variant="outlined"
+            />
+            <TextField
+              fullWidth
+              label="CVV"
+              name="cvv"
+              value={cardDetails.cvv}
+              onChange={handleCardDetailsChange}
+              variant="outlined"
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setPaymentDialogOpen(false)} color="primary">
-            Cancel
-          </Button>
+          <Button onClick={() => setPaymentDialogOpen(false)}>Cancel</Button>
           <Button
             onClick={handlePaymentConfirmation}
-            color="primary"
             variant="contained"
+            color="primary"
           >
-            Confirm
+            Confirm Payment
           </Button>
         </DialogActions>
       </Dialog>
