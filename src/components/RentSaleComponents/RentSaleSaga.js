@@ -86,7 +86,7 @@ function* fetchPropertyByIdSaga(action) {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        token: `${token}`,
+        // token: `${token}`,
       },
     };
 

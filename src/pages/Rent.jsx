@@ -37,7 +37,7 @@ function Rent() {
     (state) => state.rentsale
   );
   const initialState = {
-    category: "sale",
+    category: "rent",
     city: city || "",
     state: "",
     listingType: "",
