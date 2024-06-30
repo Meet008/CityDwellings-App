@@ -48,7 +48,7 @@ export default function SignIn() {
 
   const { user } = useSelector((state) => state.user);
   useEffect(() => {
-    if (isAuthenticated && token) {
+    if (isAuthenticated && token && user && user.userType === "seller") {
       navigate("/profile/dashboard");
     }
   }, [isAuthenticated, user, navigate, token]);
