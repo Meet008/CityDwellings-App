@@ -354,8 +354,18 @@ export default function SignUp() {
   const [fileName, setFileName] = useState("");
 
   const dispatch = useDispatch();
-  const { isAuthenticated, error } = useSelector((state) => state.auth);
+
   const navigate = useNavigate();
+
+  const { isAuthenticated, error, loading, token } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      navigate("/profile/dashboard");
+    }
+  }, [isAuthenticated]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

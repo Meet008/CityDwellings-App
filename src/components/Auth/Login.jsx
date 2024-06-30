@@ -46,11 +46,12 @@ export default function SignIn() {
     (state) => state.auth
   );
 
+  const { user } = useSelector((state) => state.user);
   useEffect(() => {
     if (isAuthenticated && token) {
       navigate("/profile/dashboard");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user, navigate, token]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
