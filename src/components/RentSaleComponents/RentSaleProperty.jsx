@@ -1,13 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Grid,
+} from "@mui/material";
 import ImageGallerySlider from "../ImageGallerySlider";
 import { orange } from "@mui/material/colors";
 import PropertyIcons from "../PropertyIcons";
 import RentalForm from "./RentalForm";
 import Itour from "./Itour";
 
+import { useLocation } from "react-router-dom";
+
 function RentSaleProperty(props) {
   const [imagesForDisplay, setImagesForDisplay] = useState([]);
+  const location = useLocation();
+
+  const [openReviewDialog, setOpenReviewDialog] = useState(false);
+  const [reviewText, setReviewText] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userFeedback, setUserFeedback] = useState("");
+  const [userComment, setUserComment] = useState("");
 
   useEffect(() => {
     if (props.propertyImages && Array.isArray(props.propertyImages)) {
@@ -17,7 +37,24 @@ function RentSaleProperty(props) {
       });
       setImagesForDisplay(imageUrls);
     }
+    return () => {};
   }, [props.propertyImages]);
+
+  const handleOpenReviewDialog = () => {
+    setOpenReviewDialog(true);
+  };
+
+  const handleCloseReviewDialog = () => {
+    setOpenReviewDialog(false);
+  };
+
+  const handleReviewSubmit = () => {
+    // Handle review submission logic here
+    // For example, send reviewText to backend or display it somewhere
+    console.log("Submitting review:", reviewText);
+    setOpenReviewDialog(false);
+    // Optionally, you can update state or perform other actions after submission
+  };
 
   return (
     <Box>
@@ -76,6 +113,61 @@ function RentSaleProperty(props) {
               bathrooms={props.propertyBathrooms}
               livingrooms={props.propertyLivingrooms}
             />
+            <Button
+              variant="outlined"
+              onClick={handleOpenReviewDialog}
+              sx={{ marginTop: "1rem" }}
+            >
+              Share Your Review
+            </Button>
+            <Dialog open={openReviewDialog} onClose={handleCloseReviewDialog}>
+              <DialogTitle>Share Your Review</DialogTitle>
+              <DialogContent>
+                <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Your Name"
+                      variant="outlined"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Feedback"
+                      variant="outlined"
+                      value={userFeedback}
+                      onChange={(e) => setUserFeedback(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Comment"
+                      variant="outlined"
+                      multiline
+                      rows={4}
+                      value={userComment}
+                      onChange={(e) => setUserComment(e.target.value)}
+                    />
+                  </Grid>
+                </Grid>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseReviewDialog} color="primary">
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleReviewSubmit}
+                  variant="contained"
+                  color="primary"
+                >
+                  Submit
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Box>
         </Box>
         <div

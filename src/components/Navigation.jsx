@@ -287,9 +287,11 @@ const Navigation = () => {
     },
   });
 
-  const pages = isAuthenticated
-    ? ["sale", "rent", "about", "contact", "profile"]
-    : ["sale", "rent", "about", "contact", "login"];
+  // const pages = isAuthenticated
+  //   ? ["sale", "rent", "about", "contact", "profile"]
+  //   : ["sale", "rent", "about", "contact", "login"];
+
+  const pages = ["sale", "rent", "about", "contact", "login"];
 
   const ConditionalLink = ({ page }) => {
     const linkTo = page === "profile" ? "/profile/dashboard" : `/${page}`;
@@ -496,21 +498,20 @@ const Navigation = () => {
               </Link>
 
               {pages.map((page) => (
-                <ConditionalLink page={page} />
-                // <Link
-                //   key={page}
-                //   onClick={handleCloseNavMenu}
-                //   to={`/${page}`}
-                //   style={{
-                //     color: "white",
-                //     fontWeight: "bold",
-                //     textTransform: "uppercase",
-                //     marginLeft: "8px",
-                //     textDecoration: "none",
-                //   }}
-                // >
-                //   {page}
-                // </Link>
+                <Link
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  to={`/${page}`}
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    textTransform: "uppercase",
+                    marginLeft: "8px",
+                    textDecoration: "none",
+                  }}
+                >
+                  {page}
+                </Link>
               ))}
               {isAuthenticated && <Logout />}
             </Box>

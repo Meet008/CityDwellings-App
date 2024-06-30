@@ -1,21 +1,22 @@
-// src/components/Logout.js
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { Button } from "@mui/material";
-import { logout } from "../Auth/authSlice"; // Ensure correct casing
+import { useNavigate } from "react-router-dom";
+import { logout } from "../Auth/authSlice";
 
 const Logout = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     dispatch(logout());
-  };
+    navigate("/"); // Redirect to the home page after logout
+  }, [dispatch, navigate]);
 
-  return (
-    <Button color="inherit" onClick={handleLogout}>
-      Logout
-    </Button>
-  );
+  useEffect(() => {
+    handleLogout();
+  }, [handleLogout]);
+
+  return null; // Return null since this component doesn't render anything
 };
 
 export default Logout;
