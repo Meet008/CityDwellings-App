@@ -26,6 +26,7 @@ import { ConfigProvider } from "antd";
 import Message from "./components/Profile/Messages";
 import Reviews from "./components/Profile/Reviews";
 import ForgotPassword from "./components/Auth/ForgotPassword";
+import Logout from "./components/Auth/Logout";
 
 const theme = createTheme({
   typography: {
@@ -51,6 +52,15 @@ const TawkToScript = () => (
   </Helmet>
 );
 
+{
+  /* {location.pathname.includes("/saleproperty/") && ( // Condition based on the route
+          <TawkToScript
+            propertyId={"668099dfeaf3bd8d4d1668ac"} // Replace with your propertyId
+            chatId={"1i1j5m9df"} // Replace with your chatId
+          />
+        )} */
+}
+
 function App() {
   return (
     <Provider store={store}>
@@ -63,7 +73,7 @@ function App() {
         }}
       >
         <ThemeProvider theme={theme}>
-          <TawkToScript />
+          {/* <TawkToScript /> */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/sale" element={<Sale />} />
@@ -86,6 +96,7 @@ function App() {
                 path="edit-property/:propertyId"
                 element={<EditProperty />}
               />
+              <Route path="logout" element={<Logout />} />
             </Route>
             <Route path="/upload" element={<UploadForm />} />
           </Routes>

@@ -44,7 +44,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
           // },
           { text: "Reviews", icon: <RateReviewIcon />, path: "reviews" },
           { text: "Profile", icon: <PersonIcon />, path: "userProfile" },
-          { text: "Signout", icon: <ExitToAppIcon />, path: "/" },
+          { text: "Signout", icon: <ExitToAppIcon />, path: "logout" },
         ].map(({ text, icon, path }) => (
           <ListItem
             button
@@ -53,9 +53,9 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
             key={text}
             onClick={handleDrawerToggle}
           >
+            {path === "Signout" && <Logout />}
             <ListItemIcon>{icon}</ListItemIcon>
             <ListItemText primary={text} />
-            {path === "signout" && <Logout />}
           </ListItem>
         ))}
       </List>
