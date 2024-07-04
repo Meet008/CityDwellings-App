@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
   Table,
@@ -17,106 +18,19 @@ import {
 } from "@mui/material";
 import { Info as InfoIcon } from "@mui/icons-material";
 import moment from "moment";
+import { fetchReviewsRequest } from "./userSlice"; // Adjust path as needed
 
 function Reviews() {
-  const [reviewList, setReviewList] = useState([
-    {
-      id: 29,
-      user_id: 194,
-      review: "Excellent",
-      suggestion: null,
-      created_at: 1717156983,
-      updated_at: 1717156983,
-      user_name: "excellent",
-    },
-    {
-      id: 28,
-      user_id: 186,
-      review: "Average",
-      suggestion: null,
-      created_at: 1713049550,
-      updated_at: 1713049550,
-      user_name: "fikkobemli@gufum.com",
-    },
-    {
-      id: 27,
-      user_id: 182,
-      review: "Poor",
-      suggestion: null,
-      created_at: 1710666750,
-      updated_at: 1710666750,
-      user_name: "Dieter",
-    },
-    {
-      id: 26,
-      user_id: 84,
-      review: "Poor",
-      suggestion: "absolutely nothing was working after spending £30",
-      created_at: 1706906292,
-      updated_at: 1706906292,
-      user_name: "Ben Jones",
-    },
-    {
-      id: 25,
-      user_id: 92,
-      review: "Poor",
-      suggestion: "the profit is massively wrong for this asin\nB0CH3SRR3L",
-      created_at: 1699264519,
-      updated_at: 1699264519,
-      user_name: "Eamonn",
-    },
-    {
-      id: 24,
-      user_id: 81,
-      review: "Poor",
-      suggestion: null,
-      created_at: 1697890859,
-      updated_at: 1697890859,
-      user_name: "amit",
-    },
-    {
-      id: 23,
-      user_id: 63,
-      review: "Poor",
-      suggestion: null,
-      created_at: 1694847697,
-      updated_at: 1694847697,
-      user_name: "vraj",
-    },
-    {
-      id: 22,
-      user_id: 21,
-      review: "Excellent",
-      suggestion: null,
-      created_at: 1692458930,
-      updated_at: 1692458930,
-      user_name: "Shashi Patel",
-    },
-    {
-      id: 21,
-      user_id: 43,
-      review: "Poor",
-      suggestion: null,
-      created_at: 1689875225,
-      updated_at: 1689875225,
-      user_name: "Esat",
-    },
-    {
-      id: 20,
-      user_id: 39,
-      review: null,
-      suggestion:
-        "Hi,\nI have still facing 404 issue in this module. Can you please update this issue ASAP.",
-      created_at: 1689597210,
-      updated_at: 1689597210,
-      user_name: "Aaqib",
-    },
-  ]);
-
+  const dispatch = useDispatch();
+  const reviewList = useSelector((state) => state.user.reviewList);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const isMobile = useMediaQuery("(max-width:600px)");
   const isTablet = useMediaQuery("(max-width:960px)");
+
+  useEffect(() => {
+    dispatch(fetchReviewsRequest());
+  }, [dispatch]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -170,6 +84,7 @@ function Reviews() {
               <TableCell sx={{ fontWeight: "bold" }}>User Name</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>Feedback</TableCell>
               <TableCell sx={{ fontWeight: "bold" }}>User Comment</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Property Name</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -179,7 +94,7 @@ function Reviews() {
                 <TableRow key={row.id}>
                   <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                   <TableCell>
-                    {moment(new Date(row.updated_at * 1000)).format(
+                    {moment(new Date(row.updatedAt)).format(
                       "MMM DD, YYYY hh:mm A"
                     )}
                   </TableCell>
@@ -196,6 +111,7 @@ function Reviews() {
                       renderSuggestion(row.suggestion)
                     )}
                   </TableCell>
+                  <TableCell>{row.property.title || "-"}</TableCell>
                 </TableRow>
               ))}
           </TableBody>

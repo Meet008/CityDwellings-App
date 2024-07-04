@@ -9,11 +9,14 @@ import {
   CardMedia,
   IconButton,
   Tooltip,
+  Badge,
 } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import PropertyIcons from "../PropertyIcons"; // Ensure this component is correctly imported
+import PropertyIcons from "../PropertyIcons";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import MailIcon from "@mui/icons-material/Mail"; // For applications icon
 
 const MyPropertyItems = ({
   itemURL,
@@ -28,6 +31,9 @@ const MyPropertyItems = ({
   itemImg,
   handleEditProperty,
   handleDeleteProperty,
+  expiryDate,
+  handleShowApplications,
+  applicationCount,
 }) => {
   let encodedImgUrl = null;
   if (itemImg) {
@@ -39,6 +45,19 @@ const MyPropertyItems = ({
     if (text.length <= length) return text;
     return text.substring(0, length) + "...";
   };
+
+  const getStatusColor = (date) => {
+    const currentDate = new Date();
+    const expiry = new Date(date);
+    const diffTime = Math.abs(expiry - currentDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 2) return "red";
+    if (diffDays <= 7) return "yellow";
+    return "green";
+  };
+
+  const expiryColor = getStatusColor(expiryDate);
 
   return (
     <Card
@@ -172,24 +191,49 @@ const MyPropertyItems = ({
           }}
         >
           <Link to={`/${itemURL}property/${itemId}`}>
-            <Button variant="contained" color="primary" size="large">
+            <Button variant="contained" color="warning" size="large">
               Full Details
             </Button>
           </Link>
+
           <Box>
+            <Badge badgeContent={applicationCount} color="primary">
+              <IconButton
+                color="warning"
+                onClick={() => handleShowApplications(itemId)}
+              >
+                <MailIcon />
+              </IconButton>
+            </Badge>
             <IconButton
-              color="primary"
+              color="warning"
               onClick={() => handleEditProperty(itemId)}
-              sx={{ marginRight: 1 }}
             >
               <EditIcon />
             </IconButton>
             <IconButton
-              color="secondary"
+              color="warning"
               onClick={() => handleDeleteProperty(itemId)}
             >
               <DeleteIcon />
             </IconButton>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: "1rem",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <AccessTimeIcon
+              sx={{ color: expiryColor, marginRight: "0.5rem" }}
+            />
+            <Typography variant="body1" sx={{ color: expiryColor }}>
+              Expiry: {new Date(expiryDate).toLocaleDateString()}
+            </Typography>
           </Box>
         </Box>
       </CardContent>

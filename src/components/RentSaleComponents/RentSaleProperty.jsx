@@ -16,18 +16,20 @@ import { orange } from "@mui/material/colors";
 import PropertyIcons from "../PropertyIcons";
 import RentalForm from "./RentalForm";
 import Itour from "./Itour";
-
-import { useLocation } from "react-router-dom";
+import ReviewForm from "./ReviewForm.js";
+import { Info as InfoIcon, Add as AddIcon } from "@mui/icons-material";
 
 function RentSaleProperty(props) {
   const [imagesForDisplay, setImagesForDisplay] = useState([]);
-  const location = useLocation();
 
-  const [openReviewDialog, setOpenReviewDialog] = useState(false);
-  const [reviewText, setReviewText] = useState("");
-  const [userName, setUserName] = useState("");
-  const [userFeedback, setUserFeedback] = useState("");
-  const [userComment, setUserComment] = useState("");
+  const [open, setOpen] = useState(false);
+  const [openRentalForm, setOpenRentalForm] = useState(false);
+  const [newReview, setNewReview] = useState({
+    user_name: "",
+    review: "",
+    suggestion: "",
+    propertyId: props.propertyId,
+  });
 
   useEffect(() => {
     if (props.propertyImages && Array.isArray(props.propertyImages)) {
@@ -40,22 +42,35 @@ function RentSaleProperty(props) {
     return () => {};
   }, [props.propertyImages]);
 
-  const handleOpenReviewDialog = () => {
-    setOpenReviewDialog(true);
+  const handleOpen = () => {
+    setOpen(true);
   };
 
-  const handleCloseReviewDialog = () => {
-    setOpenReviewDialog(false);
+  const handleClose = () => {
+    setOpen(false);
+    setNewReview({
+      user_name: "",
+      review: "",
+      suggestion: "",
+      propertyId: props.propertyId,
+    });
   };
 
-  const handleReviewSubmit = () => {
-    // Handle review submission logic here
-    // For example, send reviewText to backend or display it somewhere
-    console.log("Submitting review:", reviewText);
-    setOpenReviewDialog(false);
-    // Optionally, you can update state or perform other actions after submission
+  // Ensure the propertyId is updated if the prop changes
+  useEffect(() => {
+    setNewReview((prevState) => ({
+      ...prevState,
+      propertyId: props.propertyId,
+    }));
+  }, [props.propertyId]);
+
+  const handleOpenRentalForm = () => {
+    setOpenRentalForm(true);
   };
 
+  const handleCloseRentalForm = () => {
+    setOpenRentalForm(false);
+  };
   return (
     <Box>
       <Container>
@@ -113,61 +128,50 @@ function RentSaleProperty(props) {
               bathrooms={props.propertyBathrooms}
               livingrooms={props.propertyLivingrooms}
             />
-            <Button
-              variant="outlined"
-              onClick={handleOpenReviewDialog}
-              sx={{ marginTop: "1rem" }}
+
+            {/* <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={handleOpen}
+              sx={{ marginBottom: 2 }}
             >
-              Share Your Review
+              Add Review
             </Button>
-            <Dialog open={openReviewDialog} onClose={handleCloseReviewDialog}>
-              <DialogTitle>Share Your Review</DialogTitle>
-              <DialogContent>
-                <Grid container spacing={2} sx={{ marginTop: "1rem" }}>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      label="Your Name"
-                      variant="outlined"
-                      value={userName}
-                      onChange={(e) => setUserName(e.target.value)}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      label="Feedback"
-                      variant="outlined"
-                      value={userFeedback}
-                      onChange={(e) => setUserFeedback(e.target.value)}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Comment"
-                      variant="outlined"
-                      multiline
-                      rows={4}
-                      value={userComment}
-                      onChange={(e) => setUserComment(e.target.value)}
-                    />
-                  </Grid>
-                </Grid>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCloseReviewDialog} color="primary">
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleReviewSubmit}
-                  variant="contained"
-                  color="primary"
-                >
-                  Submit
-                </Button>
-              </DialogActions>
-            </Dialog>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOpenRentalForm}
+            >
+              Rent This Property
+            </Button> */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mt: 3,
+              }}
+            >
+              <Button
+                variant="contained"
+                color="warning"
+                size="large"
+                startIcon={<AddIcon />}
+                onClick={handleOpen}
+                sx={{ marginRight: 2 }}
+              >
+                Add Review
+              </Button>
+              <Button
+                variant="contained"
+                color="warning"
+                size="large"
+                onClick={handleOpenRentalForm}
+              >
+                Rent This Property
+              </Button>
+            </Box>
           </Box>
         </Box>
         <div
@@ -177,9 +181,15 @@ function RentSaleProperty(props) {
         {props.tourId && (
           <Itour tourId={props.tourId} filename={"index.html"} />
         )}
-
-        <RentalForm />
       </Container>
+      <ReviewForm
+        open={open}
+        handleClose={handleClose}
+        propertyId={props.propertyId}
+        newReview={newReview}
+        setNewReview={setNewReview}
+      />
+      <RentalForm open={openRentalForm} handleClose={handleCloseRentalForm} />
     </Box>
   );
 }

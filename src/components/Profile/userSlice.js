@@ -7,7 +7,7 @@ const initialState = {
   error: null,
   properties: [],
   propertyDetails: [],
-  messages: [],
+  reviewList: [],
   dashboardData: {
     totalCommercial: 0,
     totalResidential: 0,
@@ -123,6 +123,31 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    addReviewRequest: (state, action) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    addReviewSuccess: (state, action) => {
+      state.isLoading = false;
+      state.reviewList.push(action.payload);
+    },
+    addReviewFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    fetchReviewsRequest: (state) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    fetchReviewsSuccess: (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.reviewList = action.payload;
+    },
+    fetchReviewsFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -151,6 +176,12 @@ export const {
   fetchDashboardDataStart,
   fetchDashboardDataSuccess,
   fetchDashboardDataFailure,
+  addReviewRequest,
+  addReviewSuccess,
+  addReviewFailure,
+  fetchReviewsRequest,
+  fetchReviewsSuccess,
+  fetchReviewsFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;
