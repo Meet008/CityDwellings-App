@@ -49,7 +49,7 @@ const PropertyPage = () => {
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
       <Typography variant="h4" gutterBottom>
-        My Properties
+        My Properties - {properties.length > 0 ? properties.length : 0}
       </Typography>
 
       {isLoading ? (
@@ -90,6 +90,7 @@ const PropertyPage = () => {
                 itemBedrooms={property.bedrooms}
                 itemBathrooms={property.bathrooms}
                 itemLivingrooms={property.livingrooms || 1}
+                expiryDate={property.expiryDate}
                 itemImg={
                   property.images && property.images.length > 0
                     ? property.images[0]

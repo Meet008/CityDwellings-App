@@ -10,6 +10,8 @@ import {
   IconButton,
   Tooltip,
   Badge,
+  Stack,
+  Chip,
 } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import EditIcon from "@mui/icons-material/Edit";
@@ -49,16 +51,40 @@ const MyPropertyItems = ({
   const getStatusColor = (date) => {
     const currentDate = new Date();
     const expiry = new Date(date);
-    const diffTime = Math.abs(expiry - currentDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffTime = expiry - currentDate;
 
-    if (diffDays <= 2) return "red";
-    if (diffDays <= 7) return "yellow";
-    return "green";
+    if (diffTime < 0) return "grey"; // Expired
+    if (diffTime <= 3 * 24 * 60 * 60 * 1000) return "#FF1D1D"; // Less than 3 days in milliseconds
+    if (diffTime <= 15 * 24 * 60 * 60 * 1000) return "#e0d210"; // Less than 15 days in milliseconds
+    return "green"; // More than 15 days
   };
 
   const expiryColor = getStatusColor(expiryDate);
 
+  const isExpired = new Date(expiryDate) < new Date();
+
+  const getOrdinalSuffix = (day) => {
+    if (day > 3 && day < 21) return "th"; // catch 11th, 12th, 13th
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  const formatDate = (date) => {
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    const dateObj = new Date(date);
+    const day = dateObj.getDate();
+    const suffix = getOrdinalSuffix(day);
+    const formattedDate = dateObj.toLocaleDateString("en-US", options);
+    return formattedDate.replace(day, `${day}${suffix}`);
+  };
   return (
     <Card
       sx={{
@@ -68,8 +94,31 @@ const MyPropertyItems = ({
         padding: "1rem",
         boxShadow: 3,
         borderRadius: 2,
+        position: "relative",
       }}
     >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "1rem",
+          right: "1rem",
+        }}
+      >
+        <Chip
+          icon={<AccessTimeIcon />}
+          label={
+            isExpired ? "Expired" : `Valid Until: ${formatDate(expiryDate)}`
+          }
+          sx={{
+            backgroundColor: expiryColor,
+            color: "white",
+            fontWeight: "bold",
+            "& .MuiChip-icon": {
+              color: "white",
+            },
+          }}
+        />
+      </Box>
       <Box
         sx={{
           width: { xs: "100%", md: "50%" },
@@ -127,6 +176,7 @@ const MyPropertyItems = ({
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          marginTop: "25px",
         }}
       >
         <Box>
@@ -192,19 +242,19 @@ const MyPropertyItems = ({
         >
           <Link to={`/${itemURL}property/${itemId}`}>
             <Button variant="contained" color="warning" size="large">
-              Full Details
+              Applications
             </Button>
           </Link>
 
           <Box>
-            <Badge badgeContent={applicationCount} color="primary">
+            {/* <Badge badgeContent={applicationCount} color="primary">
               <IconButton
                 color="warning"
                 onClick={() => handleShowApplications(itemId)}
               >
                 <MailIcon />
               </IconButton>
-            </Badge>
+            </Badge> */}
             <IconButton
               color="warning"
               onClick={() => handleEditProperty(itemId)}
@@ -217,23 +267,6 @@ const MyPropertyItems = ({
             >
               <DeleteIcon />
             </IconButton>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: "1rem",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <AccessTimeIcon
-              sx={{ color: expiryColor, marginRight: "0.5rem" }}
-            />
-            <Typography variant="body1" sx={{ color: expiryColor }}>
-              Expiry: {new Date(expiryDate).toLocaleDateString()}
-            </Typography>
           </Box>
         </Box>
       </CardContent>
