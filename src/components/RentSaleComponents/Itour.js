@@ -28,7 +28,7 @@ const FileViewer = ({ tourId, filename }) => {
 
   return (
     <div className="file-viewer">
-      <h3>File Viewer</h3>
+      <h3>Virtual Viewer</h3>
       <iframe
         title="File Viewer"
         src={fileUrl}

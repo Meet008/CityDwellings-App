@@ -1,199 +1,203 @@
-import { Button } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Box,
+  useMediaQuery,
+} from "@mui/material";
 import { Input, Select } from "antd";
 import React, { useState } from "react";
+import { useTheme } from "@mui/material/styles";
 
-const RentalForm = () => {
-  const [forn_data, set_form_data] = useState({ full_name: "" });
+const RentalForm = (props) => {
+  const { open, handleClose } = props;
+  const [formData, setFormData] = useState({ full_name: "" });
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleChangeFormData = (key, value) => {
-    set_form_data({ ...forn_data, [key]: value });
+    setFormData({ ...formData, [key]: value });
   };
+
   return (
     <>
-      <div className="row d-flex align-items-center justify-content-center mb-3">
-        <label className="" style={{ fontSize: "22px", color: "#ff700d" }}>
+      <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
+        <DialogTitle
+          sx={{ fontSize: "22px", color: "#ff700d", textAlign: "center" }}
+        >
           Rental Application
-        </label>
-      </div>
-      <div className="row d-flex justify-content-center mt-5 mb-10">
-        <div className="col-8">
-          <label
-            className=""
-            style={{
-              fontSize: "18px",
-              color: "#ff700d",
-              borderBottom: "1px dashed #f07917",
-            }}
-          >
-            Personal Information
-          </label>
-        </div>
-
-        <div className="col-8 mt-2">
-          <label className="">Full Name</label>
-          <Input
-            size="large"
-            onChange={(e) => {
-              handleChangeFormData("full_name", e.target.value);
-            }}
-            value={forn_data?.full_name}
-          />
-        </div>
-        <div className="col-8 mt-2">
-          <div className="row">
-            <div className="col-6">
-              <label className="">Phone Number </label>
-              <Input
+        </DialogTitle>
+        <DialogContent>
+          <Box mt={2}>
+            <label
+              style={{
+                fontSize: "18px",
+                color: "#ff700d",
+                borderBottom: "1px dashed #f07917",
+                display: "block",
+              }}
+            >
+              Personal Information
+            </label>
+            <Box mt={2}>
+              <TextField
+                label="Full Name"
+                variant="outlined"
+                fullWidth
                 size="large"
                 onChange={(e) => {
-                  handleChangeFormData("phone_number", e.target.value);
+                  handleChangeFormData("full_name", e.target.value);
                 }}
-                value={forn_data?.phone_number}
+                value={formData?.full_name}
+                sx={{ mb: 2 }}
               />
-            </div>
-            <div className="col-6">
-              <label className="">Email </label>
-              <Input
+              <Box display="flex" gap={2}>
+                <TextField
+                  label="Phone Number"
+                  variant="outlined"
+                  fullWidth
+                  size="large"
+                  onChange={(e) => {
+                    handleChangeFormData("phone_number", e.target.value);
+                  }}
+                  value={formData?.phone_number}
+                />
+                <TextField
+                  label="Email"
+                  variant="outlined"
+                  fullWidth
+                  size="large"
+                  onChange={(e) => {
+                    handleChangeFormData("email", e.target.value);
+                  }}
+                  value={formData?.email}
+                />
+              </Box>
+            </Box>
+            <Box mt={3}>
+              <label
+                style={{
+                  fontSize: "18px",
+                  color: "#ff700d",
+                  borderBottom: "1px dashed #f07917",
+                  display: "block",
+                }}
+              >
+                Residential History
+              </label>
+              <Box mt={2}>
+                <TextField
+                  label="Current Address"
+                  variant="outlined"
+                  fullWidth
+                  size="large"
+                  onChange={(e) => {
+                    handleChangeFormData("curerent_address", e.target.value);
+                  }}
+                  value={formData?.curerent_address}
+                  sx={{ mb: 2 }}
+                />
+                <TextField
+                  label="Previous Addresses"
+                  variant="outlined"
+                  fullWidth
+                  size="large"
+                  onChange={(e) => {
+                    handleChangeFormData("previous_addresses", e.target.value);
+                  }}
+                  value={formData?.previous_addresses}
+                />
+              </Box>
+            </Box>
+            <Box mt={3}>
+              <label
+                style={{
+                  fontSize: "18px",
+                  color: "#ff700d",
+                  borderBottom: "1px dashed #f07917",
+                  display: "block",
+                }}
+              >
+                Financial Information
+              </label>
+              <Box mt={2}>
+                <TextField
+                  label="Bank Account Name"
+                  variant="outlined"
+                  fullWidth
+                  size="large"
+                  onChange={(e) => {
+                    handleChangeFormData("bank_account_name", e.target.value);
+                  }}
+                  value={formData?.bank_account_name}
+                  sx={{ mb: 2 }}
+                />
+                <Box display="flex" gap={2}>
+                  <Select
+                    size="large"
+                    style={{ width: "100%" }}
+                    onChange={(value) => {
+                      handleChangeFormData("account_type", value);
+                    }}
+                    placeholder="Select Account Type"
+                    value={formData?.account_type || null}
+                    options={[
+                      { label: "Current", value: "current" },
+                      { label: "Saving", value: "saving" },
+                    ]}
+                  />
+                  <TextField
+                    label="IFSC Code"
+                    variant="outlined"
+                    fullWidth
+                    size="large"
+                    onChange={(e) => {
+                      handleChangeFormData("ifsc_code", e.target.value);
+                    }}
+                    value={formData?.ifsc_code}
+                  />
+                </Box>
+              </Box>
+            </Box>
+            <Box mt={3}>
+              <label
+                style={{
+                  fontSize: "18px",
+                  color: "#ff700d",
+                  borderBottom: "1px dashed #f07917",
+                  display: "block",
+                }}
+              >
+                Optional Information
+              </label>
+              <TextField
+                label="Reason For Moving"
+                variant="outlined"
+                fullWidth
                 size="large"
+                multiline
+                rows={4}
                 onChange={(e) => {
-                  handleChangeFormData("email", e.target.value);
+                  handleChangeFormData("reason_for_moving", e.target.value);
                 }}
-                value={forn_data?.email}
+                value={formData?.reason_for_moving}
               />
-            </div>
-          </div>
-        </div>
-        <div className="col-8 mt-3">
-          <label
-            className=""
-            style={{
-              fontSize: "18px",
-              color: "#ff700d",
-              borderBottom: "1px dashed #f07917",
-            }}
-          >
-            Residential History
-          </label>
-        </div>
-        <div className="col-8 mt-1">
-          <div className="row">
-            <div className="col-12">
-              <label className="">Current Address </label>
-              <Input
-                size="large"
-                onChange={(e) => {
-                  handleChangeFormData("curerent_address", e.target.value);
-                }}
-                value={forn_data?.curerent_address}
-              />
-            </div>
-            <div className="col-12">
-              <label className="">Previous Addresses </label>
-              <Input
-                size="large"
-                onChange={(e) => {
-                  handleChangeFormData("previous_addresses", e.target.value);
-                }}
-                value={forn_data?.previous_addresses}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="col-8 mt-3">
-          <label
-            className=""
-            style={{
-              fontSize: "18px",
-              color: "#ff700d",
-              borderBottom: "1px dashed #f07917",
-            }}
-          >
-            Financial Information
-          </label>
-        </div>
-        <div className="col-8 mt-1">
-          <div className="row">
-            <div className="col-12">
-              <label className="">Bank Account Name</label>
-              <Input
-                size="large"
-                onChange={(e) => {
-                  handleChangeFormData("bank_account_name", e.target.value);
-                }}
-                value={forn_data?.bank_account_name}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="col-8 mt-2">
-          <div className="row">
-            <div className="col-6">
-              <label className="">Account Type </label>
-              <Select
-                size="large"
-                style={{ width: "100%" }}
-                onChange={(e) => {
-                  handleChangeFormData("account_type", e);
-                }}
-                placeholder="Select account Type"
-                value={forn_data?.account_type || null}
-                options={[
-                  { label: "Current", value: "current" },
-                  { label: "Saving", value: "saving" },
-                ]}
-              />
-            </div>{" "}
-            <div className="col-6">
-              <label className="">IFSC Code </label>
-              <Input
-                size="large"
-                onChange={(e) => {
-                  handleChangeFormData("ifcs_code", e.target.value);
-                }}
-                value={forn_data?.ifcs_code}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="col-8 mt-3">
-          <label
-            className=""
-            style={{
-              fontSize: "18px",
-              color: "#ff700d",
-              borderBottom: "1px dashed #f07917",
-            }}
-          >
-            Optional Information
-          </label>
-        </div>
-
-        <div className="col-8 mt-1">
-          <label className="">Reson For Moving</label>
-          <Input.TextArea
-            size="large"
-            onChange={(e) => {
-              handleChangeFormData("reason_for_moving", e.target.value);
-            }}
-            value={forn_data?.reason_for_moving}
-          />
-        </div>
-
-        <div className="col-8 mt-2 text-end mt-3">
-          <Button
-            variant="contained"
-            color="error"
-            size="large"
-            className="me-2"
-          >
+            </Box>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} variant="contained" color="secondary">
             Cancel
           </Button>
-          <Button variant="contained" color="warning" size="large">
+          <Button onClick={handleClose} variant="contained" color="primary">
             Submit
           </Button>
-        </div>
-      </div>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
