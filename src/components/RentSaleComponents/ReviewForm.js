@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux";
 import { addReviewRequest } from "../Profile/userSlice";
 import moment from "moment";
 
-function Reviews({ open, handleClose, propertyId, newReview, setNewReview }) {
+function Reviews({ open, handleClose, newReview, setNewReview }) {
   const dispatch = useDispatch();
 
   const handleSubmit = () => {

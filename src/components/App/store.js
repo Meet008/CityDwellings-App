@@ -4,6 +4,7 @@ import authReducer from "../Auth/authSlice";
 import errorReducer from "../Error/errorSlice";
 import userReducer from "../Profile/userSlice";
 import rentSaleReducer from "../RentSaleComponents/RentSaleSlice";
+import rentalFormReducer from "../RentSaleComponents/RentalFormSlice";
 import rootSaga from "./rootSaga";
 
 const sagaMiddleware = createSagaMiddleware();
@@ -14,6 +15,7 @@ const store = configureStore({
     error: errorReducer,
     user: userReducer,
     rentsale: rentSaleReducer,
+    rentalForm: rentalFormReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
