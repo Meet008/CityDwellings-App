@@ -302,7 +302,7 @@ function Sale() {
                     }}
                     className="me-2"
                   />{" "} */}
-                  More Filters
+                  {!isOpenOtherFilter ? "More Filters" : "Less Filters"}
                 </Button>
               </div>
               <div>

@@ -189,7 +189,11 @@ function RentSaleProperty(props) {
         newReview={newReview}
         setNewReview={setNewReview}
       />
-      <RentalForm open={openRentalForm} handleClose={handleCloseRentalForm} />
+      <RentalForm
+        open={openRentalForm}
+        handleClose={handleCloseRentalForm}
+        propertyId={props.propertyId}
+      />
     </Box>
   );
 }

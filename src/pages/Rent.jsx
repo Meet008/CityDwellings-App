@@ -303,7 +303,7 @@ function Rent() {
                     }}
                     className="me-2"
                   />{" "} */}
-                  More Filters
+                  {!isOpenOtherFilter ? "More Filters" : "Less Filters"}
                 </Button>
               </div>
               <div>
