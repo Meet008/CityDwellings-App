@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container } from "@mui/material";
+import { Box, Container, useMediaQuery } from "@mui/material";
 import Navigation from "../components/Navigation";
 import HeaderCarousel from "../components/HeaderCarousel";
 import AboutUsSection from "../components/AboutUsSection";
@@ -15,10 +15,13 @@ import MultiItemsCarousel from "../components/MultiItemsCarousel/MultiItemsCarou
 import Searchbar from "./Searchbar";
 
 function Home() {
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
   return (
     <div>
       <Navigation />
 
+      {/* Uncomment to use HeaderCarousel */}
       {/* <Box sx={{ backgroundColor: grey[100] }}>
         <HeaderCarousel />
       </Box> */}

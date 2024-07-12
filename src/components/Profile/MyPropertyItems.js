@@ -19,6 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PropertyIcons from "../PropertyIcons";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import MailIcon from "@mui/icons-material/Mail"; // For applications icon
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const MyPropertyItems = ({
   itemURL,
@@ -36,6 +37,8 @@ const MyPropertyItems = ({
   expiryDate,
   handleShowApplications,
   applicationCount,
+  itemStatus,
+  itemUpdatedAt,
 }) => {
   let encodedImgUrl = null;
   if (itemImg) {
@@ -104,20 +107,31 @@ const MyPropertyItems = ({
           right: "1rem",
         }}
       >
-        <Chip
-          icon={<AccessTimeIcon />}
-          label={
-            isExpired ? "Expired" : `Valid Until: ${formatDate(expiryDate)}`
-          }
-          sx={{
-            backgroundColor: expiryColor,
-            color: "white",
-            fontWeight: "bold",
-            "& .MuiChip-icon": {
+        {itemStatus === "sold" ? (
+          <Chip
+            label={`Sold at ${formatDate(itemUpdatedAt)}`}
+            sx={{
+              backgroundColor: "grey",
               color: "white",
-            },
-          }}
-        />
+              fontWeight: "bold",
+            }}
+          />
+        ) : (
+          <Chip
+            icon={<AccessTimeIcon />}
+            label={
+              isExpired ? "Expired" : `Valid Until: ${formatDate(expiryDate)}`
+            }
+            sx={{
+              backgroundColor: expiryColor,
+              color: "white",
+              fontWeight: "bold",
+              "& .MuiChip-icon": {
+                color: "white",
+              },
+            }}
+          />
+        )}
       </Box>
       <Box
         sx={{
@@ -146,7 +160,7 @@ const MyPropertyItems = ({
         </Link> */}
 
         <Link
-          to={`/${itemURL}property/${itemId}`}
+          // to={`/${itemURL}property/${itemId}`}
           style={{ display: "flex", justifyContent: "center", width: "100%" }}
         >
           {encodedImgUrl ? (
@@ -240,14 +254,13 @@ const MyPropertyItems = ({
             alignItems: "center",
           }}
         >
-          <Link to={`/${itemURL}property/${itemId}`}>
+          <Link to={`/profile/applications/${itemId}`}>
             <Button variant="contained" color="warning" size="large">
-              Applications
+              Applications ({applicationCount})
             </Button>
           </Link>
 
-          <Box>
-            {/* <Badge badgeContent={applicationCount} color="primary">
+          {/* <Badge badgeContent={applicationCount} color="primary">
               <IconButton
                 color="warning"
                 onClick={() => handleShowApplications(itemId)}
@@ -255,18 +268,41 @@ const MyPropertyItems = ({
                 <MailIcon />
               </IconButton>
             </Badge> */}
-            <IconButton
-              color="warning"
-              onClick={() => handleEditProperty(itemId)}
+          <Box>
+            <Tooltip
+              title={itemStatus === "sold" ? "View Property" : "Edit Property"}
+              arrow
+              disableInteractive
             >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              color="warning"
-              onClick={() => handleDeleteProperty(itemId)}
+              <span>
+                <IconButton
+                  color="warning"
+                  onClick={() => handleEditProperty(itemId)}
+                  // disabled={itemStatus === "sold"}
+                >
+                  {itemStatus === "sold" ? <VisibilityIcon /> : <EditIcon />}
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Tooltip
+              title={
+                itemStatus === "sold"
+                  ? "You can't delete Sold Property!"
+                  : "Delete Property"
+              }
+              arrow
+              disableInteractive
             >
-              <DeleteIcon />
-            </IconButton>
+              <span>
+                <IconButton
+                  color="warning"
+                  onClick={() => handleDeleteProperty(itemId)}
+                  disabled={itemStatus === "sold"}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
           </Box>
         </Box>
       </CardContent>

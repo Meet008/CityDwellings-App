@@ -19,6 +19,7 @@ import Notifications from "./Notifications";
 import AddProperty from "./components/Profile/AddProperty";
 import Dashboard from "./components/Profile/Dashboard";
 import EditProperty from "./components/Profile/EditProperty";
+import Applications from "./components/Profile/Applications";
 import Main from "./components/Profile/Main";
 import MyProperty from "./components/Profile/MyProperty";
 import UserProfile from "./components/Profile/UserProfile";
@@ -85,16 +86,21 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgotPassword" element={<ForgotPassword />} />
+
             <Route path="/profile" element={<Main />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="add-property" element={<AddProperty />} />
-              <Route path="my-properties" element={<MyProperty />} />
+              <Route path="my-properties" element={<MyProperty />}></Route>
               <Route path="userProfile" element={<UserProfile />} />
               <Route path="message" element={<Message />} />
               <Route path="reviews" element={<Reviews />} />
               <Route
                 path="edit-property/:propertyId"
                 element={<EditProperty />}
+              />
+              <Route
+                path="applications/:propertyId"
+                element={<Applications />}
               />
               <Route path="logout" element={<Logout />} />
             </Route>

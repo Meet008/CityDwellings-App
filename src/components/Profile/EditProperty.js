@@ -154,8 +154,6 @@ export default function EditProperty() {
       await dispatch(
         editPropertyRequest({ propertyId, formData: propertyData, navigate })
       );
-
-      navigate(`/property/${propertyId}`);
     } catch (error) {}
   };
 
@@ -163,7 +161,9 @@ export default function EditProperty() {
     <Container maxWidth="md">
       <Box sx={{ mt: 4 }}>
         <Typography variant="h4" gutterBottom align="center">
-          Edit Property
+          {propertyDetails.status === "sold"
+            ? "View Property"
+            : "Edit Property"}
         </Typography>
         <form onSubmit={handleEditProperty}>
           <Box sx={{ mb: 3 }}>
@@ -175,6 +175,7 @@ export default function EditProperty() {
               onChange={handleChange}
               variant="outlined"
               required
+              disabled={propertyDetails.status === "sold"}
             />
           </Box>
           <Box sx={{ mb: 3 }}>
@@ -188,6 +189,7 @@ export default function EditProperty() {
               multiline
               rows={4}
               required
+              disabled={propertyDetails.status === "sold"}
             />
           </Box>
           <Box sx={{ mb: 3 }}>
@@ -199,6 +201,7 @@ export default function EditProperty() {
               onChange={handleChange}
               variant="outlined"
               required
+              disabled={propertyDetails.status === "sold"}
             />
           </Box>
           <Box sx={{ mb: 3 }}>
@@ -210,6 +213,7 @@ export default function EditProperty() {
               onChange={handleChange}
               variant="outlined"
               required
+              disabled={propertyDetails.status === "sold"}
             />
           </Box>
           <Box sx={{ mb: 3 }}>
@@ -221,6 +225,7 @@ export default function EditProperty() {
               onChange={handleChange}
               variant="outlined"
               required
+              disabled={propertyDetails.status === "sold"}
             />
           </Box>
           <Box sx={{ mb: 3 }}>
@@ -232,6 +237,7 @@ export default function EditProperty() {
               onChange={handleChange}
               variant="outlined"
               required
+              disabled={propertyDetails.status === "sold"}
             />
           </Box>
           <Box sx={{ mb: 3 }}>
@@ -278,6 +284,7 @@ export default function EditProperty() {
                         padding: 0,
                       }}
                       onClick={() => handleRemoveImage(imageUrl)}
+                      disabled={propertyDetails.status === "sold"}
                     >
                       &times;
                     </Button>
@@ -300,6 +307,7 @@ export default function EditProperty() {
               variant="outlined"
               color="primary"
               onClick={() => fileRef.current.click()}
+              disabled={propertyDetails.status === "sold"}
             >
               Upload Images
             </Button>
@@ -314,6 +322,7 @@ export default function EditProperty() {
               variant="outlined"
               required
               sx={{ flexGrow: 1, mr: 2 }}
+              disabled={propertyDetails.status === "sold"}
             />
             <TextField
               label="Bedrooms"
@@ -324,6 +333,7 @@ export default function EditProperty() {
               variant="outlined"
               required
               sx={{ flexGrow: 1, mr: 2 }}
+              disabled={propertyDetails.status === "sold"}
             />
             <TextField
               label="Bathrooms"
@@ -334,6 +344,7 @@ export default function EditProperty() {
               variant="outlined"
               required
               sx={{ flexGrow: 1 }}
+              disabled={propertyDetails.status === "sold"}
             />
           </Box>
           <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
@@ -346,6 +357,7 @@ export default function EditProperty() {
               variant="outlined"
               required
               sx={{ flexGrow: 1, mr: 2 }}
+              disabled={propertyDetails.status === "sold"}
             />
             <TextField
               label="Year Built"
@@ -356,6 +368,7 @@ export default function EditProperty() {
               variant="outlined"
               required
               sx={{ flexGrow: 1 }}
+              disabled={propertyDetails.status === "sold"}
             />
           </Box>
           <Box sx={{ mb: 3 }}>
@@ -365,6 +378,7 @@ export default function EditProperty() {
                   checked={formData.furnished}
                   onChange={handleChange}
                   name="furnished"
+                  disabled={propertyDetails.status === "sold"}
                 />
               }
               label="Furnished"
@@ -375,6 +389,7 @@ export default function EditProperty() {
                   checked={formData.parking}
                   onChange={handleChange}
                   name="parking"
+                  disabled={propertyDetails.status === "sold"}
                 />
               }
               label="Parking"
@@ -393,6 +408,7 @@ export default function EditProperty() {
               variant="outlined"
               required
               sx={{ flexGrow: 1, mr: 2 }}
+              disabled={propertyDetails.status === "sold"}
             >
               <option value="houses">Houses</option>
               <option value="apartments">Apartments</option>
@@ -410,6 +426,7 @@ export default function EditProperty() {
               variant="outlined"
               required
               sx={{ flexGrow: 1 }}
+              disabled={propertyDetails.status === "sold"}
             >
               <option value="rent">Rent</option>
               <option value="sale">Sale</option>
@@ -420,7 +437,7 @@ export default function EditProperty() {
               type="submit"
               variant="contained"
               color="primary"
-              disabled={isLoading}
+              disabled={isLoading || propertyDetails.status === "sold"}
             >
               {isLoading ? <CircularProgress size={24} /> : "Update Property"}
             </Button>

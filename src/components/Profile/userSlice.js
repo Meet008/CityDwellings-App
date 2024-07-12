@@ -15,6 +15,8 @@ const initialState = {
     series: [],
     pieSeries: [],
   },
+  applications: [],
+  updateStatus: null,
 };
 
 const userSlice = createSlice({
@@ -148,6 +150,38 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    fetchRentalApplicationsRequest(state) {
+      state.isLoading = true;
+      state.error = null;
+    },
+    fetchRentalApplicationsSuccess(state, action) {
+      state.isLoading = false;
+      state.applications = action.payload;
+    },
+    fetchRentalApplicationsFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    updateRentalApplicationStatusRequest: (state, action) => {
+      state.isLoading = true;
+      state.error = null;
+      state.updateStatus = "pending";
+    },
+    updateRentalApplicationStatusSuccess: (state, action) => {
+      const updatedApplication = action.payload;
+      state.applications = state.applications.map((application) =>
+        application._id === updatedApplication._id
+          ? updatedApplication
+          : application
+      );
+      state.isLoading = false;
+      state.updateStatus = "success";
+    },
+    updateRentalApplicationStatusFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.updateStatus = "failure";
+    },
   },
 });
 
@@ -182,6 +216,12 @@ export const {
   fetchReviewsRequest,
   fetchReviewsSuccess,
   fetchReviewsFailure,
+  fetchRentalApplicationsRequest,
+  fetchRentalApplicationsSuccess,
+  fetchRentalApplicationsFailure,
+  updateRentalApplicationStatusRequest,
+  updateRentalApplicationStatusSuccess,
+  updateRentalApplicationStatusFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;
