@@ -182,6 +182,9 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.updateStatus = "failure";
     },
+    resetUserState: (state) => {
+      return initialState;
+    },
   },
 });
 
@@ -222,6 +225,7 @@ export const {
   updateRentalApplicationStatusRequest,
   updateRentalApplicationStatusSuccess,
   updateRentalApplicationStatusFailure,
+  resetUserState,
 } = userSlice.actions;
 
 export default userSlice.reducer;
