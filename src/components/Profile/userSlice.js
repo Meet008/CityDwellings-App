@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import Dashboard from "./Dashboard";
 
 const initialState = {
-  user: null,
+  user: JSON.parse(localStorage.getItem("user")) || null,
   isLoading: false,
   error: null,
   properties: [],
@@ -30,6 +30,7 @@ const userSlice = createSlice({
     fetchProfileSuccess: (state, action) => {
       state.isLoading = false;
       state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     fetchProfileFailure: (state, action) => {
       state.isLoading = false;
@@ -42,6 +43,7 @@ const userSlice = createSlice({
     updateProfileSuccess: (state, action) => {
       state.isLoading = false;
       state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     updateProfileFailure: (state, action) => {
       state.isLoading = false;
@@ -183,7 +185,8 @@ const userSlice = createSlice({
       state.updateStatus = "failure";
     },
     resetUserState: (state) => {
-      return initialState;
+      state.user = null;
+      localStorage.removeItem("user");
     },
   },
 });

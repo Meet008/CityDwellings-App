@@ -41,11 +41,11 @@ const Main = () => {
     return !pathsWithoutBackButton.includes(location.pathname);
   };
 
-  const dispatch = useDispatch();
-  useEffect(() => {
-    console.log("called from here");
-    dispatch(fetchProfileRequest());
-  }, [dispatch]);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   console.log("called from here MAin");
+  //   dispatch(fetchProfileRequest());
+  // }, [dispatch]);
 
   return (
     <Box sx={{ display: "flex" }}>
