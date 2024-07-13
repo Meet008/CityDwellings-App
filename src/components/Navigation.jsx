@@ -8,6 +8,7 @@ import {
   Menu,
   Container,
   MenuItem,
+  Avatar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -24,13 +25,17 @@ import InfoIcon from "@mui/icons-material/Info";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LoginIcon from "@mui/icons-material/Login";
+import AppsIcon from "@mui/icons-material/Apps";
 
 const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { isAuthenticated } = useSelector((state) => state.auth);
+
+  const { user } = useSelector((state) => state.user);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -38,6 +43,14 @@ const Navigation = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
   };
 
   const handleBack = () => {
@@ -62,7 +75,7 @@ const Navigation = () => {
         { name: "rent", icon: <RentIcon /> },
         { name: "about", icon: <InfoIcon /> },
         { name: "contact", icon: <ContactMailIcon /> },
-        { name: "profile", icon: <AccountCircleIcon /> },
+        // { name: "profile", icon: <AccountCircleIcon /> },
       ]
     : [
         { name: "sale", icon: <SellIcon sx={{ marginRight: 1 }} /> },
@@ -195,7 +208,6 @@ const Navigation = () => {
                     <Typography variant="">Home</Typography>
                   </Link>
                 </MenuItem>
-                {/* <ConditionalLink page={page} /> */}
                 {pages.map((page) => (
                   <MenuItem>
                     <Link
@@ -314,16 +326,68 @@ const Navigation = () => {
                   <Typography variant="">{page.name}</Typography>
                 </Link>
               ))}
+
+              {/* Show user icon with dropdown menu if user type is 'buyer' */}
               {isAuthenticated && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    marginLeft: "16px",
-                  }}
-                >
-                  <Logout />
+                <Box sx={{ flexGrow: 0 }}>
+                  <Link
+                    onClick={handleOpenUserMenu}
+                    style={{
+                      color: "white",
+                      textTransform: "uppercase",
+                      textDecoration: "none",
+                      textAlign: "center",
+                      display: "flex",
+                      fontWeight: "bold",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      marginLeft: "16px",
+                    }}
+                  >
+                    <AccountCircleIcon />
+                    <Typography variant="">Profile</Typography>
+                  </Link>
+
+                  <Menu
+                    sx={{ mt: "45px" }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                    PaperProps={{
+                      style: {
+                        backgroundColor: "white",
+                        color: "black",
+                      },
+                    }}
+                  >
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link
+                        to="/profile/dashboard"
+                        style={{
+                          color: "inherit",
+                          textDecoration: "none",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <AppsIcon sx={{ marginRight: 1 }} />
+                        <Typography>Profile</Typography>
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Logout />
+                    </MenuItem>
+                  </Menu>
                 </Box>
               )}
             </Box>

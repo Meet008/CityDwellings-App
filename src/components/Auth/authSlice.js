@@ -28,8 +28,11 @@ const authSlice = createSlice({
     },
     loginRequest: (state) => {
       state.loading = true;
+      state.isAuthenticated = false;
+      state.token = "";
     },
     loginSuccess: (state, action) => {
+      console.log("Login success:", action.payload);
       state.loading = false;
       state.isAuthenticated = true;
       state.token = action.payload.token;
@@ -61,7 +64,7 @@ const authSlice = createSlice({
     updatePasswordFail: (state) => {
       state.loading = false;
     },
-    logout: (state) => {
+    logout: (state, action) => {
       state.token = null;
       state.isAuthenticated = false;
       state.user = null;

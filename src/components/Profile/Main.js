@@ -43,6 +43,7 @@ const Main = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log("called from here");
     dispatch(fetchProfileRequest());
   }, [dispatch]);
 
