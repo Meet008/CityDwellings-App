@@ -19,6 +19,7 @@ import Notifications from "./Notifications";
 import AddProperty from "./components/Profile/AddProperty";
 import Dashboard from "./components/Profile/Dashboard";
 import EditProperty from "./components/Profile/EditProperty";
+import Applications from "./components/Profile/Applications";
 import Main from "./components/Profile/Main";
 import MyProperty from "./components/Profile/MyProperty";
 import UserProfile from "./components/Profile/UserProfile";
@@ -26,6 +27,7 @@ import { ConfigProvider } from "antd";
 import Message from "./components/Profile/Messages";
 import Reviews from "./components/Profile/Reviews";
 import ForgotPassword from "./components/Auth/ForgotPassword";
+import Logout from "./components/Auth/Logout";
 
 const theme = createTheme({
   typography: {
@@ -51,6 +53,15 @@ const TawkToScript = () => (
   </Helmet>
 );
 
+{
+  /* {location.pathname.includes("/saleproperty/") && ( // Condition based on the route
+          <TawkToScript
+            propertyId={"668099dfeaf3bd8d4d1668ac"} // Replace with your propertyId
+            chatId={"1i1j5m9df"} // Replace with your chatId
+          />
+        )} */
+}
+
 function App() {
   return (
     <Provider store={store}>
@@ -63,7 +74,7 @@ function App() {
         }}
       >
         <ThemeProvider theme={theme}>
-          <TawkToScript />
+          {/* <TawkToScript /> */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/sale" element={<Sale />} />
@@ -75,10 +86,11 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgotPassword" element={<ForgotPassword />} />
+
             <Route path="/profile" element={<Main />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="add-property" element={<AddProperty />} />
-              <Route path="my-properties" element={<MyProperty />} />
+              <Route path="my-properties" element={<MyProperty />}></Route>
               <Route path="userProfile" element={<UserProfile />} />
               <Route path="message" element={<Message />} />
               <Route path="reviews" element={<Reviews />} />
@@ -86,6 +98,11 @@ function App() {
                 path="edit-property/:propertyId"
                 element={<EditProperty />}
               />
+              <Route
+                path="applications/:propertyId"
+                element={<Applications />}
+              />
+              <Route path="logout" element={<Logout />} />
             </Route>
             <Route path="/upload" element={<UploadForm />} />
           </Routes>

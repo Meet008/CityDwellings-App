@@ -9,11 +9,17 @@ import {
   CardMedia,
   IconButton,
   Tooltip,
+  Badge,
+  Stack,
+  Chip,
 } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import PropertyIcons from "../PropertyIcons"; // Ensure this component is correctly imported
+import PropertyIcons from "../PropertyIcons";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import MailIcon from "@mui/icons-material/Mail"; // For applications icon
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const MyPropertyItems = ({
   itemURL,
@@ -28,6 +34,11 @@ const MyPropertyItems = ({
   itemImg,
   handleEditProperty,
   handleDeleteProperty,
+  expiryDate,
+  handleShowApplications,
+  applicationCount,
+  itemStatus,
+  itemUpdatedAt,
 }) => {
   let encodedImgUrl = null;
   if (itemImg) {
@@ -40,6 +51,43 @@ const MyPropertyItems = ({
     return text.substring(0, length) + "...";
   };
 
+  const getStatusColor = (date) => {
+    const currentDate = new Date();
+    const expiry = new Date(date);
+    const diffTime = expiry - currentDate;
+
+    if (diffTime < 0) return "grey"; // Expired
+    if (diffTime <= 3 * 24 * 60 * 60 * 1000) return "#FF1D1D"; // Less than 3 days in milliseconds
+    if (diffTime <= 15 * 24 * 60 * 60 * 1000) return "#e0d210"; // Less than 15 days in milliseconds
+    return "green"; // More than 15 days
+  };
+
+  const expiryColor = getStatusColor(expiryDate);
+
+  const isExpired = new Date(expiryDate) < new Date();
+
+  const getOrdinalSuffix = (day) => {
+    if (day > 3 && day < 21) return "th"; // catch 11th, 12th, 13th
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  const formatDate = (date) => {
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    const dateObj = new Date(date);
+    const day = dateObj.getDate();
+    const suffix = getOrdinalSuffix(day);
+    const formattedDate = dateObj.toLocaleDateString("en-US", options);
+    return formattedDate.replace(day, `${day}${suffix}`);
+  };
   return (
     <Card
       sx={{
@@ -49,8 +97,42 @@ const MyPropertyItems = ({
         padding: "1rem",
         boxShadow: 3,
         borderRadius: 2,
+        position: "relative",
       }}
     >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "1rem",
+          right: "1rem",
+        }}
+      >
+        {itemStatus === "sold" ? (
+          <Chip
+            label={`Sold at ${formatDate(itemUpdatedAt)}`}
+            sx={{
+              backgroundColor: "grey",
+              color: "white",
+              fontWeight: "bold",
+            }}
+          />
+        ) : (
+          <Chip
+            icon={<AccessTimeIcon />}
+            label={
+              isExpired ? "Expired" : `Valid Until: ${formatDate(expiryDate)}`
+            }
+            sx={{
+              backgroundColor: expiryColor,
+              color: "white",
+              fontWeight: "bold",
+              "& .MuiChip-icon": {
+                color: "white",
+              },
+            }}
+          />
+        )}
+      </Box>
       <Box
         sx={{
           width: { xs: "100%", md: "50%" },
@@ -78,7 +160,7 @@ const MyPropertyItems = ({
         </Link> */}
 
         <Link
-          to={`/${itemURL}property/${itemId}`}
+          // to={`/${itemURL}property/${itemId}`}
           style={{ display: "flex", justifyContent: "center", width: "100%" }}
         >
           {encodedImgUrl ? (
@@ -108,6 +190,7 @@ const MyPropertyItems = ({
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
+          marginTop: "25px",
         }}
       >
         <Box>
@@ -171,25 +254,55 @@ const MyPropertyItems = ({
             alignItems: "center",
           }}
         >
-          <Link to={`/${itemURL}property/${itemId}`}>
-            <Button variant="contained" color="primary" size="large">
-              Full Details
+          <Link to={`/profile/applications/${itemId}`}>
+            <Button variant="contained" color="warning" size="large">
+              Applications ({applicationCount})
             </Button>
           </Link>
+
+          {/* <Badge badgeContent={applicationCount} color="primary">
+              <IconButton
+                color="warning"
+                onClick={() => handleShowApplications(itemId)}
+              >
+                <MailIcon />
+              </IconButton>
+            </Badge> */}
           <Box>
-            <IconButton
-              color="primary"
-              onClick={() => handleEditProperty(itemId)}
-              sx={{ marginRight: 1 }}
+            <Tooltip
+              title={itemStatus === "sold" ? "View Property" : "Edit Property"}
+              arrow
+              disableInteractive
             >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              color="secondary"
-              onClick={() => handleDeleteProperty(itemId)}
+              <span>
+                <IconButton
+                  color="warning"
+                  onClick={() => handleEditProperty(itemId)}
+                  // disabled={itemStatus === "sold"}
+                >
+                  {itemStatus === "sold" ? <VisibilityIcon /> : <EditIcon />}
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Tooltip
+              title={
+                itemStatus === "sold"
+                  ? "You can't delete Sold Property!"
+                  : "Delete Property"
+              }
+              arrow
+              disableInteractive
             >
-              <DeleteIcon />
-            </IconButton>
+              <span>
+                <IconButton
+                  color="warning"
+                  onClick={() => handleDeleteProperty(itemId)}
+                  disabled={itemStatus === "sold"}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
           </Box>
         </Box>
       </CardContent>

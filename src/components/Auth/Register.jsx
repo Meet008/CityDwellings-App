@@ -20,8 +20,12 @@ import {
   Stepper,
   Step,
   StepLabel,
+  IconButton,
+  Badge,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import CloseIcon from "@mui/icons-material/Close";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { registerRequest } from "./authSlice";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +41,7 @@ function Copyright(props) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        CityDwellings
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -47,9 +51,21 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-const steps = ["Personal Information", "Contact Information", "Other Details"];
+const steps = [
+  "Personal Information",
+  "Contact Information",
+  "Other Details",
+  "Chat Support Information",
+];
 
-function getStepContent(stepIndex, formData, handleChange, handleFileChange) {
+function getStepContent(
+  stepIndex,
+  formData,
+  handleChange,
+  handleFileChange,
+  fileName,
+  handleRemoveImage
+) {
   switch (stepIndex) {
     case 0:
       return (
@@ -174,12 +190,57 @@ function getStepContent(stepIndex, formData, handleChange, handleFileChange) {
     case 2:
       return (
         <>
+          {formData.profilePicture && (
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                mt: 2,
+              }}
+            >
+              <Badge
+                overlap="circular"
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                badgeContent={
+                  <IconButton
+                    size="small"
+                    onClick={handleRemoveImage}
+                    sx={{
+                      color: "white",
+                      backgroundColor: "red",
+                      "&:hover": {
+                        backgroundColor: "darkred",
+                      },
+                    }}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                }
+              >
+                <img
+                  src={formData.profilePicture}
+                  alt="Profile Preview"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                  }}
+                />
+              </Badge>
+              <Typography sx={{ mt: 1 }}>{fileName}</Typography>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Button variant="contained" component="label" fullWidth>
               Upload Profile Picture
               <input type="file" hidden onChange={handleFileChange} />
             </Button>
           </Grid>
+
           <Grid item xs={12}>
             <FormControl fullWidth>
               <InputLabel>User Type</InputLabel>
@@ -221,6 +282,50 @@ function getStepContent(stepIndex, formData, handleChange, handleFileChange) {
           </Grid>
         </>
       );
+    case 3:
+      return (
+        <>
+          <Grid item xs={12}>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              <InfoOutlinedIcon
+                fontSize="small"
+                sx={{ verticalAlign: "middle", mr: 1 }}
+              />
+              If you do not want to add chat support, please leave the fields
+              empty.
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              name="propertyId"
+              label="Property ID"
+              id="propertyId"
+              value={formData.propertyId}
+              onChange={handleChange}
+              helperText="Enter the ID associated with the property you want to list."
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              name="widgetId"
+              label="Widget ID (Chat Support)"
+              id="widgetId"
+              value={formData.widgetId}
+              onChange={handleChange}
+              helperText={
+                <>
+                  Enter the Widget ID provided by your chat support service.
+                  <br />
+                  This ID is necessary to link the chat support widget to your
+                  account.
+                </>
+              }
+            />
+          </Grid>
+        </>
+      );
     default:
       return "Unknown stepIndex";
   }
@@ -241,13 +346,26 @@ export default function SignUp() {
     userType: "",
     preferredContactMethod: "",
     receiveNewsletter: false,
+    propertyId: "", // New state for Property ID
+    widgetId: "", // New state for Widget ID
   });
 
   const [activeStep, setActiveStep] = useState(0);
+  const [fileName, setFileName] = useState("");
 
   const dispatch = useDispatch();
-  const { isAuthenticated, error } = useSelector((state) => state.auth);
+
   const navigate = useNavigate();
+
+  const { isAuthenticated, error, loading, token } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      navigate("/profile/dashboard");
+    }
+  }, [isAuthenticated]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -260,6 +378,15 @@ export default function SignUp() {
       setFormData({ ...formData, profilePicture: reader.result });
     };
     reader.readAsDataURL(e.target.files[0]);
+    setFileName(e.target.files[0].name);
+  };
+
+  const handleRemoveImage = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      profilePicture: null,
+    }));
+    setFileName("");
   };
 
   const handleNext = () => {
@@ -354,7 +481,9 @@ export default function SignUp() {
                 activeStep,
                 formData,
                 handleChange,
-                handleFileChange
+                handleFileChange,
+                fileName,
+                handleRemoveImage
               )}
             </Grid>
             <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
@@ -382,14 +511,28 @@ export default function SignUp() {
               </Grid>
             )}
           </Box>
-          <Button
+          {activeStep === steps.length - 1 && (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                Need help with your Chat account setup?{" "}
+                <Link
+                  href="https://help.tawk.to/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Visit Tawk.to Help Center
+                </Link>
+              </Typography>
+            </Box>
+          )}
+          {/* <Button
             variant="contained"
             color="primary"
             onClick={() => handleGenerateAndSubmitFakeUsers(10)}
             sx={{ mt: 3 }}
           >
             Generate and Submit 10 Fake Users
-          </Button>
+          </Button> */}
         </Box>
         <Copyright sx={{ mt: 5 }} />
       </Container>

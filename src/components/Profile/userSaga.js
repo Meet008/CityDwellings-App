@@ -26,6 +26,18 @@ import {
   fetchDashboardDataStart,
   fetchDashboardDataSuccess,
   fetchDashboardDataFailure,
+  addReviewRequest,
+  addReviewSuccess,
+  addReviewFailure,
+  fetchReviewsRequest,
+  fetchReviewsSuccess,
+  fetchReviewsFailure,
+  fetchRentalApplicationsRequest,
+  fetchRentalApplicationsSuccess,
+  fetchRentalApplicationsFailure,
+  updateRentalApplicationStatusRequest,
+  updateRentalApplicationStatusSuccess,
+  updateRentalApplicationStatusFailure,
 } from "./userSlice";
 
 // API base URL
@@ -264,6 +276,114 @@ function* fetchDashboardDataSaga() {
   }
 }
 
+// Add review saga
+function* addReviewSaga(action) {
+  try {
+    const { user_name, review, suggestion, propertyId } = action.payload;
+    // const token = localStorage.getItem("token");
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // };
+
+    const response = yield call(
+      axios.post,
+      "http://localhost:5000/api/reviews",
+      { user_name, review, suggestion, propertyId }
+    );
+
+    yield put(addReviewSuccess(response.data));
+    toast.success("Review added successfully");
+  } catch (error) {
+    yield put(
+      addReviewFailure(error.response?.data?.message || "Failed to add review")
+    );
+    toast.error(error.response?.data?.message || "Failed to add review");
+  }
+}
+
+function* fetchReviewsSaga() {
+  try {
+    const token = localStorage.getItem("token");
+    console.log("token", token);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
+    const response = yield call(axios.get, `${API_BASE_URL}/reviews`, config);
+    yield put(fetchReviewsSuccess(response.data));
+  } catch (error) {
+    yield put(fetchReviewsFailure(error.message));
+    toast.error(error.message || "Failed to fetch reviews");
+  }
+}
+
+// Fetch rental applications
+function* fetchRentalApplicationsSaga(action) {
+  try {
+    const { propertyId } = action.payload;
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
+    const response = yield call(
+      axios.get,
+      `${API_BASE_URL}/rental_form/property/${propertyId}`,
+      config
+    );
+    yield put(fetchRentalApplicationsSuccess(response.data));
+  } catch (error) {
+    yield put(
+      fetchRentalApplicationsFailure(
+        error.response?.data?.message || "Failed to fetch rental applications"
+      )
+    );
+    toast.error(
+      error.response?.data?.message || "Failed to fetch rental applications"
+    );
+  }
+}
+
+// Update rental application status
+function* updateRentalApplicationStatusSaga(action) {
+  try {
+    const { applicationId, status } = action.payload;
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
+    const response = yield call(
+      axios.put,
+      `${API_BASE_URL}/rental_form/${applicationId}/status`,
+      { status },
+      config
+    );
+    yield put(updateRentalApplicationStatusSuccess(response.data));
+    toast.success("Rental application status updated successfully");
+  } catch (error) {
+    yield put(
+      updateRentalApplicationStatusFailure(
+        error.response?.data?.message ||
+          "Failed to update rental application status"
+      )
+    );
+    toast.error(
+      error.response?.data?.message ||
+        "Failed to update rental application status"
+    );
+  }
+}
+
 // Watcher Sagas
 export default function* userSaga() {
   yield takeLatest(fetchProfileRequest.type, fetchProfileSaga);
@@ -273,5 +393,15 @@ export default function* userSaga() {
   yield takeLatest(deletePropertyRequest.type, deletePropertySaga);
   yield takeLatest(editPropertyRequest.type, editPropertySaga);
   yield takeLatest(fetchPropertyDetailsRequest.type, fetchPropertyDetailsSaga);
-  yield takeLatest(fetchDashboardDataStart.type, fetchDashboardDataSaga); // Added for dashboard data
+  yield takeLatest(fetchDashboardDataStart.type, fetchDashboardDataSaga);
+  yield takeLatest(addReviewRequest.type, addReviewSaga);
+  yield takeLatest(fetchReviewsRequest.type, fetchReviewsSaga);
+  yield takeLatest(
+    fetchRentalApplicationsRequest.type,
+    fetchRentalApplicationsSaga
+  );
+  yield takeLatest(
+    updateRentalApplicationStatusRequest.type,
+    updateRentalApplicationStatusSaga
+  );
 }

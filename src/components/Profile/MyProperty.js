@@ -49,7 +49,8 @@ const PropertyPage = () => {
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
       <Typography variant="h4" gutterBottom>
-        My Properties
+        My Properties -{" "}
+        {properties && properties.length > 0 ? properties.length : 0}
       </Typography>
 
       {isLoading ? (
@@ -90,6 +91,9 @@ const PropertyPage = () => {
                 itemBedrooms={property.bedrooms}
                 itemBathrooms={property.bathrooms}
                 itemLivingrooms={property.livingrooms || 1}
+                itemStatus={property.status}
+                itemUpdatedAt={property.updatedAt}
+                expiryDate={property.expiryDate}
                 itemImg={
                   property.images && property.images.length > 0
                     ? property.images[0]
@@ -97,6 +101,10 @@ const PropertyPage = () => {
                 }
                 handleEditProperty={handleEditProperty}
                 handleDeleteProperty={() => handleDeleteProperty(property._id)}
+                applicationCount={
+                  (property.buyingApplications?.length || 0) +
+                  (property.rentalApplications?.length || 0)
+                }
               />
             </Grid>
           ))}

@@ -2,12 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import Dashboard from "./Dashboard";
 
 const initialState = {
-  user: null,
+  user: JSON.parse(localStorage.getItem("user")) || null,
   isLoading: false,
   error: null,
   properties: [],
   propertyDetails: [],
-  messages: [],
+  reviewList: [],
   dashboardData: {
     totalCommercial: 0,
     totalResidential: 0,
@@ -15,6 +15,8 @@ const initialState = {
     series: [],
     pieSeries: [],
   },
+  applications: [],
+  updateStatus: null,
 };
 
 const userSlice = createSlice({
@@ -28,6 +30,7 @@ const userSlice = createSlice({
     fetchProfileSuccess: (state, action) => {
       state.isLoading = false;
       state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     fetchProfileFailure: (state, action) => {
       state.isLoading = false;
@@ -40,6 +43,7 @@ const userSlice = createSlice({
     updateProfileSuccess: (state, action) => {
       state.isLoading = false;
       state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     updateProfileFailure: (state, action) => {
       state.isLoading = false;
@@ -123,6 +127,67 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    addReviewRequest: (state, action) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    addReviewSuccess: (state, action) => {
+      state.isLoading = false;
+      state.reviewList.push(action.payload);
+    },
+    addReviewFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    fetchReviewsRequest: (state) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    fetchReviewsSuccess: (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.reviewList = action.payload;
+    },
+    fetchReviewsFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    fetchRentalApplicationsRequest(state) {
+      state.isLoading = true;
+      state.error = null;
+    },
+    fetchRentalApplicationsSuccess(state, action) {
+      state.isLoading = false;
+      state.applications = action.payload;
+    },
+    fetchRentalApplicationsFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    updateRentalApplicationStatusRequest: (state, action) => {
+      state.isLoading = true;
+      state.error = null;
+      state.updateStatus = "pending";
+    },
+    updateRentalApplicationStatusSuccess: (state, action) => {
+      const updatedApplication = action.payload;
+      state.applications = state.applications.map((application) =>
+        application._id === updatedApplication._id
+          ? updatedApplication
+          : application
+      );
+      state.isLoading = false;
+      state.updateStatus = "success";
+    },
+    updateRentalApplicationStatusFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.updateStatus = "failure";
+    },
+    resetUserState: (state) => {
+      state.user = null;
+      localStorage.removeItem("user");
+    },
   },
 });
 
@@ -151,6 +216,19 @@ export const {
   fetchDashboardDataStart,
   fetchDashboardDataSuccess,
   fetchDashboardDataFailure,
+  addReviewRequest,
+  addReviewSuccess,
+  addReviewFailure,
+  fetchReviewsRequest,
+  fetchReviewsSuccess,
+  fetchReviewsFailure,
+  fetchRentalApplicationsRequest,
+  fetchRentalApplicationsSuccess,
+  fetchRentalApplicationsFailure,
+  updateRentalApplicationStatusRequest,
+  updateRentalApplicationStatusSuccess,
+  updateRentalApplicationStatusFailure,
+  resetUserState,
 } = userSlice.actions;
 
 export default userSlice.reducer;

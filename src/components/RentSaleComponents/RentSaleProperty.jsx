@@ -1,13 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Grid,
+  Tooltip,
+} from "@mui/material";
 import ImageGallerySlider from "../ImageGallerySlider";
 import { orange } from "@mui/material/colors";
 import PropertyIcons from "../PropertyIcons";
 import RentalForm from "./RentalForm";
 import Itour from "./Itour";
+import ReviewForm from "./ReviewForm.js";
+import { Info as InfoIcon, Add as AddIcon } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
 
 function RentSaleProperty(props) {
+  const { isAuthenticated, error, loading, token } = useSelector(
+    (state) => state.auth
+  );
+
+  const { user } = useSelector((state) => state.user);
+
   const [imagesForDisplay, setImagesForDisplay] = useState([]);
+
+  const [open, setOpen] = useState(false);
+  const [openRentalForm, setOpenRentalForm] = useState(false);
+  const [newReview, setNewReview] = useState({
+    user_name: "",
+    review: "",
+    suggestion: "",
+    propertyId: props.propertyId,
+  });
 
   useEffect(() => {
     if (props.propertyImages && Array.isArray(props.propertyImages)) {
@@ -17,8 +47,38 @@ function RentSaleProperty(props) {
       });
       setImagesForDisplay(imageUrls);
     }
+    return () => {};
   }, [props.propertyImages]);
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setNewReview({
+      user_name: "",
+      review: "",
+      suggestion: "",
+      propertyId: props.propertyId,
+    });
+  };
+
+  // Ensure the propertyId is updated if the prop changes
+  useEffect(() => {
+    setNewReview((prevState) => ({
+      ...prevState,
+      propertyId: props.propertyId,
+    }));
+  }, [props.propertyId]);
+
+  const handleOpenRentalForm = () => {
+    setOpenRentalForm(true);
+  };
+
+  const handleCloseRentalForm = () => {
+    setOpenRentalForm(false);
+  };
   return (
     <Box>
       <Container>
@@ -76,6 +136,82 @@ function RentSaleProperty(props) {
               bathrooms={props.propertyBathrooms}
               livingrooms={props.propertyLivingrooms}
             />
+
+            {/* <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={handleOpen}
+              sx={{ marginBottom: 2 }}
+            >
+              Add Review
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOpenRentalForm}
+            >
+              Rent This Property
+            </Button> */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mt: 3,
+              }}
+            >
+              <Tooltip
+                title={
+                  !isAuthenticated
+                    ? "You have to Login first to Add Review!"
+                    : ""
+                }
+                arrow
+                placement="bottom"
+              >
+                <div>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    size="large"
+                    startIcon={<AddIcon />}
+                    onClick={handleOpen}
+                    sx={{ marginRight: 2 }}
+                    disabled={!isAuthenticated}
+                    style={{
+                      pointerEvents: !isAuthenticated ? "none" : "auto",
+                    }}
+                  >
+                    Add Review
+                  </Button>
+                </div>
+              </Tooltip>
+              <Tooltip
+                title={
+                  !isAuthenticated
+                    ? "You have to Login first to Rent this Property!"
+                    : ""
+                }
+                arrow
+                placement="bottom"
+              >
+                <div>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    size="large"
+                    onClick={handleOpenRentalForm}
+                    disabled={!isAuthenticated}
+                    style={{
+                      pointerEvents: !isAuthenticated ? "none" : "auto",
+                    }}
+                  >
+                    Rent This Property
+                  </Button>
+                </div>
+              </Tooltip>
+            </Box>
           </Box>
         </Box>
         <div
@@ -85,9 +221,19 @@ function RentSaleProperty(props) {
         {props.tourId && (
           <Itour tourId={props.tourId} filename={"index.html"} />
         )}
-
-        <RentalForm />
       </Container>
+      <ReviewForm
+        open={open}
+        handleClose={handleClose}
+        propertyId={props.propertyId}
+        newReview={newReview}
+        setNewReview={setNewReview}
+      />
+      <RentalForm
+        open={openRentalForm}
+        handleClose={handleCloseRentalForm}
+        propertyId={props.propertyId}
+      />
     </Box>
   );
 }

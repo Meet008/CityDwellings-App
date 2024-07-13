@@ -1,200 +1,246 @@
-import { Button } from "@mui/material";
-import { Input, Select } from "antd";
-import React, { useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Box,
+  useMediaQuery,
+} from "@mui/material";
+import { Select } from "antd";
+import React, { useState, useEffect } from "react";
+import { useTheme } from "@mui/material/styles";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setFormData,
+  submitFormRequest,
+  submitFormSuccess,
+  submitFormFailure,
+} from "./RentalFormSlice"; // Update the import path as necessary
 
-const RentalForm = () => {
-  const [forn_data, set_form_data] = useState({ full_name: "" });
+const RentalForm = (props) => {
+  const { open, handleClose, propertyId } = props;
+  const dispatch = useDispatch();
+  const formData = useSelector((state) => state.rentalForm.formData);
+  const isLoading = useSelector((state) => state.rentalForm.isLoading);
+  const submissionSuccess = useSelector(
+    (state) => state.rentalForm.submissionSuccess
+  );
+  const error = useSelector((state) => state.rentalForm.error);
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleChangeFormData = (key, value) => {
-    set_form_data({ ...forn_data, [key]: value });
+    dispatch(setFormData({ [key]: value }));
   };
+
+  const handleSubmit = () => {
+    dispatch(submitFormRequest({ propertyId, formData }));
+  };
+
+  // Close the dialog if the form is successfully submitted
+  if (submissionSuccess) {
+    handleClose();
+    dispatch(submitFormSuccess());
+  }
+
+  useEffect(() => {
+    // Set dummy data when the component mounts
+    const dummyData = {
+      full_name: "John Doe",
+      phone_number: "1234567890",
+      email: "john.doe@example.com",
+      current_address: "123 Current St, City, Country",
+      previous_addresses: "456 Previous St, City, Country",
+      bank_account_name: "John Doe",
+      account_type: "saving",
+      ifsc_code: "IFSC0001",
+      reason_for_moving: "Relocation for work",
+    };
+    dispatch(setFormData(dummyData));
+  }, [dispatch]);
+
   return (
-    <>
-      <div className="row d-flex align-items-center justify-content-center mb-3">
-        <label className="" style={{ fontSize: "22px", color: "#ff700d" }}>
-          Rental Application
-        </label>
-      </div>
-      <div className="row d-flex justify-content-center mt-5 mb-10">
-        <div className="col-8">
+    <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
+      <DialogTitle
+        sx={{ fontSize: "22px", color: "#ff700d", textAlign: "center" }}
+      >
+        Rental Application
+      </DialogTitle>
+      <DialogContent>
+        <Box mt={2}>
           <label
-            className=""
             style={{
               fontSize: "18px",
               color: "#ff700d",
               borderBottom: "1px dashed #f07917",
+              display: "block",
             }}
           >
             Personal Information
           </label>
-        </div>
-
-        <div className="col-8 mt-2">
-          <label className="">Full Name</label>
-          <Input
-            size="large"
-            onChange={(e) => {
-              handleChangeFormData("full_name", e.target.value);
-            }}
-            value={forn_data?.full_name}
-          />
-        </div>
-        <div className="col-8 mt-2">
-          <div className="row">
-            <div className="col-6">
-              <label className="">Phone Number </label>
-              <Input
+          <Box mt={2}>
+            <TextField
+              label="Full Name"
+              variant="outlined"
+              fullWidth
+              size="large"
+              onChange={(e) => {
+                handleChangeFormData("full_name", e.target.value);
+              }}
+              value={formData?.full_name}
+              sx={{ mb: 2 }}
+            />
+            <Box display="flex" gap={2}>
+              <TextField
+                label="Phone Number"
+                variant="outlined"
+                fullWidth
                 size="large"
                 onChange={(e) => {
                   handleChangeFormData("phone_number", e.target.value);
                 }}
-                value={forn_data?.phone_number}
+                value={formData?.phone_number}
               />
-            </div>
-            <div className="col-6">
-              <label className="">Email </label>
-              <Input
+              <TextField
+                label="Email"
+                variant="outlined"
+                fullWidth
                 size="large"
                 onChange={(e) => {
                   handleChangeFormData("email", e.target.value);
                 }}
-                value={forn_data?.email}
+                value={formData?.email}
               />
-            </div>
-          </div>
-        </div>
-        <div className="col-8 mt-3">
-          <label
-            className=""
-            style={{
-              fontSize: "18px",
-              color: "#ff700d",
-              borderBottom: "1px dashed #f07917",
-            }}
-          >
-            Residential History
-          </label>
-        </div>
-        <div className="col-8 mt-1">
-          <div className="row">
-            <div className="col-12">
-              <label className="">Current Address </label>
-              <Input
+            </Box>
+          </Box>
+          <Box mt={3}>
+            <label
+              style={{
+                fontSize: "18px",
+                color: "#ff700d",
+                borderBottom: "1px dashed #f07917",
+                display: "block",
+              }}
+            >
+              Residential History
+            </label>
+            <Box mt={2}>
+              <TextField
+                label="Current Address"
+                variant="outlined"
+                fullWidth
                 size="large"
                 onChange={(e) => {
                   handleChangeFormData("curerent_address", e.target.value);
                 }}
-                value={forn_data?.curerent_address}
+                value={formData?.current_address}
+                sx={{ mb: 2 }}
               />
-            </div>
-            <div className="col-12">
-              <label className="">Previous Addresses </label>
-              <Input
+              <TextField
+                label="Previous Addresses"
+                variant="outlined"
+                fullWidth
                 size="large"
                 onChange={(e) => {
                   handleChangeFormData("previous_addresses", e.target.value);
                 }}
-                value={forn_data?.previous_addresses}
+                value={formData?.previous_addresses}
               />
-            </div>
-          </div>
-        </div>
-        <div className="col-8 mt-3">
-          <label
-            className=""
-            style={{
-              fontSize: "18px",
-              color: "#ff700d",
-              borderBottom: "1px dashed #f07917",
-            }}
-          >
-            Financial Information
-          </label>
-        </div>
-        <div className="col-8 mt-1">
-          <div className="row">
-            <div className="col-12">
-              <label className="">Bank Account Name</label>
-              <Input
+            </Box>
+          </Box>
+          <Box mt={3}>
+            <label
+              style={{
+                fontSize: "18px",
+                color: "#ff700d",
+                borderBottom: "1px dashed #f07917",
+                display: "block",
+              }}
+            >
+              Financial Information
+            </label>
+            <Box mt={2}>
+              <TextField
+                label="Bank Account Name"
+                variant="outlined"
+                fullWidth
                 size="large"
                 onChange={(e) => {
                   handleChangeFormData("bank_account_name", e.target.value);
                 }}
-                value={forn_data?.bank_account_name}
+                value={formData?.bank_account_name}
+                sx={{ mb: 2 }}
               />
-            </div>
-          </div>
-        </div>
-        <div className="col-8 mt-2">
-          <div className="row">
-            <div className="col-6">
-              <label className="">Account Type </label>
-              <Select
-                size="large"
-                style={{ width: "100%" }}
-                onChange={(e) => {
-                  handleChangeFormData("account_type", e);
-                }}
-                placeholder="Select account Type"
-                value={forn_data?.account_type || null}
-                options={[
-                  { label: "Current", value: "current" },
-                  { label: "Saving", value: "saving" },
-                ]}
-              />
-            </div>{" "}
-            <div className="col-6">
-              <label className="">IFSC Code </label>
-              <Input
-                size="large"
-                onChange={(e) => {
-                  handleChangeFormData("ifcs_code", e.target.value);
-                }}
-                value={forn_data?.ifcs_code}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="col-8 mt-3">
-          <label
-            className=""
-            style={{
-              fontSize: "18px",
-              color: "#ff700d",
-              borderBottom: "1px dashed #f07917",
-            }}
-          >
-            Optional Information
-          </label>
-        </div>
-
-        <div className="col-8 mt-1">
-          <label className="">Reson For Moving</label>
-          <Input.TextArea
-            size="large"
-            onChange={(e) => {
-              handleChangeFormData("reason_for_moving", e.target.value);
-            }}
-            value={forn_data?.reason_for_moving}
-          />
-        </div>
-
-        <div className="col-8 mt-2 text-end mt-3">
-          <Button
-            variant="contained"
-            color="error"
-            size="large"
-            className="me-2"
-          >
-            Cancel
-          </Button>
-          <Button variant="contained" color="warning" size="large">
-            Submit
-          </Button>
-        </div>
-      </div>
-    </>
+              <Box display="flex" gap={2}>
+                <Select
+                  size="large"
+                  style={{ width: "100%" }}
+                  onChange={(value) => {
+                    handleChangeFormData("account_type", value);
+                  }}
+                  placeholder="Select Account Type"
+                  value={formData?.account_type || null}
+                  options={[
+                    { label: "Current", value: "current" },
+                    { label: "Saving", value: "saving" },
+                  ]}
+                />
+                <TextField
+                  label="IFSC Code"
+                  variant="outlined"
+                  fullWidth
+                  size="large"
+                  onChange={(e) => {
+                    handleChangeFormData("ifsc_code", e.target.value);
+                  }}
+                  value={formData?.ifsc_code}
+                />
+              </Box>
+            </Box>
+          </Box>
+          <Box mt={3}>
+            <label
+              style={{
+                fontSize: "18px",
+                color: "#ff700d",
+                borderBottom: "1px dashed #f07917",
+                display: "block",
+              }}
+            >
+              Optional Information
+            </label>
+            <TextField
+              label="Reason For Moving"
+              variant="outlined"
+              fullWidth
+              size="large"
+              multiline
+              rows={4}
+              onChange={(e) => {
+                handleChangeFormData("reason_for_moving", e.target.value);
+              }}
+              value={formData?.reason_for_moving}
+            />
+          </Box>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} variant="contained" color="secondary">
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          color="primary"
+          disabled={isLoading}
+        >
+          {isLoading ? "Submitting..." : "Submit"}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

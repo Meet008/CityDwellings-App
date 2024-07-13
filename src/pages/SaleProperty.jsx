@@ -84,6 +84,7 @@ function SaleProperty() {
               propertyBathrooms={property.bathrooms}
               propertyLivingrooms={property.livingrooms || 1}
               tourId={property.tourId}
+              propertyId={property._id}
             />
             <MortgageCalculator fullPropertyPrice={property.price} />
           </Box>

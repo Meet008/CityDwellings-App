@@ -46,11 +46,16 @@ export default function SignIn() {
     (state) => state.auth
   );
 
+  const { user } = useSelector((state) => state.user);
   useEffect(() => {
-    if (isAuthenticated && token) {
+    console.log("Auth state:", { isAuthenticated, token, user });
+    if (isAuthenticated && token && user && user.userType === "seller") {
       navigate("/profile/dashboard");
     }
-  }, [isAuthenticated]);
+    if (isAuthenticated && token && user && user.userType === "buyer") {
+      navigate("/");
+    }
+  }, [isAuthenticated, user, navigate, token]);
 
   return (
     <ThemeProvider theme={defaultTheme}>

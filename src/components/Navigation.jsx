@@ -1,241 +1,3 @@
-// import React from "react";
-// import AppBar from "@mui/material/AppBar";
-// import Box from "@mui/material/Box";
-// import Toolbar from "@mui/material/Toolbar";
-// import IconButton from "@mui/material/IconButton";
-// import Typography from "@mui/material/Typography";
-// import Menu from "@mui/material/Menu";
-// import MenuIcon from "@mui/icons-material/Menu";
-// import Container from "@mui/material/Container";
-// import MenuItem from "@mui/material/MenuItem";
-// import logo from "../assets/icons/buildings.svg";
-// import { ThemeProvider, createTheme } from "@mui/material/styles";
-// import { orange } from "@mui/material/colors";
-// import { Link } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-
-// function Navigation() {
-//   const [anchorElNav, setAnchorElNav] = React.useState(null);
-
-//   const handleOpenNavMenu = (event) => {
-//     setAnchorElNav(event.currentTarget);
-//   };
-
-//   const handleCloseNavMenu = () => {
-//     setAnchorElNav(null);
-//   };
-
-//   const darkTheme = createTheme({
-//     palette: {
-//       mode: "dark",
-//       primary: {
-//         main: "#1976d2",
-//       },
-//     },
-//     typography: {
-//       fontFamily: ["Montserrat", "sans-serif"].join(","),
-//     },
-//   });
-
-//   const { isAuthenticated, error, loading, token } = useSelector(
-//     (state) => state.auth
-//   );
-
-//   const pages = isAuthenticated
-//     ? ["sale", "rent", "about", "contact", "profile"]
-//     : ["sale", "rent", "about", "contact", "login"];
-
-//   return (
-//     <ThemeProvider theme={darkTheme}>
-//       <AppBar
-//         sx={{
-//           position: "relative",
-//           backgroundColor: orange[800],
-//           boxShadow: "none",
-//         }}
-//       >
-//         <Container maxWidth="xl">
-//           <Toolbar disableGutters>
-//             <Link to="/" style={{ textDecoration: "none" }}>
-//               <Box sx={{ display: "flex" }}>
-//                 <Box
-//                   sx={{
-//                     display: { xs: "none", md: "flex" },
-//                     marginRight: "5px",
-//                   }}
-//                 >
-//                   <img src={logo} alt="logo" />
-//                 </Box>
-//                 <Typography
-//                   variant="h6"
-//                   noWrap
-//                   sx={{
-//                     mr: 2,
-//                     display: { xs: "none", md: "flex" },
-//                     fontWeight: 700,
-//                     letterSpacing: ".1rem",
-//                     color: "white",
-//                     textDecoration: "none",
-//                   }}
-//                 >
-//                   City Dwellings
-//                 </Typography>
-//               </Box>
-//             </Link>
-
-//             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-//               <IconButton
-//                 size="large"
-//                 aria-label="account of current user"
-//                 aria-controls="menu-appbar"
-//                 aria-haspopup="true"
-//                 onClick={handleOpenNavMenu}
-//                 color="inherit"
-//               >
-//                 <MenuIcon />
-//               </IconButton>
-//               <Menu
-//                 id="menu-appbar"
-//                 anchorEl={anchorElNav}
-//                 anchorOrigin={{
-//                   vertical: "bottom",
-//                   horizontal: "left",
-//                 }}
-//                 keepMounted
-//                 transformOrigin={{
-//                   vertical: "top",
-//                   horizontal: "left",
-//                 }}
-//                 open={Boolean(anchorElNav)}
-//                 onClose={handleCloseNavMenu}
-//                 sx={{
-//                   display: { xs: "block", md: "none" },
-//                 }}
-//               >
-//                 <MenuItem>
-//                   <Link
-//                     to="/"
-//                     style={{
-//                       textAlign: "center",
-//                       color: "white",
-//                       textDecoration: "none",
-//                       textTransform: "uppercase",
-//                       fontWeight: "bold",
-//                     }}
-//                   >
-//                     Home
-//                   </Link>
-//                 </MenuItem>
-
-//                 {pages.map((page) => (
-//                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-//                     <Link
-//                       to={`/${page}`}
-//                       style={{
-//                         textAlign: "center",
-//                         color: "white",
-//                         textDecoration: "none",
-//                         textTransform: "uppercase",
-//                         fontWeight: "bold",
-//                       }}
-//                     >
-//                       {page}
-//                     </Link>
-//                   </MenuItem>
-//                 ))}
-//               </Menu>
-//             </Box>
-
-//             <Link
-//               to="/"
-//               style={{
-//                 textDecoration: "none",
-
-//                 display: "flex",
-//                 justifyContent: "center",
-//               }}
-//             >
-//               <Box
-//                 sx={{
-//                   display: { xs: "flex", md: "none" },
-//                   justifyContent: "center",
-//                   width: "100%",
-//                 }}
-//               >
-//                 <Box
-//                   sx={{
-//                     display: { xs: "flex", md: "none" },
-//                     marginRight: "5px",
-//                   }}
-//                 >
-//                   <img src={logo} alt="logo" />
-//                 </Box>
-//                 <Box>
-//                   <Typography
-//                     variant="h5"
-//                     noWrap
-//                     sx={{
-//                       mr: 2,
-//                       display: { xs: "flex", md: "none" },
-//                       flexGrow: 1,
-//                       fontWeight: 700,
-//                       letterSpacing: ".1rem",
-//                       color: "white",
-//                       textDecoration: "none",
-//                     }}
-//                   >
-//                     City Dwellings
-//                   </Typography>
-//                 </Box>
-//               </Box>
-//             </Link>
-//             <Box
-//               sx={{
-//                 flexGrow: 1,
-//                 display: { xs: "none", md: "flex" },
-//                 justifyContent: "end",
-//                 alignItems: "center",
-//               }}
-//             >
-//               <Link
-//                 to="/"
-//                 style={{
-//                   color: "white",
-//                   fontWeight: "bold",
-//                   textTransform: "uppercase",
-//                   textDecoration: "none",
-//                 }}
-//               >
-//                 Home
-//               </Link>
-
-//               {pages.map((page) => (
-//                 <Link
-//                   key={page}
-//                   onClick={handleCloseNavMenu}
-//                   to={`/${page}`}
-//                   style={{
-//                     color: "white",
-//                     fontWeight: "bold",
-//                     textTransform: "uppercase",
-//                     marginLeft: "8px",
-//                     textDecoration: "none",
-//                   }}
-//                 >
-//                   {page}
-//                 </Link>
-//               ))}
-//             </Box>
-//           </Toolbar>
-//         </Container>
-//       </AppBar>
-//     </ThemeProvider>
-//   );
-// }
-
-// export default Navigation;
-
-// src/components/Navigation.js
 import React from "react";
 import {
   AppBar,
@@ -246,6 +8,7 @@ import {
   Menu,
   Container,
   MenuItem,
+  Avatar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -255,13 +18,25 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { orange } from "@mui/material/colors";
 import Logout from "./Auth/Logout";
 import ArrowBack from "@mui/icons-material/ArrowBack";
+import HomeIcon from "@mui/icons-material/Home";
+import SellIcon from "@mui/icons-material/Sell";
+import RentIcon from "@mui/icons-material/House";
+import InfoIcon from "@mui/icons-material/Info";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LoginIcon from "@mui/icons-material/Login";
+import AppsIcon from "@mui/icons-material/Apps";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { isAuthenticated } = useSelector((state) => state.auth);
+
+  const { user } = useSelector((state) => state.user);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -269,6 +44,14 @@ const Navigation = () => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
   };
 
   const handleBack = () => {
@@ -288,28 +71,39 @@ const Navigation = () => {
   });
 
   const pages = isAuthenticated
-    ? ["sale", "rent", "about", "contact", "profile"]
-    : ["sale", "rent", "about", "contact", "login"];
+    ? [
+        { name: "sale", icon: <SellIcon sx={{ marginRight: 1 }} /> },
+        { name: "rent", icon: <RentIcon sx={{ marginRight: 1 }} /> },
+        { name: "about", icon: <InfoIcon sx={{ marginRight: 1 }} /> },
+        { name: "contact", icon: <ContactMailIcon sx={{ marginRight: 1 }} /> },
+        // { name: "profile", icon: <AccountCircleIcon /> },
+      ]
+    : [
+        { name: "sale", icon: <SellIcon sx={{ marginRight: 1 }} /> },
+        { name: "rent", icon: <RentIcon sx={{ marginRight: 1 }} /> },
+        { name: "about", icon: <InfoIcon sx={{ marginRight: 1 }} /> },
+        { name: "contact", icon: <ContactMailIcon sx={{ marginRight: 1 }} /> },
+        { name: "login", icon: <LoginIcon sx={{ marginRight: 1 }} /> },
+      ];
 
   const ConditionalLink = ({ page }) => {
-    const linkTo = page === "profile" ? "/profile/dashboard" : `/${page}`;
+    const linkTo =
+      page.name === "profile" ? "/profile/dashboard" : `/${page.name}`;
 
     return (
       <Link
         to={linkTo}
         style={{
           color: "white",
-          fontWeight: "bold",
-          textTransform: "uppercase",
-          marginLeft: "8px",
           textDecoration: "none",
-          borderBottom:
-            location?.pathname === `/${page}`
-              ? "2px solid #fff"
-              : "2px solid #f07917",
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        {page === "profile" ? "Profile" : page}
+        {page.icon}
+        <Typography variant="caption">{page.name}</Typography>
       </Link>
     );
   };
@@ -358,7 +152,7 @@ const Navigation = () => {
                   sx={{
                     mr: 2,
                     display: { xs: "none", md: "flex" },
-                    fontWeight: 700,
+                    fontWeight: "bold",
                     letterSpacing: ".1rem",
                     color: "white",
                     textDecoration: "none",
@@ -406,23 +200,107 @@ const Navigation = () => {
                       color: "white",
                       fontWeight: "bold",
                       textTransform: "uppercase",
-                      marginLeft: "8px",
                       textDecoration: "none",
+                      display: "flex",
+                      alignItems: "center",
                     }}
                   >
-                    Home
+                    <HomeIcon sx={{ marginRight: 1 }} />
+                    <Typography variant="">Home</Typography>
                   </Link>
                 </MenuItem>
-
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <ConditionalLink page={page} />
+                  <MenuItem>
+                    <Link
+                      key={page.name}
+                      onClick={handleCloseNavMenu}
+                      to={`/${page.name}`}
+                      style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontWeight: "bold",
+                        textTransform: "uppercase",
+                        textDecoration: "none",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {page.icon}
+                      <Typography variant="">{page.name}</Typography>
+                    </Link>
                   </MenuItem>
                 ))}
-                {isAuthenticated && (
+                {/* {isAuthenticated && (
                   <MenuItem>
                     <Logout />
                   </MenuItem>
+                )}
+                
+                
+                */}
+
+                {isAuthenticated && (
+                  <>
+                    <MenuItem>
+                      <Link
+                        onClick={handleOpenUserMenu}
+                        style={{
+                          textAlign: "center",
+                          color: "white",
+                          fontWeight: "bold",
+                          textTransform: "uppercase",
+                          textDecoration: "none",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <AccountCircleIcon sx={{ marginRight: 1 }} />
+                        <Typography variant="">Profile</Typography>
+                      </Link>
+                    </MenuItem>
+
+                    <Menu
+                      sx={{ mt: "45px" }}
+                      id="menu-appbar"
+                      anchorEl={anchorElUser}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      open={Boolean(anchorElUser)}
+                      onClose={handleCloseUserMenu}
+                      PaperProps={{
+                        style: {
+                          backgroundColor: "white",
+                          color: "black",
+                        },
+                      }}
+                    >
+                      <MenuItem onClick={handleCloseUserMenu}>
+                        <Link
+                          to="/profile/dashboard"
+                          style={{
+                            color: "inherit",
+                            textDecoration: "none",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <AppsIcon sx={{ marginRight: 1 }} />
+                          <Typography>Profile</Typography>
+                        </Link>
+                      </MenuItem>
+                      <MenuItem onClick={handleCloseUserMenu}>
+                        <ExitToAppIcon sx={{ marginRight: 1 }} />
+                        <Logout />
+                      </MenuItem>
+                    </Menu>
+                  </>
                 )}
               </Menu>
             </Box>
@@ -458,7 +336,7 @@ const Navigation = () => {
                       mr: 2,
                       display: { xs: "flex", md: "none" },
                       flexGrow: 1,
-                      fontWeight: 700,
+                      fontWeight: "bold",
                       letterSpacing: ".1rem",
                       color: "white",
                       textDecoration: "none",
@@ -484,35 +362,103 @@ const Navigation = () => {
                   color: "white",
                   fontWeight: "bold",
                   textTransform: "uppercase",
-                  marginLeft: "8px",
                   textDecoration: "none",
-                  borderBottom:
-                    location?.pathname === "/"
-                      ? "2px solid #fff"
-                      : "2px solid #f07917",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginLeft: "16px",
                 }}
               >
-                Home
+                <HomeIcon />
+                <Typography variant="">Home</Typography>
               </Link>
 
               {pages.map((page) => (
-                <ConditionalLink page={page} />
-                // <Link
-                //   key={page}
-                //   onClick={handleCloseNavMenu}
-                //   to={`/${page}`}
-                //   style={{
-                //     color: "white",
-                //     fontWeight: "bold",
-                //     textTransform: "uppercase",
-                //     marginLeft: "8px",
-                //     textDecoration: "none",
-                //   }}
-                // >
-                //   {page}
-                // </Link>
+                <Link
+                  key={page.name}
+                  onClick={handleCloseNavMenu}
+                  to={`/${page.name}`}
+                  style={{
+                    color: "white",
+                    textTransform: "uppercase",
+                    textDecoration: "none",
+                    textAlign: "center",
+                    display: "flex",
+                    fontWeight: "bold",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    marginLeft: "16px",
+                  }}
+                >
+                  {page.icon}
+                  <Typography variant="">{page.name}</Typography>
+                </Link>
               ))}
-              {isAuthenticated && <Logout />}
+
+              {/* Show user icon with dropdown menu if user type is 'buyer' */}
+              {isAuthenticated && (
+                <Box sx={{ flexGrow: 0 }}>
+                  <Link
+                    onClick={handleOpenUserMenu}
+                    style={{
+                      color: "white",
+                      textTransform: "uppercase",
+                      textDecoration: "none",
+                      textAlign: "center",
+                      display: "flex",
+                      fontWeight: "bold",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      marginLeft: "16px",
+                    }}
+                  >
+                    <AccountCircleIcon />
+                    <Typography variant="">Profile</Typography>
+                  </Link>
+
+                  <Menu
+                    sx={{ mt: "45px" }}
+                    id="menu-appbar"
+                    anchorEl={anchorElUser}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    open={Boolean(anchorElUser)}
+                    onClose={handleCloseUserMenu}
+                    PaperProps={{
+                      style: {
+                        backgroundColor: "white",
+                        color: "black",
+                      },
+                    }}
+                  >
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Link
+                        to="/profile/dashboard"
+                        style={{
+                          color: "inherit",
+                          textDecoration: "none",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <AppsIcon sx={{ marginRight: 1 }} />
+                        <Typography>Profile</Typography>
+                      </Link>
+                    </MenuItem>
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <ExitToAppIcon sx={{ marginRight: 1 }} />
+                      <Logout />
+                    </MenuItem>
+                  </Menu>
+                </Box>
+              )}
             </Box>
           </Toolbar>
         </Container>
