@@ -26,6 +26,7 @@ import ContactMailIcon from "@mui/icons-material/ContactMail";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LoginIcon from "@mui/icons-material/Login";
 import AppsIcon from "@mui/icons-material/Apps";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 const Navigation = () => {
   const location = useLocation();
@@ -71,10 +72,10 @@ const Navigation = () => {
 
   const pages = isAuthenticated
     ? [
-        { name: "sale", icon: <SellIcon /> },
-        { name: "rent", icon: <RentIcon /> },
-        { name: "about", icon: <InfoIcon /> },
-        { name: "contact", icon: <ContactMailIcon /> },
+        { name: "sale", icon: <SellIcon sx={{ marginRight: 1 }} /> },
+        { name: "rent", icon: <RentIcon sx={{ marginRight: 1 }} /> },
+        { name: "about", icon: <InfoIcon sx={{ marginRight: 1 }} /> },
+        { name: "contact", icon: <ContactMailIcon sx={{ marginRight: 1 }} /> },
         // { name: "profile", icon: <AccountCircleIcon /> },
       ]
     : [
@@ -229,10 +230,77 @@ const Navigation = () => {
                     </Link>
                   </MenuItem>
                 ))}
-                {isAuthenticated && (
+                {/* {isAuthenticated && (
                   <MenuItem>
                     <Logout />
                   </MenuItem>
+                )}
+                
+                
+                */}
+
+                {isAuthenticated && (
+                  <>
+                    <MenuItem>
+                      <Link
+                        onClick={handleOpenUserMenu}
+                        style={{
+                          textAlign: "center",
+                          color: "white",
+                          fontWeight: "bold",
+                          textTransform: "uppercase",
+                          textDecoration: "none",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <AccountCircleIcon sx={{ marginRight: 1 }} />
+                        <Typography variant="">Profile</Typography>
+                      </Link>
+                    </MenuItem>
+
+                    <Menu
+                      sx={{ mt: "45px" }}
+                      id="menu-appbar"
+                      anchorEl={anchorElUser}
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      open={Boolean(anchorElUser)}
+                      onClose={handleCloseUserMenu}
+                      PaperProps={{
+                        style: {
+                          backgroundColor: "white",
+                          color: "black",
+                        },
+                      }}
+                    >
+                      <MenuItem onClick={handleCloseUserMenu}>
+                        <Link
+                          to="/profile/dashboard"
+                          style={{
+                            color: "inherit",
+                            textDecoration: "none",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <AppsIcon sx={{ marginRight: 1 }} />
+                          <Typography>Profile</Typography>
+                        </Link>
+                      </MenuItem>
+                      <MenuItem onClick={handleCloseUserMenu}>
+                        <ExitToAppIcon sx={{ marginRight: 1 }} />
+                        <Logout />
+                      </MenuItem>
+                    </Menu>
+                  </>
                 )}
               </Menu>
             </Box>
@@ -385,6 +453,7 @@ const Navigation = () => {
                       </Link>
                     </MenuItem>
                     <MenuItem onClick={handleCloseUserMenu}>
+                      <ExitToAppIcon sx={{ marginRight: 1 }} />
                       <Logout />
                     </MenuItem>
                   </Menu>

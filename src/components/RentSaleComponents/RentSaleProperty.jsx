@@ -10,6 +10,7 @@ import {
   DialogActions,
   TextField,
   Grid,
+  Tooltip,
 } from "@mui/material";
 import ImageGallerySlider from "../ImageGallerySlider";
 import { orange } from "@mui/material/colors";
@@ -18,8 +19,15 @@ import RentalForm from "./RentalForm";
 import Itour from "./Itour";
 import ReviewForm from "./ReviewForm.js";
 import { Info as InfoIcon, Add as AddIcon } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
 
 function RentSaleProperty(props) {
+  const { isAuthenticated, error, loading, token } = useSelector(
+    (state) => state.auth
+  );
+
+  const { user } = useSelector((state) => state.user);
+
   const [imagesForDisplay, setImagesForDisplay] = useState([]);
 
   const [open, setOpen] = useState(false);
@@ -153,24 +161,56 @@ function RentSaleProperty(props) {
                 mt: 3,
               }}
             >
-              <Button
-                variant="contained"
-                color="warning"
-                size="large"
-                startIcon={<AddIcon />}
-                onClick={handleOpen}
-                sx={{ marginRight: 2 }}
+              <Tooltip
+                title={
+                  !isAuthenticated
+                    ? "You have to Login first to Add Review!"
+                    : ""
+                }
+                arrow
+                placement="bottom"
               >
-                Add Review
-              </Button>
-              <Button
-                variant="contained"
-                color="warning"
-                size="large"
-                onClick={handleOpenRentalForm}
+                <div>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    size="large"
+                    startIcon={<AddIcon />}
+                    onClick={handleOpen}
+                    sx={{ marginRight: 2 }}
+                    disabled={!isAuthenticated}
+                    style={{
+                      pointerEvents: !isAuthenticated ? "none" : "auto",
+                    }}
+                  >
+                    Add Review
+                  </Button>
+                </div>
+              </Tooltip>
+              <Tooltip
+                title={
+                  !isAuthenticated
+                    ? "You have to Login first to Rent this Property!"
+                    : ""
+                }
+                arrow
+                placement="bottom"
               >
-                Rent This Property
-              </Button>
+                <div>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    size="large"
+                    onClick={handleOpenRentalForm}
+                    disabled={!isAuthenticated}
+                    style={{
+                      pointerEvents: !isAuthenticated ? "none" : "auto",
+                    }}
+                  >
+                    Rent This Property
+                  </Button>
+                </div>
+              </Tooltip>
             </Box>
           </Box>
         </Box>
