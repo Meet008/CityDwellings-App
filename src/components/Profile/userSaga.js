@@ -39,6 +39,7 @@ import {
   updateRentalApplicationStatusSuccess,
   updateRentalApplicationStatusFailure,
 } from "./userSlice";
+import { MakeApiCall } from "../../config/axios_call";
 
 // API base URL
 const API_BASE_URL = "http://localhost:5000/api";
@@ -46,19 +47,38 @@ const API_BASE_URL = "http://localhost:5000/api";
 // Fetch user profile
 function* fetchProfileSaga() {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: `${token}`,
-      },
-    };
+    // const token = localStorage.getItem("token");
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     token: `${token}`,
+    //   },
+    // };
+    // const response = yield call(
+    //   axios.get,
+    //   `${API_BASE_URL}/user/profile`,
+    //   config
+    // );
     const response = yield call(
-      axios.get,
-      `${API_BASE_URL}/user/profile`,
-      config
+      MakeApiCall,
+      "/user/profile",
+      "get",
+      null,
+      true
     );
-    yield put(fetchProfileSuccess(response.data));
+
+    if (response?.status) {
+      // when status true and get response before 5 second
+      yield put(fetchProfileSuccess(response.data));
+    } else {
+      // when status false take more then 5 second
+      yield put(
+        fetchProfileFailure(response?.message || "Failed to fetch profile")
+      );
+      // Display error message using toast
+      toast.error(response?.message || "Failed to fetch profile");
+    }
+
     // No need to display a toast here, but you can add it if necessary
   } catch (error) {
     yield put(
@@ -74,21 +94,36 @@ function* fetchProfileSaga() {
 // Update user profile
 function* updateProfileSaga(action) {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: `${token}`,
-      },
-    };
+    // const token = localStorage.getItem("token");
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     token: `${token}`,
+    //   },
+    // };
+    // const response = yield call(
+    //   axios.put,
+    //   `${API_BASE_URL}/user/profile`,
+    //   action.payload,
+    //   config
+    // );
     const response = yield call(
-      axios.put,
-      `${API_BASE_URL}/user/profile`,
+      MakeApiCall,
+      "/user/profile",
+      "put",
       action.payload,
-      config
+      true
     );
-    yield put(updateProfileSuccess(response.data));
-    toast.success("Profile updated successfully");
+
+    if (response?.status) {
+      yield put(updateProfileSuccess(response.data));
+      toast.success("Profile updated successfully");
+    } else {
+      yield put(
+        updateProfileFailure(response?.message || "Failed to update profile")
+      );
+      toast.error(response?.message || "Failed to update profile");
+    }
   } catch (error) {
     yield put(
       updateProfileFailure(
@@ -103,23 +138,40 @@ function* updateProfileSaga(action) {
 function* addPropertySaga(action) {
   try {
     const { formData, navigate } = action.payload;
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        token: `${token}`,
-      },
-    };
+    // const token = localStorage.getItem("token");
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //     token: `${token}`,
+    //   },
+    // };
+
+    // const response = yield call(
+    //   axios.post,
+    //   `${API_BASE_URL}/property/add`,
+    //   formData,
+    //   config
+    // );
 
     const response = yield call(
-      axios.post,
-      `${API_BASE_URL}/property/add`,
+      MakeApiCall,
+      "/property/add",
+      "post",
       formData,
-      config
+      true,
+      true
     );
 
-    yield put(addPropertySuccess(response.data));
-    toast.success("Property added successfully");
+    if (response?.status) {
+      yield put(addPropertySuccess(response.data));
+      toast.success("Property added successfully");
+    } else {
+      yield put(
+        addPropertyFailure(response?.message || "Failed to add property")
+      );
+      toast.error(response?.message || "Failed to add property");
+    }
+
     if (navigate) navigate("/profile/my-properties"); // Redirect after success
   } catch (error) {
     yield put(
@@ -134,19 +186,37 @@ function* addPropertySaga(action) {
 // Fetch properties
 function* fetchPropertiesSaga() {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: `${token}`,
-      },
-    };
+    // const token = localStorage.getItem("token");
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     token: `${token}`,
+    //   },
+    // };
+    // const response = yield call(
+    //   axios.get,
+    //   `${API_BASE_URL}/property/user-properties`,
+    //   config
+    // );
+
     const response = yield call(
-      axios.get,
-      `${API_BASE_URL}/property/user-properties`,
-      config
+      MakeApiCall,
+      "/property/user-properties",
+      "get",
+      null,
+      true
     );
-    yield put(fetchPropertiesSuccess(response.data));
+
+    if (response?.status) {
+      yield put(fetchPropertiesSuccess(response.data));
+    } else {
+      yield put(
+        fetchPropertiesFailure(
+          response?.message || "Failed to fetch properties"
+        )
+      );
+      toast.error(response?.message || "Failed to fetch properties");
+    }
   } catch (error) {
     yield put(
       fetchPropertiesFailure(
@@ -161,22 +231,39 @@ function* fetchPropertiesSaga() {
 function* fetchPropertyDetailsSaga(action) {
   try {
     const { propertyId } = action.payload;
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: `${token}`,
-      },
-    };
+    // const token = localStorage.getItem("token");
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     token: `${token}`,
+    //   },
+    // };
 
-    console.log("api call", `${API_BASE_URL}/property/${propertyId}`);
+    // console.log("api call", `${API_BASE_URL}/property/${propertyId}`);
+    // const response = yield call(
+    //   axios.get,
+    //   `${API_BASE_URL}/property/${propertyId}`,
+    //   config
+    // );
+
     const response = yield call(
-      axios.get,
-      `${API_BASE_URL}/property/${propertyId}`,
-      config
+      MakeApiCall,
+      `/property/${propertyId}`,
+      "get",
+      null,
+      true
     );
 
-    yield put(fetchPropertyDetailsSuccess(response.data));
+    if (response?.status) {
+      yield put(fetchPropertyDetailsSuccess(response.data));
+    } else {
+      yield put(
+        fetchPropertyDetailsFailure(
+          response?.message || "Failed to fetch property details"
+        )
+      );
+      toast.error(response?.message || "Failed to fetch property details");
+    }
   } catch (error) {
     yield put(
       fetchPropertyDetailsFailure(
@@ -193,19 +280,34 @@ function* fetchPropertyDetailsSaga(action) {
 function* deletePropertySaga(action) {
   try {
     const { propertyId } = action.payload;
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: `${token}`,
-      },
-    };
-    yield call(axios.delete, `${API_BASE_URL}/property/${propertyId}`, config);
-    yield put(deletePropertySuccess(propertyId));
-    toast.success("Property deleted successfully");
+    // const token = localStorage.getItem("token");
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     token: `${token}`,
+    //   },
+    // };
+    // yield call(axios.delete, `${API_BASE_URL}/property/${propertyId}`, config);
 
-    // Dispatch fetch properties action to update the list after deletion
-    yield put(fetchPropertiesRequest());
+    const response = yield call(
+      MakeApiCall,
+      `/property/${propertyId}`,
+      "delete",
+      null,
+      true
+    );
+
+    if (response?.status) {
+      yield put(deletePropertySuccess(propertyId));
+      toast.success("Property deleted successfully");
+      // Dispatch fetch properties action to update the list after deletion
+      yield put(fetchPropertiesRequest());
+    } else {
+      yield put(
+        deletePropertyFailure(response?.message || "Failed to delete property")
+      );
+      toast.error(response?.message || "Failed to delete property");
+    }
   } catch (error) {
     yield put(
       deletePropertyFailure(
@@ -220,24 +322,40 @@ function* deletePropertySaga(action) {
 function* editPropertySaga(action) {
   try {
     const { propertyId, formData, navigate } = action.payload;
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        token: `${token}`,
-      },
-    };
+    // const token = localStorage.getItem("token");
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //     token: `${token}`,
+    //   },
+    // };
+
+    // const response = yield call(
+    //   axios.put,
+    //   `${API_BASE_URL}/property/edit/${propertyId}`,
+    //   formData,
+    //   config
+    // );
 
     const response = yield call(
-      axios.put,
-      `${API_BASE_URL}/property/edit/${propertyId}`,
+      MakeApiCall,
+      `/property/edit/${propertyId}`,
+      "put",
       formData,
-      config
+      true,
+      true
     );
 
-    yield put(editPropertySuccess(response.data));
-    toast.success("Property updated successfully");
-    if (navigate) navigate("/profile/my-properties"); // Redirect after success
+    if (response?.status) {
+      yield put(editPropertySuccess(response.data));
+      toast.success("Property updated successfully");
+      if (navigate) navigate("/profile/my-properties"); // Redirect after success
+    } else {
+      yield put(
+        editPropertyFailure(response?.message || "Failed to update property")
+      );
+      toast.error(response?.message || "Failed to update property");
+    }
   } catch (error) {
     yield put(
       editPropertyFailure(
@@ -251,19 +369,26 @@ function* editPropertySaga(action) {
 // Fetch dashboard data
 function* fetchDashboardDataSaga() {
   try {
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: `${token}`,
-      },
-    };
     const response = yield call(
-      axios.get,
-      `${API_BASE_URL}/property/dashboard`,
-      config
+      MakeApiCall,
+      "/property/dashboard",
+      "get",
+      null,
+      true
     );
-    yield put(fetchDashboardDataSuccess(response.data));
+
+    if (response?.status) {
+      // when status true and get response before 5 second
+      yield put(fetchDashboardDataSuccess(response.data));
+    } else {
+      // when status false take more then 5 second
+      yield put(
+        fetchDashboardDataFailure(
+          response?.message || "Failed to fetch dashboard data"
+        )
+      );
+      toast.error(response?.message || "Failed to fetch dashboard data");
+    }
   } catch (error) {
     yield put(
       fetchDashboardDataFailure(
@@ -288,14 +413,22 @@ function* addReviewSaga(action) {
     //   },
     // };
 
-    const response = yield call(
-      axios.post,
-      "http://localhost:5000/api/reviews",
-      { user_name, review, suggestion, propertyId }
-    );
+    // const response = yield call(
+    //   axios.post,
+    //   "http://localhost:5000/api/reviews",
+    //   { user_name, review, suggestion, propertyId }
+    // );
 
-    yield put(addReviewSuccess(response.data));
-    toast.success("Review added successfully");
+    const data = { user_name, review, suggestion, propertyId };
+    const response = yield call(MakeApiCall, `/reviews`, "post", data, true);
+
+    if (response?.status) {
+      yield put(addReviewSuccess(response.data));
+      toast.success("Review added successfully");
+    } else {
+      yield put(addReviewFailure(response?.message || "Failed to add review"));
+      toast.error(response?.message || "Failed to add review");
+    }
   } catch (error) {
     yield put(
       addReviewFailure(error.response?.data?.message || "Failed to add review")
@@ -306,16 +439,24 @@ function* addReviewSaga(action) {
 
 function* fetchReviewsSaga() {
   try {
-    const token = localStorage.getItem("token");
-    console.log("token", token);
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: `${token}`,
-      },
-    };
-    const response = yield call(axios.get, `${API_BASE_URL}/reviews`, config);
-    yield put(fetchReviewsSuccess(response.data));
+    // const token = localStorage.getItem("token");
+    // console.log("token", token);
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     token: `${token}`,
+    //   },
+    // };
+    // const response = yield call(axios.get, `${API_BASE_URL}/reviews`, config);
+
+    const response = yield call(MakeApiCall, `/reviews`, "get", null, true);
+
+    if (response?.status) {
+      yield put(fetchReviewsSuccess(response.data));
+    } else {
+      yield put(fetchReviewsFailure(response.message));
+      toast.error(response.message || "Failed to fetch reviews");
+    }
   } catch (error) {
     yield put(fetchReviewsFailure(error.message));
     toast.error(error.message || "Failed to fetch reviews");
@@ -326,19 +467,37 @@ function* fetchReviewsSaga() {
 function* fetchRentalApplicationsSaga(action) {
   try {
     const { propertyId } = action.payload;
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: `${token}`,
-      },
-    };
+    // const token = localStorage.getItem("token");
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     token: `${token}`,
+    //   },
+    // };
+    // const response = yield call(
+    //   axios.get,
+    //   `${API_BASE_URL}/rental_form/property/${propertyId}`,
+    //   config
+    // );
+
     const response = yield call(
-      axios.get,
-      `${API_BASE_URL}/rental_form/property/${propertyId}`,
-      config
+      MakeApiCall,
+      `/rental_form/property/${propertyId}`,
+      "get",
+      null,
+      true
     );
-    yield put(fetchRentalApplicationsSuccess(response.data));
+
+    if (response?.status) {
+      yield put(fetchRentalApplicationsSuccess(response.data));
+    } else {
+      yield put(
+        fetchRentalApplicationsFailure(
+          response?.message || "Failed to fetch rental applications"
+        )
+      );
+      toast.error(response?.message || "Failed to fetch rental applications");
+    }
   } catch (error) {
     yield put(
       fetchRentalApplicationsFailure(
@@ -355,21 +514,41 @@ function* fetchRentalApplicationsSaga(action) {
 function* updateRentalApplicationStatusSaga(action) {
   try {
     const { applicationId, status } = action.payload;
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: `${token}`,
-      },
-    };
+    // const token = localStorage.getItem("token");
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     token: `${token}`,
+    //   },
+    // };
+    // const response = yield call(
+    //   axios.put,
+    //   `${API_BASE_URL}/rental_form/${applicationId}/status`,
+    //   { status },
+    //   config
+    // );
+
     const response = yield call(
-      axios.put,
-      `${API_BASE_URL}/rental_form/${applicationId}/status`,
+      MakeApiCall,
+      `/rental_form/${applicationId}/status`,
+      "put",
       { status },
-      config
+      true
     );
-    yield put(updateRentalApplicationStatusSuccess(response.data));
-    toast.success("Rental application status updated successfully");
+
+    if (response?.status) {
+      yield put(updateRentalApplicationStatusSuccess(response.data));
+      toast.success("Rental application status updated successfully");
+    } else {
+      yield put(
+        updateRentalApplicationStatusFailure(
+          response?.message || "Failed to update rental application status"
+        )
+      );
+      toast.error(
+        response?.message || "Failed to update rental application status"
+      );
+    }
   } catch (error) {
     yield put(
       updateRentalApplicationStatusFailure(
