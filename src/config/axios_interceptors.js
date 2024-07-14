@@ -5,7 +5,7 @@ const getToken = () => localStorage.getItem("token");
 
 const axiosInstance = axios.create({
   baseURL: ENDPOINT,
-  timeout: 500, // Default timeout set to 5 seconds
+  timeout: 5000, // Default timeout set to 5 seconds
   headers: {
     "Content-Type": "application/json",
   },
