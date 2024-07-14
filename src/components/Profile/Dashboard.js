@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Chart from "react-apexcharts";
-import { DatePicker, Select, Spin, Tag } from "antd";
+import { DatePicker, Select, Skeleton, Spin, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDashboardDataStart } from "./userSlice";
@@ -147,9 +147,57 @@ const Dashboard = () => {
           </div>
         </div>
         {isLoading ? (
-          <div className="text-center mt-5">
-            <Spin size="large" />
-            <p>Loading...</p>
+          <div className="row mt-3">
+            <div className="col-12 col-md-6 col-lg-4 mt-2">
+              <Skeleton.Button block active />
+            </div>
+            <div className="col-12 col-md-6 col-lg-4 mt-2">
+              <Skeleton.Button block active />
+            </div>
+            <div className="row px-0 mx-0 mt-4">
+              <div
+                className="col-12 p-5 text-center"
+                style={{
+                  border: "1px solid #cbcbcb",
+                  background: "#f3f3f3",
+                  borderRadius: "6px",
+                }}
+              >
+                <Skeleton.Node block active />
+              </div>
+            </div>
+            <div className="row px-0 mx-0 mt-4">
+              <div
+                className="col-12 col-lg-6"
+                style={{
+                  border: "1px solid #cbcbcb",
+                  background: "#f3f3f3",
+                  borderRadius: "6px",
+                }}
+              >
+                <div className="row mt-3 mx-0 px-0">
+                  <div
+                    className="col-12 p-3 text-center"
+                    style={{ borderBottom: "1px dashed grey" }}
+                  >
+                    <Skeleton.Node block active />
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 col-lg-6">
+                <div className="row mx-0 px-0">
+                  <div
+                    className="col-12 p-3"
+                    style={{ borderBottom: "1px dashed grey" }}
+                  >
+                    <Skeleton.Button block active className="mb-1" />
+                    <Skeleton.Button block active className="mb-1" />
+                    <Skeleton.Button block active className="mb-1" />
+                    <Skeleton.Button block active className="mb-1" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <>

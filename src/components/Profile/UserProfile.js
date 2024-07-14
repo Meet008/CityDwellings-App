@@ -16,6 +16,7 @@ import { useDropzone } from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { fetchProfileRequest, updateProfileRequest } from "./userSlice";
+import { Skeleton } from "antd";
 
 const drawerWidth = 240;
 
@@ -101,7 +102,19 @@ export default function UserProfile() {
       }}
     >
       {isLoading ? (
-        <CircularProgress />
+        <div>
+          <Skeleton.Button block active className="mt-2" />
+          <Skeleton.Button block active className="mt-2" />
+          <Skeleton.Button block active className="mt-2" />
+          <Skeleton.Button block active className="mt-2" />
+          <Skeleton.Button block active className="mt-2" />
+          <Skeleton.Button block active className="mt-2" />
+          <Skeleton.Button block active className="mt-2" />
+          <Skeleton.Button block active className="mt-2" />
+          <Skeleton.Button block active className="mt-2" />
+          <Skeleton.Button block active className="mt-2" />
+          <Skeleton.Button block active className="mt-2" />
+        </div>
       ) : (
         <>
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>

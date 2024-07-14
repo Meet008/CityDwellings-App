@@ -19,6 +19,7 @@ import {
 import { Info as InfoIcon } from "@mui/icons-material";
 import moment from "moment";
 import { fetchReviewsRequest } from "./userSlice"; // Adjust path as needed
+import { Skeleton } from "antd";
 
 function Reviews() {
   const dispatch = useDispatch();
@@ -64,12 +65,14 @@ function Reviews() {
     }
     return suggestion;
   };
-
+  const isLoading = true;
+  const skeletonCount = [1, 2, 3, 4, 5, 6, 7, 8];
   return (
     <Box sx={{ padding: 2 }}>
       <Typography variant="h6" gutterBottom>
         Review List
       </Typography>
+
       <TableContainer component={Paper}>
         <Table
           sx={{
@@ -88,6 +91,32 @@ function Reviews() {
             </TableRow>
           </TableHead>
           <TableBody>
+            {isLoading
+              ? skeletonCount?.map((d) => {
+                  return (
+                    <TableRow>
+                      <TableCell sx={{ fontWeight: "bold" }}>
+                        <Skeleton.Button active block />
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold" }}>
+                        <Skeleton.Button active block />
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold" }}>
+                        <Skeleton.Button active block />
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold" }}>
+                        <Skeleton.Button active block />
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold" }}>
+                        <Skeleton.Button active block />
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: "bold" }}>
+                        <Skeleton.Button active block />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              : ""}
             {reviewList
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => (
@@ -116,15 +145,17 @@ function Reviews() {
               ))}
           </TableBody>
         </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 15]}
-          component="div"
-          count={reviewList.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        {!isLoading && (
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 15]}
+            component="div"
+            count={reviewList.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        )}
       </TableContainer>
     </Box>
   );

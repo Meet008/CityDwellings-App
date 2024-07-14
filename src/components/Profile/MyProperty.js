@@ -15,6 +15,7 @@ import {
 import MyPropertyItems from "./MyPropertyItems";
 import { fetchPropertiesRequest, deletePropertyRequest } from "./userSlice";
 import { useNavigate } from "react-router-dom";
+import { Skeleton } from "antd";
 
 const PropertyPage = () => {
   const dispatch = useDispatch();
@@ -45,7 +46,7 @@ const PropertyPage = () => {
     setPropertyToDelete(null);
     setConfirmDialogOpen(false);
   };
-
+  const skeletonCount = [1, 2, 3, 4, 5];
   return (
     <Box sx={{ flexGrow: 1, p: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -54,7 +55,31 @@ const PropertyPage = () => {
       </Typography>
 
       {isLoading ? (
-        <CircularProgress />
+        <>
+          {/* <CircularProgress /> */}
+          <div
+            className="mb-3"
+            style={{ borderBottom: "1px dashed lightgrey" }}
+          ></div>
+          {skeletonCount?.map((d) => {
+            return (
+              <div>
+                <Skeleton.Button active />
+                <Skeleton.Button active block className="mt-1" />
+                <Skeleton.Button
+                  active
+                  className="mt-1 me-5"
+                  style={{ width: "500px" }}
+                />
+                <Skeleton.Button active className="mt-1" />
+                <div
+                  className="my-3"
+                  style={{ borderBottom: "1px dashed lightgrey" }}
+                ></div>
+              </div>
+            );
+          })}
+        </>
       ) : (
         <Grid>
           {properties.length === 0 && !isLoading && (
