@@ -15,8 +15,8 @@ function* submitRentalFormSaga(action) {
   try {
     const { propertyId, formData } = action.payload;
     const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-    const userId = user._id;
+    const user = JSON.parse(localStorage.getItem("user")); // Parse the JSON string
+    const userId = user?._id; // Optional chaining to safely access the _id
 
     const config = {
       headers: {

@@ -281,20 +281,22 @@ function* addReviewSaga(action) {
   try {
     const { user_name, review, suggestion, propertyId } = action.payload;
 
-    const user = localStorage.getItem("user");
-    const userId = user._id;
-    // const token = localStorage.getItem("token");
-    // const config = {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // };
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user")); // Parse the JSON string
+    const userId = user?._id; // Optional chaining to safely access the _id
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
 
     const response = yield call(
       axios.post,
       "http://localhost:5000/api/reviews",
-      { user_name, review, suggestion, propertyId, userId }
+      { user_name, review, suggestion, propertyId, userId },
+      config
     );
 
     yield put(addReviewSuccess(response.data));
