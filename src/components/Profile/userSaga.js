@@ -75,19 +75,13 @@ function* fetchProfileSaga() {
       yield put(
         fetchProfileFailure(response?.message || "Failed to fetch profile")
       );
-      // Display error message using toast
-      toast.error(response?.message || "Failed to fetch profile");
     }
-
-    // No need to display a toast here, but you can add it if necessary
   } catch (error) {
     yield put(
       fetchProfileFailure(
         error.response?.data?.message || "Failed to fetch profile"
       )
     );
-    // Display error message using toast
-    toast.error(error.response?.data?.message || "Failed to fetch profile");
   }
 }
 
@@ -122,7 +116,6 @@ function* updateProfileSaga(action) {
       yield put(
         updateProfileFailure(response?.message || "Failed to update profile")
       );
-      toast.error(response?.message || "Failed to update profile");
     }
   } catch (error) {
     yield put(
@@ -130,7 +123,6 @@ function* updateProfileSaga(action) {
         error.response?.data?.message || "Failed to update profile"
       )
     );
-    toast.error(error.response?.data?.message || "Failed to update profile");
   }
 }
 
@@ -169,7 +161,6 @@ function* addPropertySaga(action) {
       yield put(
         addPropertyFailure(response?.message || "Failed to add property")
       );
-      toast.error(response?.message || "Failed to add property");
     }
 
     if (navigate) navigate("/profile/my-properties"); // Redirect after success
@@ -179,7 +170,6 @@ function* addPropertySaga(action) {
         error.response?.data?.message || "Failed to add property"
       )
     );
-    toast.error(error.response?.data?.message || "Failed to add property");
   }
 }
 
@@ -215,7 +205,6 @@ function* fetchPropertiesSaga() {
           response?.message || "Failed to fetch properties"
         )
       );
-      toast.error(response?.message || "Failed to fetch properties");
     }
   } catch (error) {
     yield put(
@@ -223,7 +212,6 @@ function* fetchPropertiesSaga() {
         error.response?.data?.message || "Failed to fetch properties"
       )
     );
-    toast.error(error.response?.data?.message || "Failed to fetch properties");
   }
 }
 
@@ -262,16 +250,12 @@ function* fetchPropertyDetailsSaga(action) {
           response?.message || "Failed to fetch property details"
         )
       );
-      toast.error(response?.message || "Failed to fetch property details");
     }
   } catch (error) {
     yield put(
       fetchPropertyDetailsFailure(
         error.response?.data?.message || "Failed to fetch property details"
       )
-    );
-    toast.error(
-      error.response?.data?.message || "Failed to fetch property details"
     );
   }
 }
@@ -306,7 +290,6 @@ function* deletePropertySaga(action) {
       yield put(
         deletePropertyFailure(response?.message || "Failed to delete property")
       );
-      toast.error(response?.message || "Failed to delete property");
     }
   } catch (error) {
     yield put(
@@ -314,7 +297,6 @@ function* deletePropertySaga(action) {
         error.response?.data?.message || "Failed to delete property"
       )
     );
-    toast.error(error.response?.data?.message || "Failed to delete property");
   }
 }
 
@@ -354,7 +336,6 @@ function* editPropertySaga(action) {
       yield put(
         editPropertyFailure(response?.message || "Failed to update property")
       );
-      toast.error(response?.message || "Failed to update property");
     }
   } catch (error) {
     yield put(
@@ -362,7 +343,6 @@ function* editPropertySaga(action) {
         error.response?.data?.message || "Failed to update property"
       )
     );
-    toast.error(error.response?.data?.message || "Failed to update property");
   }
 }
 
@@ -387,16 +367,12 @@ function* fetchDashboardDataSaga() {
           response?.message || "Failed to fetch dashboard data"
         )
       );
-      toast.error(response?.message || "Failed to fetch dashboard data");
     }
   } catch (error) {
     yield put(
       fetchDashboardDataFailure(
         error.response?.data?.message || "Failed to fetch dashboard data"
       )
-    );
-    toast.error(
-      error.response?.data?.message || "Failed to fetch dashboard data"
     );
   }
 }
@@ -427,13 +403,11 @@ function* addReviewSaga(action) {
       toast.success("Review added successfully");
     } else {
       yield put(addReviewFailure(response?.message || "Failed to add review"));
-      toast.error(response?.message || "Failed to add review");
     }
   } catch (error) {
     yield put(
       addReviewFailure(error.response?.data?.message || "Failed to add review")
     );
-    toast.error(error.response?.data?.message || "Failed to add review");
   }
 }
 
@@ -455,11 +429,9 @@ function* fetchReviewsSaga() {
       yield put(fetchReviewsSuccess(response.data));
     } else {
       yield put(fetchReviewsFailure(response.message));
-      toast.error(response.message || "Failed to fetch reviews");
     }
   } catch (error) {
     yield put(fetchReviewsFailure(error.message));
-    toast.error(error.message || "Failed to fetch reviews");
   }
 }
 
@@ -496,16 +468,12 @@ function* fetchRentalApplicationsSaga(action) {
           response?.message || "Failed to fetch rental applications"
         )
       );
-      toast.error(response?.message || "Failed to fetch rental applications");
     }
   } catch (error) {
     yield put(
       fetchRentalApplicationsFailure(
         error.response?.data?.message || "Failed to fetch rental applications"
       )
-    );
-    toast.error(
-      error.response?.data?.message || "Failed to fetch rental applications"
     );
   }
 }
@@ -545,9 +513,6 @@ function* updateRentalApplicationStatusSaga(action) {
           response?.message || "Failed to update rental application status"
         )
       );
-      toast.error(
-        response?.message || "Failed to update rental application status"
-      );
     }
   } catch (error) {
     yield put(
@@ -555,10 +520,6 @@ function* updateRentalApplicationStatusSaga(action) {
         error.response?.data?.message ||
           "Failed to update rental application status"
       )
-    );
-    toast.error(
-      error.response?.data?.message ||
-        "Failed to update rental application status"
     );
   }
 }

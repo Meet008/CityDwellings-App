@@ -20,7 +20,7 @@ import { Skeleton } from "antd";
 const PropertyPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { properties, isLoading } = useSelector((state) => state.user);
+  const { properties, isLoading, error } = useSelector((state) => state.user);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState(null);
 
@@ -92,16 +92,18 @@ const PropertyPage = () => {
                 />
               </div>
               <label>No Properties Found</label>
-              <div className="mt-3">
-                <button
-                  className="btn btn-sm btn-primary"
-                  onClick={() => {
-                    navigate("/profile/add-property");
-                  }}
-                >
-                  Add Properties
-                </button>
-              </div>
+              {!isLoading && !error && (
+                <div className="mt-3">
+                  <button
+                    className="btn btn-sm btn-primary"
+                    onClick={() => {
+                      navigate("/profile/add-property");
+                    }}
+                  >
+                    Add Properties
+                  </button>
+                </div>
+              )}
             </div>
           )}
           {properties.map((property) => (
