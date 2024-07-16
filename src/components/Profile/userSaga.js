@@ -38,6 +38,9 @@ import {
   updateRentalApplicationStatusRequest,
   updateRentalApplicationStatusSuccess,
   updateRentalApplicationStatusFailure,
+  fetchUserApplicationsRequest,
+  fetchUserApplicationsSuccess,
+  fetchUserApplicationsFailure,
 } from "./userSlice";
 import { MakeApiCall } from "../../config/axios_call";
 
@@ -381,21 +384,26 @@ function* fetchDashboardDataSaga() {
 function* addReviewSaga(action) {
   try {
     const { user_name, review, suggestion, propertyId } = action.payload;
-    // const token = localStorage.getItem("token");
-    // const config = {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // };
+
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user")); // Parse the JSON string
+    const userId = user?._id; // Optional chaining to safely access the _id
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
 
     // const response = yield call(
     //   axios.post,
     //   "http://localhost:5000/api/reviews",
-    //   { user_name, review, suggestion, propertyId }
+    //   { user_name, review, suggestion, propertyId, userId },
+    //   config
     // );
 
-    const data = { user_name, review, suggestion, propertyId };
+    const data = { user_name, review, suggestion, propertyId, userId };
     const response = yield call(MakeApiCall, `/reviews`, "post", data, true);
 
     if (response?.status) {
@@ -524,6 +532,35 @@ function* updateRentalApplicationStatusSaga(action) {
   }
 }
 
+// Fetch rental applications
+function* fetchUserApplicationsSaga(action) {
+  try {
+    const { userId } = action.payload;
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
+    const response = yield call(
+      axios.get,
+      `${API_BASE_URL}/rental_form/user/${userId}`,
+      config
+    );
+    yield put(fetchUserApplicationsSuccess(response.data));
+  } catch (error) {
+    yield put(
+      fetchUserApplicationsFailure(
+        error.response?.data?.message || "Failed to fetch applications"
+      )
+    );
+    toast.error(
+      error.response?.data?.message || "Failed to fetch applications"
+    );
+  }
+}
+
 // Watcher Sagas
 export default function* userSaga() {
   yield takeLatest(fetchProfileRequest.type, fetchProfileSaga);
@@ -543,5 +580,9 @@ export default function* userSaga() {
   yield takeLatest(
     updateRentalApplicationStatusRequest.type,
     updateRentalApplicationStatusSaga
+  );
+  yield takeLatest(
+    fetchUserApplicationsRequest.type,
+    fetchUserApplicationsSaga
   );
 }

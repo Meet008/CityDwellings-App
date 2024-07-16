@@ -188,6 +188,18 @@ const userSlice = createSlice({
       state.user = null;
       localStorage.removeItem("user");
     },
+    fetchUserApplicationsRequest(state) {
+      state.isLoading = true;
+      state.error = null;
+    },
+    fetchUserApplicationsSuccess(state, action) {
+      state.isLoading = false;
+      state.applications = action.payload;
+    },
+    fetchUserApplicationsFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -229,6 +241,9 @@ export const {
   updateRentalApplicationStatusSuccess,
   updateRentalApplicationStatusFailure,
   resetUserState,
+  fetchUserApplicationsRequest,
+  fetchUserApplicationsSuccess,
+  fetchUserApplicationsFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

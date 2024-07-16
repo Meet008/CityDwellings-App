@@ -15,6 +15,9 @@ function* submitRentalFormSaga(action) {
   try {
     const { propertyId, formData } = action.payload;
     const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user")); // Parse the JSON string
+    const userId = user?._id; // Optional chaining to safely access the _id
+
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +28,7 @@ function* submitRentalFormSaga(action) {
     const response = yield call(
       axios.post,
       `${API_BASE_URL}/rental_form/`,
-      { propertyId, formData }, // Combine propertyId and formData into one object
+      { propertyId, formData, userId }, // Combine propertyId and formData into one object
       config
     );
 

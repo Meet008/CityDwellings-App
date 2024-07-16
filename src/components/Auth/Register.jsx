@@ -55,7 +55,7 @@ const steps = [
   "Personal Information",
   "Contact Information",
   "Other Details",
-  "Chat Support Information",
+  // "Chat Support Information",
 ];
 
 function getStepContent(
@@ -282,50 +282,50 @@ function getStepContent(
           </Grid>
         </>
       );
-    case 3:
-      return (
-        <>
-          <Grid item xs={12}>
-            <Typography variant="body2" color="textSecondary" gutterBottom>
-              <InfoOutlinedIcon
-                fontSize="small"
-                sx={{ verticalAlign: "middle", mr: 1 }}
-              />
-              If you do not want to add chat support, please leave the fields
-              empty.
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              name="propertyId"
-              label="Property ID"
-              id="propertyId"
-              value={formData.propertyId}
-              onChange={handleChange}
-              helperText="Enter the ID associated with the property you want to list."
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              name="widgetId"
-              label="Widget ID (Chat Support)"
-              id="widgetId"
-              value={formData.widgetId}
-              onChange={handleChange}
-              helperText={
-                <>
-                  Enter the Widget ID provided by your chat support service.
-                  <br />
-                  This ID is necessary to link the chat support widget to your
-                  account.
-                </>
-              }
-            />
-          </Grid>
-        </>
-      );
+    // case 3:
+    //   return (
+    //     <>
+    //       <Grid item xs={12}>
+    //         <Typography variant="body2" color="textSecondary" gutterBottom>
+    //           <InfoOutlinedIcon
+    //             fontSize="small"
+    //             sx={{ verticalAlign: "middle", mr: 1 }}
+    //           />
+    //           If you do not want to add chat support, please leave the fields
+    //           empty.
+    //         </Typography>
+    //       </Grid>
+    //       <Grid item xs={12}>
+    //         <TextField
+    //           fullWidth
+    //           name="propertyId"
+    //           label="Property ID"
+    //           id="propertyId"
+    //           value={formData.propertyId}
+    //           onChange={handleChange}
+    //           helperText="Enter the ID associated with the property you want to list."
+    //         />
+    //       </Grid>
+    //       <Grid item xs={12}>
+    //         <TextField
+    //           fullWidth
+    //           name="widgetId"
+    //           label="Widget ID (Chat Support)"
+    //           id="widgetId"
+    //           value={formData.widgetId}
+    //           onChange={handleChange}
+    //           helperText={
+    //             <>
+    //               Enter the Widget ID provided by your chat support service.
+    //               <br />
+    //               This ID is necessary to link the chat support widget to your
+    //               account.
+    //             </>
+    //           }
+    //         />
+    //       </Grid>
+    //     </>
+    //   );
     default:
       return "Unknown stepIndex";
   }
@@ -346,8 +346,8 @@ export default function SignUp() {
     userType: "",
     preferredContactMethod: "",
     receiveNewsletter: false,
-    propertyId: "", // New state for Property ID
-    widgetId: "", // New state for Widget ID
+    // propertyId: "", // New state for Property ID
+    // widgetId: "", // New state for Widget ID
   });
 
   const [activeStep, setActiveStep] = useState(0);
@@ -361,11 +361,16 @@ export default function SignUp() {
     (state) => state.auth
   );
 
+  const { user } = useSelector((state) => state.user);
   useEffect(() => {
-    if (isAuthenticated && token) {
+    console.log("Auth state:", { isAuthenticated, token, user });
+    if (isAuthenticated && token && user && user.userType === "seller") {
       navigate("/profile/dashboard");
     }
-  }, [isAuthenticated]);
+    if (isAuthenticated && token && user && user.userType === "buyer") {
+      navigate("/");
+    }
+  }, [isAuthenticated, user, navigate, token]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -511,7 +516,7 @@ export default function SignUp() {
               </Grid>
             )}
           </Box>
-          {activeStep === steps.length - 1 && (
+          {/* {activeStep === steps.length - 1 && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <Typography variant="body2" color="text.secondary">
                 Need help with your Chat account setup?{" "}
@@ -524,7 +529,7 @@ export default function SignUp() {
                 </Link>
               </Typography>
             </Box>
-          )}
+          )} */}
           {/* <Button
             variant="contained"
             color="primary"
