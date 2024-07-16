@@ -543,11 +543,15 @@ function* fetchUserApplicationsSaga(action) {
         token: `${token}`,
       },
     };
+
     const response = yield call(
-      axios.get,
-      `${API_BASE_URL}/rental_form/user/${userId}`,
-      config
+      MakeApiCall,
+      `/rental_form/user/${userId}`,
+      "get",
+      null,
+      true
     );
+
     yield put(fetchUserApplicationsSuccess(response.data));
   } catch (error) {
     yield put(
