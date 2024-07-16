@@ -27,6 +27,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LoginIcon from "@mui/icons-material/Login";
 import AppsIcon from "@mui/icons-material/Apps";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 
 const Navigation = () => {
   const location = useLocation();
@@ -240,67 +241,23 @@ const Navigation = () => {
                 */}
 
                 {isAuthenticated && (
-                  <>
-                    <MenuItem>
-                      <Link
-                        onClick={handleOpenUserMenu}
-                        style={{
-                          textAlign: "center",
-                          color: "white",
-                          fontWeight: "bold",
-                          textTransform: "uppercase",
-                          textDecoration: "none",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <AccountCircleIcon sx={{ marginRight: 1 }} />
-                        <Typography variant="">Profile</Typography>
-                      </Link>
-                    </MenuItem>
-
-                    <Menu
-                      sx={{ mt: "45px" }}
-                      id="menu-appbar"
-                      anchorEl={anchorElUser}
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      keepMounted
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      open={Boolean(anchorElUser)}
-                      onClose={handleCloseUserMenu}
-                      PaperProps={{
-                        style: {
-                          backgroundColor: "white",
-                          color: "black",
-                        },
+                  <MenuItem>
+                    <Link
+                      onClick={handleOpenUserMenu}
+                      style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontWeight: "bold",
+                        textTransform: "uppercase",
+                        textDecoration: "none",
+                        display: "flex",
+                        alignItems: "center",
                       }}
                     >
-                      <MenuItem onClick={handleCloseUserMenu}>
-                        <Link
-                          to="/profile/dashboard"
-                          style={{
-                            color: "inherit",
-                            textDecoration: "none",
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        >
-                          <AppsIcon sx={{ marginRight: 1 }} />
-                          <Typography>Profile</Typography>
-                        </Link>
-                      </MenuItem>
-                      <MenuItem onClick={handleCloseUserMenu}>
-                        <ExitToAppIcon sx={{ marginRight: 1 }} />
-                        <Logout />
-                      </MenuItem>
-                    </Menu>
-                  </>
+                      <AccountCircleIcon sx={{ marginRight: 1 }} />
+                      <Typography variant="">Profile</Typography>
+                    </Link>
+                  </MenuItem>
                 )}
               </Menu>
             </Box>
@@ -415,53 +372,67 @@ const Navigation = () => {
                     <AccountCircleIcon />
                     <Typography variant="">Profile</Typography>
                   </Link>
-
-                  <Menu
-                    sx={{ mt: "45px" }}
-                    id="menu-appbar"
-                    anchorEl={anchorElUser}
-                    anchorOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
-                    }}
-                    open={Boolean(anchorElUser)}
-                    onClose={handleCloseUserMenu}
-                    PaperProps={{
-                      style: {
-                        backgroundColor: "white",
-                        color: "black",
-                      },
-                    }}
-                  >
-                    <MenuItem onClick={handleCloseUserMenu}>
-                      <Link
-                        to="/profile/dashboard"
-                        style={{
-                          color: "inherit",
-                          textDecoration: "none",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <AppsIcon sx={{ marginRight: 1 }} />
-                        <Typography>Profile</Typography>
-                      </Link>
-                    </MenuItem>
-                    <MenuItem onClick={handleCloseUserMenu}>
-                      <ExitToAppIcon sx={{ marginRight: 1 }} />
-                      <Logout />
-                    </MenuItem>
-                  </Menu>
                 </Box>
               )}
             </Box>
           </Toolbar>
         </Container>
+
+        <Menu
+          sx={{ mt: "45px" }}
+          id="menu-appbar"
+          anchorEl={anchorElUser}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={Boolean(anchorElUser)}
+          onClose={handleCloseUserMenu}
+          PaperProps={{
+            style: {
+              backgroundColor: "white",
+              color: "black",
+            },
+          }}
+        >
+          <MenuItem onClick={handleCloseUserMenu}>
+            <Link
+              to="/userProfile"
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <AppsIcon sx={{ marginRight: 1 }} />
+              <Typography>Profile</Typography>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleCloseUserMenu}>
+            <Link
+              to="/userApplications"
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <AssignmentIcon sx={{ marginRight: 1 }} />
+              <Typography>Applications</Typography>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleCloseUserMenu}>
+            <ExitToAppIcon sx={{ marginRight: 1 }} />
+            <Logout />
+          </MenuItem>
+        </Menu>
       </AppBar>
     </ThemeProvider>
   );
