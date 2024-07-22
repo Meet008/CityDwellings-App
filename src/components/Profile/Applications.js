@@ -91,7 +91,7 @@ const RentalApplicationsPage = () => {
               alt="No Data Found"
             />
           </div>
-          <label>No Applications Recieved</label>
+          <label>No Applications Received</label>
         </div>
       ) : (
         <Grid container spacing={3}>
@@ -143,6 +143,24 @@ const RentalApplicationsPage = () => {
                       >
                         <strong>Email:</strong> {application.email}
                       </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 1 }}
+                      >
+                        <strong>Date of Birth:</strong>{" "}
+                        {new Date(
+                          application.date_of_birth
+                        ).toLocaleDateString()}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 1 }}
+                      >
+                        <strong>Driver's License Number:</strong>{" "}
+                        {application.driver_license_number}
+                      </Typography>
                     </Grid>
                     <Grid item xs={12} md={4}>
                       <Typography
@@ -165,50 +183,51 @@ const RentalApplicationsPage = () => {
                         sx={{ mb: 1 }}
                       >
                         <strong>Previous Addresses:</strong>{" "}
-                        {application.previous_addresses}
+                        {application.previous_addresses.map((address) => (
+                          <div key={address._id}>
+                            <p>
+                              <strong>Address:</strong> {address.address}
+                            </p>
+                            <p>
+                              <strong>Landlord Name:</strong>{" "}
+                              {address.landlord_name}
+                            </p>
+                            <p>
+                              <strong>Landlord Contact:</strong>{" "}
+                              {address.landlord_contact}
+                            </p>
+                            <p>
+                              <strong>Duration of Residence:</strong>{" "}
+                              {address.duration_of_residence}
+                            </p>
+                            <p>
+                              <strong>Reason for Leaving:</strong>{" "}
+                              {address.reason_for_leaving}
+                            </p>
+                            <Divider />
+                          </div>
+                        ))}
                       </Typography>
                     </Grid>
+
                     <Grid item xs={12} md={4}>
                       <Typography
                         variant="h6"
                         sx={{ fontWeight: "bold", mb: 2, color: "#2c3e50" }}
                       >
-                        Financial Information
+                        Stay Duration
                       </Typography>
                       <Typography
                         variant="body2"
                         color="text.secondary"
                         sx={{ mb: 1 }}
                       >
-                        <strong>Bank Account Name:</strong>{" "}
-                        {application.bank_account_name}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 1 }}
-                      >
-                        <strong>Account Type:</strong>{" "}
-                        {application.account_type}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 1 }}
-                      >
-                        <strong>IFSC Code:</strong> {application.ifsc_code}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 1 }}
-                      >
-                        <strong>Reason For Moving:</strong>{" "}
-                        {application.reason_for_moving}
+                        {application.minimum_stay}
                       </Typography>
                     </Grid>
                   </Grid>
                 </CardContent>
+
                 <CardActions sx={{ justifyContent: "flex-end", p: 2 }}>
                   {application.status === "pending" ? (
                     <>

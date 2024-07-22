@@ -8,13 +8,17 @@ import {
   Card,
   CardContent,
   CardActions,
+  Button,
 } from "@mui/material";
-import { fetchUserApplicationsRequest } from "./userSlice";
+import {
+  fetchUserApplicationsRequest,
+  deleteApplicationRequest,
+} from "../RentSaleComponents/RentalFormSlice";
 import Navigation from "../../components/Navigation";
 
 const UserApplications = () => {
   const dispatch = useDispatch();
-  const { applications, isLoading } = useSelector((state) => state.user);
+  const { applications, isLoading } = useSelector((state) => state.rentalForm);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id;
@@ -22,6 +26,10 @@ const UserApplications = () => {
   useEffect(() => {
     dispatch(fetchUserApplicationsRequest({ userId }));
   }, [dispatch, userId]);
+
+  const handleDelete = (formId) => {
+    dispatch(deleteApplicationRequest({ formId }));
+  };
 
   return (
     <>
@@ -88,83 +96,159 @@ const UserApplications = () => {
                       <Grid item xs={12} md={4}>
                         <Typography
                           variant="h6"
-                          sx={{
-                            fontWeight: "bold",
-                            mb: 2,
-                            color: "#2c3e50",
-                          }}
+                          sx={{ fontWeight: "bold", mb: 2, color: "#2c3e50" }}
                         >
-                          Property Details
+                          Personal Information
                         </Typography>
                         <Typography
                           variant="body2"
                           color="text.secondary"
                           sx={{ mb: 1 }}
                         >
-                          <strong>Title:</strong> {application.property.title}
+                          <strong>Full Name:</strong> {application.full_name}
                         </Typography>
                         <Typography
                           variant="body2"
                           color="text.secondary"
                           sx={{ mb: 1 }}
                         >
-                          <strong>Address:</strong>{" "}
-                          {application.property.address}
+                          <strong>Phone:</strong> {application.phone_number}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mb: 1 }}
+                        >
+                          <strong>Email:</strong> {application.email}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mb: 1 }}
+                        >
+                          <strong>Date of Birth:</strong>{" "}
+                          {new Date(
+                            application.date_of_birth
+                          ).toLocaleDateString()}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mb: 1 }}
+                        >
+                          <strong>Driver's License Number:</strong>{" "}
+                          {application.driver_license_number}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} md={4}>
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: "bold", mb: 2, color: "#2c3e50" }}
+                        >
+                          Residential History
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mb: 1 }}
+                        >
+                          <strong>Current Address:</strong>{" "}
+                          {application.current_address}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ mb: 1 }}
+                        >
+                          <strong>Previous Addresses:</strong>{" "}
+                          {application.previous_addresses.map((address) => (
+                            <div key={address._id}>
+                              <p>
+                                <strong>Address:</strong> {address.address}
+                              </p>
+                              <p>
+                                <strong>Landlord Name:</strong>{" "}
+                                {address.landlord_name}
+                              </p>
+                              <p>
+                                <strong>Landlord Contact:</strong>{" "}
+                                {address.landlord_contact}
+                              </p>
+                              <p>
+                                <strong>Duration of Residence:</strong>{" "}
+                                {address.duration_of_residence}
+                              </p>
+                              <p>
+                                <strong>Reason for Leaving:</strong>{" "}
+                                {address.reason_for_leaving}
+                              </p>
+                            </div>
+                          ))}
                         </Typography>
                       </Grid>
 
                       <Grid item xs={12} md={4}>
                         <Typography
                           variant="h6"
-                          sx={{
-                            fontWeight: "bold",
-                            mb: 2,
-                            color: "#2c3e50",
-                          }}
+                          sx={{ fontWeight: "bold", mb: 2, color: "#2c3e50" }}
                         >
-                          Financial Information
+                          Stay Duration
                         </Typography>
                         <Typography
                           variant="body2"
                           color="text.secondary"
                           sx={{ mb: 1 }}
                         >
-                          <strong>Bank Account Name:</strong>{" "}
-                          {application.bank_account_name}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ mb: 1 }}
-                        >
-                          <strong>Account Type:</strong>{" "}
-                          {application.account_type}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ mb: 1 }}
-                        >
-                          <strong>IFSC Code:</strong> {application.ifsc_code}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ mb: 1 }}
-                        >
-                          <strong>Reason For Moving:</strong>{" "}
-                          {application.reason_for_moving}
+                          {application.minimum_stay}
                         </Typography>
                       </Grid>
                     </Grid>
                   </CardContent>
-                  <CardActions sx={{ justifyContent: "flex-end", p: 2 }}>
-                    <Typography variant="body1" color="textSecondary">
-                      Status:{" "}
-                      {application.status.charAt(0).toUpperCase() +
-                        application.status.slice(1)}
-                    </Typography>
-                  </CardActions>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      p: 2,
+                    }}
+                  >
+                    <CardActions>
+                      <Typography
+                        variant="body1"
+                        color="textSecondary"
+                        fontWeight="bold"
+                      >
+                        Status:{" "}
+                        {application.status.charAt(0).toUpperCase() +
+                          application.status.slice(1)}
+                      </Typography>
+                    </CardActions>
+
+                    <CardActions>
+                      {application.status === "pending" ? (
+                        <>
+                          <Button
+                            variant="contained"
+                            color="success"
+                            sx={{ mr: 1 }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() => handleDelete(application._id)}
+                          >
+                            Delete
+                          </Button>
+                        </>
+                      ) : (
+                        <Button variant="contained" disabled={true}>
+                          {application.status}
+                        </Button>
+                      )}
+                    </CardActions>
+                  </Box>
                 </Card>
               </Grid>
             ))}

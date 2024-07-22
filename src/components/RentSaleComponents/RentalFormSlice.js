@@ -5,16 +5,31 @@ const initialState = {
     full_name: "",
     phone_number: "",
     email: "",
+    date_of_birth: "",
+    driver_license_number: "",
     current_address: "",
-    previous_addresses: "",
-    bank_account_name: "",
-    account_type: "",
-    ifsc_code: "",
-    reason_for_moving: "",
+    previous_addresses: [],
+    previous_employers: [],
+
+    emergency_contact: {
+      name: "",
+      relationship: "",
+      phone_number: "",
+    },
+
+    authorization_and_consent: {
+      signature: "",
+      date: "",
+      consent_for_checks: false,
+    },
+    minimum_stay: "",
   },
+
   isLoading: false,
   error: null,
   submissionSuccess: false,
+
+  applications: [],
 };
 
 const rentalFormSlice = createSlice({
@@ -39,6 +54,32 @@ const rentalFormSlice = createSlice({
       state.error = action.payload;
       state.submissionSuccess = false;
     },
+
+    deleteApplicationRequest: (state) => {
+      state.isLoading = true;
+    },
+    deleteApplicationSuccess: (state, action) => {
+      state.isLoading = false;
+      state.applications = state.applications.filter(
+        (application) => application._id !== action.payload
+      );
+    },
+    deleteApplicationFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    fetchUserApplicationsRequest(state) {
+      state.isLoading = true;
+      state.error = null;
+    },
+    fetchUserApplicationsSuccess(state, action) {
+      state.isLoading = false;
+      state.applications = action.payload;
+    },
+    fetchUserApplicationsFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -47,6 +88,12 @@ export const {
   submitFormRequest,
   submitFormSuccess,
   submitFormFailure,
+  deleteApplicationRequest,
+  deleteApplicationSuccess,
+  deleteApplicationFailure,
+  fetchUserApplicationsRequest,
+  fetchUserApplicationsSuccess,
+  fetchUserApplicationsFailure,
 } = rentalFormSlice.actions;
 
 export default rentalFormSlice.reducer;

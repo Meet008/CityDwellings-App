@@ -38,9 +38,6 @@ import {
   updateRentalApplicationStatusRequest,
   updateRentalApplicationStatusSuccess,
   updateRentalApplicationStatusFailure,
-  fetchUserApplicationsRequest,
-  fetchUserApplicationsSuccess,
-  fetchUserApplicationsFailure,
 } from "./userSlice";
 
 // API base URL
@@ -392,35 +389,6 @@ function* updateRentalApplicationStatusSaga(action) {
   }
 }
 
-// Fetch rental applications
-function* fetchUserApplicationsSaga(action) {
-  try {
-    const { userId } = action.payload;
-    const token = localStorage.getItem("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        token: `${token}`,
-      },
-    };
-    const response = yield call(
-      axios.get,
-      `${API_BASE_URL}/rental_form/user/${userId}`,
-      config
-    );
-    yield put(fetchUserApplicationsSuccess(response.data));
-  } catch (error) {
-    yield put(
-      fetchUserApplicationsFailure(
-        error.response?.data?.message || "Failed to fetch applications"
-      )
-    );
-    toast.error(
-      error.response?.data?.message || "Failed to fetch applications"
-    );
-  }
-}
-
 // Watcher Sagas
 export default function* userSaga() {
   yield takeLatest(fetchProfileRequest.type, fetchProfileSaga);
@@ -440,9 +408,5 @@ export default function* userSaga() {
   yield takeLatest(
     updateRentalApplicationStatusRequest.type,
     updateRentalApplicationStatusSaga
-  );
-  yield takeLatest(
-    fetchUserApplicationsRequest.type,
-    fetchUserApplicationsSaga
   );
 }
