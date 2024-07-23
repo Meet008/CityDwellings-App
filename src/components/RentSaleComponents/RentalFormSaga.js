@@ -11,6 +11,9 @@ import {
   fetchUserApplicationsRequest,
   fetchUserApplicationsSuccess,
   fetchUserApplicationsFailure,
+  editFormRequest,
+  editFormSuccess,
+  editFormFailure,
 } from "./RentalFormSlice";
 
 // API base URL
@@ -52,6 +55,41 @@ function* submitRentalFormSaga(action) {
   }
 }
 
+// Edit rental form
+function* editRentalFormSaga(action) {
+  try {
+    const { propertyId, formData } = action.payload;
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
+
+    yield call(
+      axios.put,
+      `${API_BASE_URL}/rental_form/${propertyId}`,
+      formData,
+      config
+    );
+
+    yield put(editFormSuccess());
+    yield put(fetchUserApplicationsRequest());
+    toast.success("Rental form updated successfully");
+  } catch (error) {
+    yield put(
+      editFormFailure(
+        error.response?.data?.message || "Failed to update rental form"
+      )
+    );
+    toast.error(
+      error.response?.data?.message || "Failed to update rental form"
+    );
+  }
+}
+
 // Delete rental form
 function* deleteRentalFormSaga(action) {
   try {
@@ -83,8 +121,9 @@ function* deleteRentalFormSaga(action) {
 // Fetch rental applications
 function* fetchUserApplicationsSaga(action) {
   try {
-    const { userId } = action.payload;
     const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user")); // Parse the JSON string
+    const userId = user?._id;
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -117,4 +156,5 @@ export default function* rentalFormSaga() {
     fetchUserApplicationsRequest.type,
     fetchUserApplicationsSaga
   );
+  yield takeLatest(editFormRequest.type, editRentalFormSaga);
 }

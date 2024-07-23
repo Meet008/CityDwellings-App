@@ -19,9 +19,51 @@ import {
   setFormData,
   submitFormRequest,
   submitFormSuccess,
+  clearForm,
+  editFormRequest,
 } from "./RentalFormSlice"; // Adjust the import path as necessary
 
-const RentalForm = ({ open, handleClose, propertyId }) => {
+const dummyData = {
+  full_name: "John Doe",
+  phone_number: "123-456-7890",
+  email: "johndoe@example.com",
+  date_of_birth: "1990-01-01",
+  driver_license_number: "D1234567",
+  current_address: "123 Main St, Springfield, IL",
+  previous_addresses: [
+    {
+      address: "456 Elm St, Springfield, IL",
+      landlord_name: "Jane Smith",
+      landlord_contact: "098-765-4321",
+      duration_of_residence: "2 years",
+      reason_for_leaving: "Moved to a bigger place",
+    },
+  ],
+  previous_employers: [
+    {
+      employer_name: "ABC Corp",
+      employer_contact: "111-222-3333",
+      position: "Software Engineer",
+      duration_of_employment: "3 years",
+      monthly_income: "$5000",
+    },
+  ],
+
+  emergency_contact: {
+    name: "Mary Doe",
+    relationship: "Sister",
+    phone_number: "987-654-3210",
+  },
+
+  authorization_and_consent: {
+    signature: "John Doe",
+    date: "2024-07-16",
+    consent_for_checks: true,
+  },
+  minimum_stay: "6 months",
+};
+
+const RentalForm = ({ open, handleClose, propertyId, initialData }) => {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.rentalForm.formData);
   const isLoading = useSelector((state) => state.rentalForm.isLoading);
@@ -33,81 +75,60 @@ const RentalForm = ({ open, handleClose, propertyId }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleChangeFormData = (key, value) => {
-    dispatch(setFormData({ ...formData, [key]: value }));
+    const keys = key.split(".");
+    let updatedFormData = { ...formData };
+
+    let currentLevel = updatedFormData;
+    for (let i = 0; i < keys.length - 1; i++) {
+      currentLevel[keys[i]] = currentLevel[keys[i]]
+        ? { ...currentLevel[keys[i]] }
+        : {};
+      currentLevel = currentLevel[keys[i]];
+    }
+
+    currentLevel[keys[keys.length - 1]] = value;
+
+    dispatch(setFormData(updatedFormData));
   };
 
   const handleArrayChange = (arrayKey, index, fieldKey, value) => {
-    const newArray = formData[arrayKey] ? [...formData[arrayKey]] : [];
+    const newArray = formData[arrayKey]
+      ? formData[arrayKey].map((item) => ({ ...item }))
+      : [];
     if (!newArray[index]) {
       newArray[index] = {};
     }
     newArray[index][fieldKey] = value;
     handleChangeFormData(arrayKey, newArray);
   };
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
     // Dispatch the form submission request action
-    dispatch(submitFormRequest({ propertyId, formData }));
-
-    try {
-      // Ideally, await an asynchronous action here (e.g., API call)
-      // Simulating a delay for demonstration purposes
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Assuming submissionSuccess is updated based on successful form submission
-      if (submissionSuccess) {
-        // Close the dialog and reset form state
-        handleClose();
-        dispatch(submitFormSuccess()); // Reset form submission state in Redux
-      }
-    } catch (error) {
-      // Handle error if submission fails (optional)
-      console.error("Error submitting form:", error);
-    }
+    event.preventDefault();
+    initialData
+      ? dispatch(editFormRequest({ propertyId, formData }))
+      : dispatch(submitFormRequest({ propertyId, formData }));
   };
 
   useEffect(() => {
-    const dummyData = {
-      full_name: "John Doe",
-      phone_number: "123-456-7890",
-      email: "johndoe@example.com",
-      date_of_birth: "1990-01-01",
-      driver_license_number: "D1234567",
-      current_address: "123 Main St, Springfield, IL",
-      previous_addresses: [
-        {
-          address: "456 Elm St, Springfield, IL",
-          landlord_name: "Jane Smith",
-          landlord_contact: "098-765-4321",
-          duration_of_residence: "2 years",
-          reason_for_leaving: "Moved to a bigger place",
-        },
-      ],
-      previous_employers: [
-        {
-          employer_name: "ABC Corp",
-          employer_contact: "111-222-3333",
-          position: "Software Engineer",
-          duration_of_employment: "3 years",
-          monthly_income: "$5000",
-        },
-      ],
+    if (submissionSuccess) {
+      dispatch(clearForm());
+      handleClose();
+    }
+  }, [submissionSuccess, handleClose, dispatch]);
 
-      emergency_contact: {
-        name: "Mary Doe",
-        relationship: "Sister",
-        phone_number: "987-654-3210",
-      },
-
-      authorization_and_consent: {
-        signature: "John Doe",
-        date: "2024-07-16",
-        consent_for_checks: true,
-      },
-      minimum_stay: "6 months",
-    };
-    dispatch(setFormData(dummyData));
-  }, [dispatch]);
+  useEffect(() => {
+    if (initialData) {
+      const formattedData = {
+        ...initialData,
+        date_of_birth: initialData.date_of_birth
+          ? new Date(initialData.date_of_birth).toISOString().split("T")[0]
+          : "",
+      };
+      dispatch(setFormData(formattedData)); // Set the form data with initial data
+    } else {
+      dispatch(setFormData(dummyData));
+    }
+  }, [dispatch, initialData]);
   return (
     <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle
@@ -423,64 +444,6 @@ const RentalForm = ({ open, handleClose, propertyId }) => {
             value={formData?.emergency_contact?.phone_number || ""}
             sx={{ mb: 2 }}
           />
-
-          <Box mt={3}>
-            <label
-              style={{
-                fontSize: "18px",
-                color: "#ff700d",
-                borderBottom: "1px dashed #f07917",
-                display: "block",
-              }}
-            >
-              User Consent
-            </label>
-            <TextField
-              label="Signature"
-              variant="outlined"
-              fullWidth
-              onChange={(e) =>
-                handleChangeFormData(
-                  "authorization_and_consent.signature",
-                  e.target.value
-                )
-              }
-              value={formData?.authorization_and_consent?.signature || ""}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Date"
-              type="date"
-              variant="outlined"
-              fullWidth
-              onChange={(e) =>
-                handleChangeFormData(
-                  "authorization_and_consent.date",
-                  e.target.value
-                )
-              }
-              value={formData?.authorization_and_consent?.date || ""}
-              sx={{ mb: 2 }}
-            />
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel>Consent for Checks</InputLabel>
-              <Select
-                value={
-                  formData?.authorization_and_consent?.consent_for_checks ||
-                  false
-                }
-                onChange={(e) =>
-                  handleChangeFormData(
-                    "authorization_and_consent.consent_for_checks",
-                    e.target.value
-                  )
-                }
-              >
-                <MenuItem value={true}>Yes</MenuItem>
-                <MenuItem value={false}>No</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
         </Box>
       </DialogContent>
       <DialogActions>
@@ -493,7 +456,7 @@ const RentalForm = ({ open, handleClose, propertyId }) => {
           variant="contained"
           disabled={isLoading}
         >
-          {isLoading ? "Submitting..." : "Submit"}
+          {isLoading ? "Submitting..." : initialData ? "Edit" : "Submit"}
         </Button>
       </DialogActions>
     </Dialog>

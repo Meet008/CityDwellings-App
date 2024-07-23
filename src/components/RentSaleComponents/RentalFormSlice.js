@@ -49,12 +49,31 @@ const rentalFormSlice = createSlice({
       state.submissionSuccess = true;
       state.formData = initialState.formData; // Clear form data after successful submission
     },
+
     submitFormFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
       state.submissionSuccess = false;
     },
-
+    clearForm: (state) => {
+      state.isLoading = false;
+      state.submissionSuccess = false;
+      state.formData = initialState.formData;
+    },
+    editFormRequest: (state) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    editFormSuccess: (state) => {
+      state.isLoading = false;
+      state.submissionSuccess = true;
+      state.formData = initialState.formData;
+    },
+    editFormFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.submissionSuccess = false;
+    },
     deleteApplicationRequest: (state) => {
       state.isLoading = true;
     },
@@ -94,6 +113,10 @@ export const {
   fetchUserApplicationsRequest,
   fetchUserApplicationsSuccess,
   fetchUserApplicationsFailure,
+  clearForm,
+  editFormRequest,
+  editFormSuccess,
+  editFormFailure,
 } = rentalFormSlice.actions;
 
 export default rentalFormSlice.reducer;

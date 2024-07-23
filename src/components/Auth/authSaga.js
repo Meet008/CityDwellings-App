@@ -26,6 +26,7 @@ function* registerUser(action) {
       action.payload
     );
     yield put(registerSuccess(res.data));
+    yield put(fetchProfileRequest());
     toast.success("Registration successful"); // Display success message using toast
   } catch (err) {
     yield put(registerFail(err.response.data));

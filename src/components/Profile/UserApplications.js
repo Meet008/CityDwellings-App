@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
@@ -9,16 +9,28 @@ import {
   CardContent,
   CardActions,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import {
   fetchUserApplicationsRequest,
   deleteApplicationRequest,
+  setFormData,
 } from "../RentSaleComponents/RentalFormSlice";
 import Navigation from "../../components/Navigation";
+import RentalForm from "../RentSaleComponents/RentalForm";
 
 const UserApplications = () => {
   const dispatch = useDispatch();
   const { applications, isLoading } = useSelector((state) => state.rentalForm);
+
+  const [openRentalForm, setOpenRentalForm] = useState(false);
+  const [currentFormData, setCurrentFormData] = useState(null);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [formId, setFormId] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?._id;
@@ -27,8 +39,29 @@ const UserApplications = () => {
     dispatch(fetchUserApplicationsRequest({ userId }));
   }, [dispatch, userId]);
 
+  const handleCloseRentalForm = () => {
+    setOpenRentalForm(false);
+    setCurrentFormData(null);
+  };
+
+  const handleOpenRentalForm = (application) => {
+    setCurrentFormData(application);
+    dispatch(setFormData(application));
+    setOpenRentalForm(true);
+  };
+
   const handleDelete = (formId) => {
+    setFormId(formId);
+    setConfirmDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
     dispatch(deleteApplicationRequest({ formId }));
+    setConfirmDialogOpen(false);
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmDialogOpen(false);
   };
 
   return (
@@ -231,6 +264,7 @@ const UserApplications = () => {
                             variant="contained"
                             color="success"
                             sx={{ mr: 1 }}
+                            onClick={() => handleOpenRentalForm(application)}
                           >
                             Edit
                           </Button>
@@ -254,6 +288,29 @@ const UserApplications = () => {
             ))}
           </Grid>
         )}
+
+        <RentalForm
+          open={openRentalForm}
+          handleClose={handleCloseRentalForm}
+          propertyId={currentFormData?._id}
+          initialData={currentFormData}
+        />
+        <Dialog open={confirmDialogOpen} onClose={handleCancelDelete}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this application?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancelDelete} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmDelete} color="error" autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </>
   );
