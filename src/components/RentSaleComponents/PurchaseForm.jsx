@@ -22,6 +22,8 @@ import {
   editFormRequest,
 } from "./PurchaseFormSlice"; // Adjust the import path as necessary
 
+import moment from "moment";
+
 const dummyData = {
   full_name: "John Doe",
   phone_number: "123-456-7890",
@@ -97,18 +99,29 @@ const PurchaseForm = ({ open, handleClose, propertyId, initialData }) => {
 
   useEffect(() => {
     if (initialData) {
+      console.log("Initial Date of Birth:", initialData.date_of_birth);
       const formattedData = {
         ...initialData,
         date_of_birth: initialData.date_of_birth
-          ? new Date(initialData.date_of_birth).toISOString().split("T")[0]
+          ? formatDateString(initialData.date_of_birth)
           : "",
+        date: initialData.date ? formatDateString(initialData.date) : "",
       };
+      console.log("Formatted Data:", formattedData);
       dispatch(setFormData(formattedData));
     } else {
-      dispatch(setFormData(dummyData));
+      dispatch(setFormData({}));
     }
   }, [dispatch, initialData]);
+  const formatDateString = (dateString) => {
+    // Parse the date in ISO format and format it to 'YYYY-MM-DD'
+    return moment(dateString).format("YYYY-MM-DD");
+  };
 
+  const parseDateString = (dateString) => {
+    // Parse the date string in 'YYYY-MM-DD' format to a moment object
+    return moment(dateString, "YYYY-MM-DD").toISOString();
+  };
   return (
     <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle
@@ -162,8 +175,15 @@ const PurchaseForm = ({ open, handleClose, propertyId, initialData }) => {
             onChange={(e) =>
               handleChangeFormData("date_of_birth", e.target.value)
             }
-            value={formData?.date_of_birth || ""}
+            value={
+              formData?.date_of_birth
+                ? formatDateString(formData.date_of_birth)
+                : ""
+            }
             sx={{ mb: 2, mt: 2 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
           <TextField
             label="Current Address"

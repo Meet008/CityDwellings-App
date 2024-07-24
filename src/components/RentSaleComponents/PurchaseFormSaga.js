@@ -5,12 +5,12 @@ import {
   submitFormRequest,
   submitFormSuccess,
   submitFormFailure,
-  deleteApplicationRequest,
-  deleteApplicationSuccess,
-  deleteApplicationFailure,
-  fetchUserApplicationsRequest,
-  fetchUserApplicationsSuccess,
-  fetchUserApplicationsFailure,
+  deletePurchaseApplicationRequest,
+  deletePurchaseApplicationSuccess,
+  deletePurchaseApplicationFailure,
+  fetchUserPurchaseApplicationsRequest,
+  fetchUserPurchaseApplicationsSuccess,
+  fetchUserPurchaseApplicationsFailure,
   editFormRequest,
   editFormSuccess,
   editFormFailure,
@@ -59,7 +59,7 @@ function* submitPurchaseFormSaga(action) {
 // Edit purchase form
 function* editPurchaseFormSaga(action) {
   try {
-    const { id, formData } = action.payload;
+    const { propertyId, formData } = action.payload;
     const token = localStorage.getItem("token");
 
     const config = {
@@ -69,10 +69,10 @@ function* editPurchaseFormSaga(action) {
       },
     };
 
-    yield call(axios.put, `${API_BASE_URL}/${id}`, formData, config);
+    yield call(axios.put, `${API_BASE_URL}/${propertyId}`, formData, config);
 
     yield put(editFormSuccess());
-    yield put(fetchUserApplicationsRequest()); // Refresh the list of applications
+    yield put(fetchUserPurchaseApplicationsRequest()); // Refresh the list of applications
     toast.success("Purchase form updated successfully");
   } catch (error) {
     yield put(
@@ -100,11 +100,11 @@ function* deletePurchaseFormSaga(action) {
 
     yield call(axios.delete, `${API_BASE_URL}/${id}`, config);
 
-    yield put(deleteApplicationSuccess(id));
+    yield put(deletePurchaseApplicationSuccess(id));
     toast.success("Purchase form deleted successfully");
   } catch (error) {
     yield put(
-      deleteApplicationFailure(
+      deletePurchaseApplicationFailure(
         error.response?.data?.message || "Failed to delete purchase form"
       )
     );
@@ -115,7 +115,7 @@ function* deletePurchaseFormSaga(action) {
 }
 
 // Fetch user applications
-function* fetchUserApplicationsSaga() {
+function* fetchUserPurchaseApplicationsSaga() {
   try {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
@@ -131,10 +131,10 @@ function* fetchUserApplicationsSaga() {
       `${API_BASE_URL}/user/${userId}`,
       config
     );
-    yield put(fetchUserApplicationsSuccess(response.data));
+    yield put(fetchUserPurchaseApplicationsSuccess(response.data));
   } catch (error) {
     yield put(
-      fetchUserApplicationsFailure(
+      fetchUserPurchaseApplicationsFailure(
         error.response?.data?.message || "Failed to fetch applications"
       )
     );
@@ -147,10 +147,13 @@ function* fetchUserApplicationsSaga() {
 // Watcher Saga
 export default function* purchaseFormSaga() {
   yield takeLatest(submitFormRequest.type, submitPurchaseFormSaga);
-  yield takeLatest(deleteApplicationRequest.type, deletePurchaseFormSaga);
   yield takeLatest(
-    fetchUserApplicationsRequest.type,
-    fetchUserApplicationsSaga
+    deletePurchaseApplicationRequest.type,
+    deletePurchaseFormSaga
+  );
+  yield takeLatest(
+    fetchUserPurchaseApplicationsRequest.type,
+    fetchUserPurchaseApplicationsSaga
   );
   yield takeLatest(editFormRequest.type, editPurchaseFormSaga);
 }

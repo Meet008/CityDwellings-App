@@ -87,15 +87,15 @@ const rentalFormSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    fetchUserApplicationsRequest(state) {
+    fetchUserRentApplicationsRequest(state) {
       state.isLoading = true;
       state.error = null;
     },
-    fetchUserApplicationsSuccess(state, action) {
+    fetchUserRentApplicationsSuccess(state, action) {
       state.isLoading = false;
       state.applications = action.payload;
     },
-    fetchUserApplicationsFailure(state, action) {
+    fetchUserRentApplicationsFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
@@ -110,9 +110,9 @@ export const {
   deleteApplicationRequest,
   deleteApplicationSuccess,
   deleteApplicationFailure,
-  fetchUserApplicationsRequest,
-  fetchUserApplicationsSuccess,
-  fetchUserApplicationsFailure,
+  fetchUserRentApplicationsRequest,
+  fetchUserRentApplicationsSuccess,
+  fetchUserRentApplicationsFailure,
   clearForm,
   editFormRequest,
   editFormSuccess,

@@ -8,9 +8,9 @@ import {
   deleteApplicationRequest,
   deleteApplicationSuccess,
   deleteApplicationFailure,
-  fetchUserApplicationsRequest,
-  fetchUserApplicationsSuccess,
-  fetchUserApplicationsFailure,
+  fetchUserRentApplicationsRequest,
+  fetchUserRentApplicationsSuccess,
+  fetchUserRentApplicationsFailure,
   editFormRequest,
   editFormSuccess,
   editFormFailure,
@@ -76,7 +76,7 @@ function* editRentalFormSaga(action) {
     );
 
     yield put(editFormSuccess());
-    yield put(fetchUserApplicationsRequest());
+    yield put(fetchUserRentApplicationsRequest());
     toast.success("Rental form updated successfully");
   } catch (error) {
     yield put(
@@ -119,7 +119,7 @@ function* deleteRentalFormSaga(action) {
 }
 
 // Fetch rental applications
-function* fetchUserApplicationsSaga(action) {
+function* fetchUserRentApplicationsSaga(action) {
   try {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user")); // Parse the JSON string
@@ -135,10 +135,10 @@ function* fetchUserApplicationsSaga(action) {
       `${API_BASE_URL}/rental_form/user/${userId}`,
       config
     );
-    yield put(fetchUserApplicationsSuccess(response.data));
+    yield put(fetchUserRentApplicationsSuccess(response.data));
   } catch (error) {
     yield put(
-      fetchUserApplicationsFailure(
+      fetchUserRentApplicationsFailure(
         error.response?.data?.message || "Failed to fetch applications"
       )
     );
@@ -153,8 +153,8 @@ export default function* rentalFormSaga() {
   yield takeLatest(submitFormRequest.type, submitRentalFormSaga);
   yield takeLatest(deleteApplicationRequest.type, deleteRentalFormSaga);
   yield takeLatest(
-    fetchUserApplicationsRequest.type,
-    fetchUserApplicationsSaga
+    fetchUserRentApplicationsRequest.type,
+    fetchUserRentApplicationsSaga
   );
   yield takeLatest(editFormRequest.type, editRentalFormSaga);
 }

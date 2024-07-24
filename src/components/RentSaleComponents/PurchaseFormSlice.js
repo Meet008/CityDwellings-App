@@ -80,28 +80,28 @@ const purchaseFormSlice = createSlice({
       state.error = action.payload;
       state.submissionSuccess = false;
     },
-    deleteApplicationRequest: (state) => {
+    deletePurchaseApplicationRequest: (state) => {
       state.isLoading = true;
     },
-    deleteApplicationSuccess: (state, action) => {
+    deletePurchaseApplicationSuccess: (state, action) => {
       state.isLoading = false;
       state.applications = state.applications.filter(
         (application) => application._id !== action.payload
       );
     },
-    deleteApplicationFailure: (state, action) => {
+    deletePurchaseApplicationFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
-    fetchUserApplicationsRequest(state) {
+    fetchUserPurchaseApplicationsRequest(state) {
       state.isLoading = true;
       state.error = null;
     },
-    fetchUserApplicationsSuccess(state, action) {
+    fetchUserPurchaseApplicationsSuccess(state, action) {
       state.isLoading = false;
       state.applications = action.payload;
     },
-    fetchUserApplicationsFailure(state, action) {
+    fetchUserPurchaseApplicationsFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
@@ -117,12 +117,12 @@ export const {
   editFormRequest,
   editFormSuccess,
   editFormFailure,
-  deleteApplicationRequest,
-  deleteApplicationSuccess,
-  deleteApplicationFailure,
-  fetchUserApplicationsRequest,
-  fetchUserApplicationsSuccess,
-  fetchUserApplicationsFailure,
+  deletePurchaseApplicationRequest,
+  deletePurchaseApplicationSuccess,
+  deletePurchaseApplicationFailure,
+  fetchUserPurchaseApplicationsRequest,
+  fetchUserPurchaseApplicationsSuccess,
+  fetchUserPurchaseApplicationsFailure,
 } = purchaseFormSlice.actions;
 
 export default purchaseFormSlice.reducer;
