@@ -101,7 +101,7 @@ function App() {
                 element={<EditProperty />}
               />
               <Route
-                path="applications/:propertyId"
+                path="applications/:propertyId/:purchaseApplications"
                 element={<Applications />}
               />
               <Route path="logout" element={<Logout />} />
