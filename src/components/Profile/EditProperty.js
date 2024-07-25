@@ -75,7 +75,7 @@ export default function EditProperty() {
           const encodedFilename = encodeURIComponent(
             imagePath.split("/").pop()
           );
-          return `http://localhost:5000/uploads/${encodedFilename}`;
+          return `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
         });
         setImagesForDisplay(imageUrls);
       }

@@ -155,6 +155,7 @@ const userSlice = createSlice({
     fetchRentalApplicationsRequest(state) {
       state.isLoading = true;
       state.error = null;
+      state.applications = [];
     },
     fetchRentalApplicationsSuccess(state, action) {
       state.isLoading = false;
@@ -164,12 +165,12 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    updateRentalApplicationStatusRequest: (state, action) => {
+    updateApplicationStatusRequest: (state, action) => {
       state.isLoading = true;
       state.error = null;
       state.updateStatus = "pending";
     },
-    updateRentalApplicationStatusSuccess: (state, action) => {
+    updateApplicationStatusSuccess: (state, action) => {
       const updatedApplication = action.payload;
       state.applications = state.applications.map((application) =>
         application._id === updatedApplication._id
@@ -179,10 +180,23 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.updateStatus = "success";
     },
-    updateRentalApplicationStatusFailure: (state, action) => {
+    updateApplicationStatusFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
       state.updateStatus = "failure";
+    },
+    fetchPurchaseApplicationsRequest(state) {
+      state.isLoading = true;
+      state.error = null;
+      state.applications = [];
+    },
+    fetchPurchaseApplicationsSuccess(state, action) {
+      state.isLoading = false;
+      state.applications = action.payload;
+    },
+    fetchPurchaseApplicationsFailure(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     },
     resetUserState: (state) => {
       state.user = null;
@@ -225,10 +239,13 @@ export const {
   fetchRentalApplicationsRequest,
   fetchRentalApplicationsSuccess,
   fetchRentalApplicationsFailure,
-  updateRentalApplicationStatusRequest,
-  updateRentalApplicationStatusSuccess,
-  updateRentalApplicationStatusFailure,
+  updateApplicationStatusRequest,
+  updateApplicationStatusSuccess,
+  updateApplicationStatusFailure,
   resetUserState,
+  fetchPurchaseApplicationsRequest,
+  fetchPurchaseApplicationsSuccess,
+  fetchPurchaseApplicationsFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

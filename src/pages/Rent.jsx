@@ -28,6 +28,11 @@ import RentHeaderImg from "../assets/images/rent-header-img.jpg";
 import RentItem from "../components/RentItem";
 import { Skeleton } from "antd";
 
+const toUpperCase = (string) => {
+  if (!string) return "";
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 function Rent() {
   const location = useLocation();
   const { city } = location.state || {};
@@ -88,10 +93,10 @@ function Rent() {
           className="row mb-4 mx-0 px-0"
           style={{
             padding: "18px",
-            background: "#00000014",
+            // background: "#00000014",
             borderRadius: "7px",
-            // border: "1px dashed #f07917",
-            // boxShadow: "0px 0px 20px -10px #ed6c02",
+            border: "1px dashed #f07917",
+            boxShadow: "0px 0px 20px -10px #ed6c02",
           }}
         >
           <div className="col-12  my-2">
@@ -122,7 +127,7 @@ function Rent() {
               >
                 {filterOptions.listingTypes?.map((type) => (
                   <MenuItem key={type} value={type}>
-                    {type}
+                    {toUpperCase(type)}
                   </MenuItem>
                 ))}
               </Select>
@@ -518,7 +523,7 @@ function Rent() {
             className="fw-bold"
             style={{ fontSize: "22px", color: "#ff700d" }}
           >
-            Properties List
+            Property List
           </label>
         </div>
         {isLoading ? (

@@ -10,7 +10,7 @@ function RentSaleItem(props) {
   let encodedImgUrl = null;
   if (itemImg) {
     const encodedFilename = encodeURIComponent(itemImg.split("/").pop());
-    encodedImgUrl = `http://localhost:5000/uploads/${encodedFilename}`;
+    encodedImgUrl = `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
   }
 
   return (

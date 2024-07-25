@@ -39,11 +39,12 @@ const MyPropertyItems = ({
   applicationCount,
   itemStatus,
   itemUpdatedAt,
+  purchaseApplications,
 }) => {
   let encodedImgUrl = null;
   if (itemImg) {
     const encodedFilename = encodeURIComponent(itemImg.split("/").pop());
-    encodedImgUrl = `http://localhost:5000/uploads/${encodedFilename}`;
+    encodedImgUrl = `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
   }
 
   const truncateText = (text, length) => {
@@ -254,7 +255,7 @@ const MyPropertyItems = ({
             alignItems: "center",
           }}
         >
-          <Link to={`/profile/applications/${itemId}`}>
+          <Link to={`/profile/applications/${itemId}/${purchaseApplications}`}>
             <Button variant="contained" color="warning" size="large">
               Applications ({applicationCount})
             </Button>

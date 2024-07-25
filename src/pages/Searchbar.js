@@ -1,210 +1,199 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
-  TextField,
-  InputAdornment,
-  IconButton,
   Button,
-  Divider,
-  Badge,
+  CircularProgress,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
-import {
-  LocationOnOutlined,
-  Close,
-  ArrowDropDown,
-  HomeRounded,
-  LocalOffer,
-  Checklist,
-  Tune,
-  Search as SearchIcon,
-} from "@mui/icons-material";
-import { Select, Input } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchFilterOptionsRequest } from "../components/RentSaleComponents/RentSaleSlice";
+
+const toUpperCase = (string) => {
+  if (!string) return "";
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
 const SearchBarForm = () => {
   const navigate = useNavigate();
-  const [all_filter, set_all_filter] = useState({
-    city: null,
-    type: "Residential",
+  const dispatch = useDispatch();
+  const { isLoading, filterOptions } = useSelector((state) => state.rentsale);
+
+  useEffect(() => {
+    dispatch(fetchFilterOptionsRequest());
+  }, [dispatch]);
+
+  const initialState = {
+    city: "",
     priceMax: "",
-    beds: null,
-  });
+    beds: "",
+    listingType: "",
+  };
+
+  const [filters, setFilters] = useState(initialState);
+
+  const handleFilterChange = (name, value) => {
+    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+  };
+
+  const handleSearch = () => {
+    navigate("/sale", { state: filters });
+  };
+
   return (
-    <div
-      className="row mx-20 px-0"
-      style={{
+    <Box
+      sx={{
+        position: "relative",
         backgroundImage: `url("/assets/images/review-img.jpg")`,
         height: "500px",
-        objectFit: "contain",
+        objectFit: "cover",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-      }}
-    >
-      <div
-        className="col-12 d-flex justify-content-center"
-        style={{ paddingTop: "200px", background: "#00000082" }}
-      >
-        <div className="searchBarCustom">
-          <div style={{ background: "#00000082", padding: "16px 22px" }}>
-            <div>
-              <Select
-                options={[
-                  { label: "Ahmedabad", value: "ahmedabad" },
-                  { label: "Surat", value: "surat" },
-                  { label: "Rajkot", value: "rajkot" },
-                  { label: "Baroda", value: "baroda" },
-                ]}
-                style={{ width: "100%" }}
-                size="large"
-                value={all_filter?.city}
-                placeholder="Select City"
-                showSearch
-                allowClear
-                onChange={(e) => {
-                  set_all_filter({ ...all_filter, city: e });
-                }}
-              />
-            </div>
-            <div className="d-flex mt-3">
-              <Select
-                options={[
-                  { label: "Residential", value: "residential" },
-                  { label: "Commercial", value: "commercial" },
-                ]}
-                className="me-3"
-                style={{ width: "30%" }}
-                size="large"
-                placeholder="Select Type"
-                showSearch
-                allowClear
-                value={all_filter?.type}
-                onChange={(e) => {
-                  set_all_filter({ ...all_filter, type: e });
-                }}
-              />
-              <Select
-                options={[
-                  { label: "1", value: "1" },
-                  { label: "2", value: "2" },
-                  { label: "3", value: "3" },
-                  { label: "4", value: "4" },
-                  { label: "5", value: "5" },
-                ]}
-                className="me-3"
-                style={{ width: "30%" }}
-                size="large"
-                placeholder="Select Beds"
-                showSearch
-                allowClear
-                value={all_filter?.beds}
-                onChange={(e) => {
-                  set_all_filter({ ...all_filter, beds: e });
-                }}
-              />{" "}
-              <Input
-                className="me-3"
-                style={{ width: "30%" }}
-                size="large"
-                placeholder="Enter priceMax"
-                value={all_filter?.priceMax}
-                onChange={(e) => {
-                  set_all_filter({ ...all_filter, priceMax: e.target.value });
-                }}
-              />
-              <div>
-                <img
-                  src="/assets/images/search.png"
-                  style={{ width: "42px" }}
-                  onClick={() => {
-                    navigate("/sale", {
-                      state: {
-                        city: all_filter?.city,
-                        type: all_filter?.type,
-                        priceMax: all_filter?.priceMax,
-                        beds: all_filter?.beds,
-                      },
-                    });
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-  return (
-    <form
-      style={{
-        width: "100%",
-        height: "100%",
         display: "flex",
+        justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
-        <TextField
-          fullWidth
-          variant="standard"
-          placeholder="Search Location"
-          defaultValue="Toronto"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <LocationOnOutlined />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <IconButton aria-label="Clear" title="Clear">
-                  <Close />
-                </IconButton>
-                <IconButton aria-label="Open" title="Open">
-                  <ArrowDropDown />
-                </IconButton>
-              </Box>
-            ),
-          }}
-        />
-        <Button
-          variant="text"
-          startIcon={<HomeRounded />}
-          endIcon={<ArrowDropDown />}
-          sx={{ ml: 2, textTransform: "none" }}
-        >
-          Residential
-        </Button>
-        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
-        <Button
-          variant="text"
-          startIcon={<LocalOffer />}
-          endIcon={<ArrowDropDown />}
-          sx={{ textTransform: "none" }}
-        >
-          Price
-        </Button>
-        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
-        <Button
-          variant="text"
-          startIcon={<Checklist />}
-          endIcon={<ArrowDropDown />}
-          sx={{ textTransform: "none" }}
-        >
-          Features
-        </Button>
-        <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton aria-label="search filters button">
-            <Badge badgeContent={0} color="primary">
-              <Tune />
-            </Badge>
-          </IconButton>
-          <IconButton aria-label="search">
-            <SearchIcon />
-          </IconButton>
-        </Box>
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.5)", // Light black overlay
+        }}
+      />
+      <Box
+        sx={{
+          background: "#00000082",
+          padding: "16px 22px",
+          borderRadius: "8px",
+          width: "100%",
+          maxWidth: "800px",
+        }}
+      >
+        {isLoading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Box>
+            <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
+              <InputLabel
+                sx={{ color: "orange", "&.Mui-focused": { color: "orange" } }}
+              >
+                Select City
+              </InputLabel>
+              <Select
+                value={filters.city}
+                onChange={(e) => handleFilterChange("city", e.target.value)}
+                label="Select City"
+                sx={{ backgroundColor: "white" }}
+              >
+                {filterOptions.cities?.map((city) => (
+                  <MenuItem key={city} value={city}>
+                    {city}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Box display="flex" gap={2} mb={2}>
+              <FormControl variant="outlined" sx={{ flex: 1 }}>
+                <InputLabel
+                  sx={{
+                    color: "orange",
+                    "&.Mui-focused": { color: "orange" },
+                  }}
+                >
+                  Select Type
+                </InputLabel>
+                <Select
+                  value={filters.listingType}
+                  onChange={(e) =>
+                    handleFilterChange("listingType", e.target.value)
+                  }
+                  label=""
+                  sx={{
+                    backgroundColor: "white",
+                  }}
+                >
+                  {filterOptions.listingTypes?.map((type) => (
+                    <MenuItem key={type} value={type}>
+                      {toUpperCase(type)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl variant="outlined" sx={{ flex: 1 }}>
+                <InputLabel
+                  sx={{ color: "orange", "&.Mui-focused": { color: "orange" } }}
+                >
+                  Max Price
+                </InputLabel>
+                <Select
+                  value={filters.priceMax}
+                  onChange={(e) =>
+                    handleFilterChange("priceMax", e.target.value)
+                  }
+                  label="Max Price"
+                  sx={{ backgroundColor: "white" }}
+                >
+                  <MenuItem value="">Any</MenuItem>
+                  <MenuItem value="25000">25,000</MenuItem>
+                  <MenuItem value="50000">50,000</MenuItem>
+                  <MenuItem value="75000">75,000</MenuItem>
+                  <MenuItem value="100000">100,000</MenuItem>
+                  <MenuItem value="125000">125,000</MenuItem>
+                  <MenuItem value="9999999">Above 125,000</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl variant="outlined" sx={{ flex: 1 }}>
+                <InputLabel
+                  sx={{ color: "orange", "&.Mui-focused": { color: "orange" } }}
+                >
+                  Beds
+                </InputLabel>
+                <Select
+                  value={filters.beds}
+                  onChange={(e) => handleFilterChange("beds", e.target.value)}
+                  label="Beds"
+                  sx={{ backgroundColor: "white" }}
+                >
+                  <MenuItem value="">Any</MenuItem>
+                  <MenuItem value="1">1</MenuItem>
+                  <MenuItem value="2">2</MenuItem>
+                  <MenuItem value="3">3</MenuItem>
+                  <MenuItem value="4">4</MenuItem>
+                  <MenuItem value="5">5</MenuItem>
+                </Select>
+              </FormControl>
+
+              <Button
+                variant="text"
+                sx={{ alignSelf: "center" }}
+                onClick={handleSearch}
+              >
+                <img
+                  src="/assets/images/search.png"
+                  style={{ width: "42px" }}
+                  alt="Search"
+                />
+              </Button>
+            </Box>
+          </Box>
+        )}
       </Box>
-    </form>
+    </Box>
   );
 };
 

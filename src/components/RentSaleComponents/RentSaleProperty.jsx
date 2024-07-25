@@ -16,6 +16,7 @@ import ImageGallerySlider from "../ImageGallerySlider";
 import { orange } from "@mui/material/colors";
 import PropertyIcons from "../PropertyIcons";
 import RentalForm from "./RentalForm";
+import PurchaseForm from "./PurchaseForm.jsx";
 import Itour from "./Itour";
 import ReviewForm from "./ReviewForm.js";
 import { Info as InfoIcon, Add as AddIcon } from "@mui/icons-material";
@@ -32,6 +33,7 @@ function RentSaleProperty(props) {
 
   const [open, setOpen] = useState(false);
   const [openRentalForm, setOpenRentalForm] = useState(false);
+  const [openPurchaseForm, setOpenPurchaseForm] = useState(false);
   const [newReview, setNewReview] = useState({
     user_name: "",
     review: "",
@@ -43,7 +45,7 @@ function RentSaleProperty(props) {
     if (props.propertyImages && Array.isArray(props.propertyImages)) {
       const imageUrls = props.propertyImages.map((imagePath) => {
         const encodedFilename = encodeURIComponent(imagePath.split("/").pop());
-        return `http://localhost:5000/uploads/${encodedFilename}`;
+        return `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
       });
       setImagesForDisplay(imageUrls);
     }
@@ -76,8 +78,16 @@ function RentSaleProperty(props) {
     setOpenRentalForm(true);
   };
 
+  const handleOpenPurchaseForm = () => {
+    setOpenPurchaseForm(true);
+  };
+
   const handleCloseRentalForm = () => {
     setOpenRentalForm(false);
+  };
+
+  const handleClosePurchaseForm = () => {
+    setOpenPurchaseForm(false);
   };
   return (
     <Box>
@@ -201,7 +211,7 @@ function RentSaleProperty(props) {
                     variant="contained"
                     color="warning"
                     size="large"
-                    onClick={handleOpenRentalForm}
+                    onClick={handleOpenPurchaseForm}
                     disabled={!isAuthenticated}
                     style={{
                       pointerEvents: !isAuthenticated ? "none" : "auto",
@@ -232,6 +242,11 @@ function RentSaleProperty(props) {
       <RentalForm
         open={openRentalForm}
         handleClose={handleCloseRentalForm}
+        propertyId={props.propertyId}
+      />
+      <PurchaseForm
+        open={openPurchaseForm}
+        handleClose={handleClosePurchaseForm}
         propertyId={props.propertyId}
       />
     </Box>

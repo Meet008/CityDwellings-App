@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -7,61 +8,127 @@ import {
   TextField,
   Box,
   useMediaQuery,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
-import { Select } from "antd";
-import React, { useState, useEffect } from "react";
-import { useTheme } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
+import { useTheme } from "@mui/material/styles";
 import {
   setFormData,
   submitFormRequest,
   submitFormSuccess,
-  submitFormFailure,
-} from "./RentalFormSlice"; // Update the import path as necessary
+  clearForm,
+  editFormRequest,
+} from "./RentalFormSlice"; // Adjust the import path as necessary
 
-const RentalForm = (props) => {
-  const { open, handleClose, propertyId } = props;
+const dummyData = {
+  full_name: "John Doe",
+  phone_number: "123-456-7890",
+  email: "johndoe@example.com",
+  date_of_birth: "1990-01-01",
+  driver_license_number: "D1234567",
+  current_address: "123 Main St, Springfield, IL",
+  previous_addresses: [
+    {
+      address: "456 Elm St, Springfield, IL",
+      landlord_name: "Jane Smith",
+      landlord_contact: "098-765-4321",
+      duration_of_residence: "2 years",
+      reason_for_leaving: "Moved to a bigger place",
+    },
+  ],
+  previous_employers: [
+    {
+      employer_name: "ABC Corp",
+      employer_contact: "111-222-3333",
+      position: "Software Engineer",
+      duration_of_employment: "3 years",
+      monthly_income: "$5000",
+    },
+  ],
+
+  emergency_contact: {
+    name: "Mary Doe",
+    relationship: "Sister",
+    phone_number: "987-654-3210",
+  },
+
+  authorization_and_consent: {
+    signature: "John Doe",
+    date: "2024-07-16",
+    consent_for_checks: true,
+  },
+  minimum_stay: "6 months",
+};
+
+const RentalForm = ({ open, handleClose, propertyId, initialData }) => {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.rentalForm.formData);
   const isLoading = useSelector((state) => state.rentalForm.isLoading);
   const submissionSuccess = useSelector(
     (state) => state.rentalForm.submissionSuccess
   );
-  const error = useSelector((state) => state.rentalForm.error);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleChangeFormData = (key, value) => {
-    dispatch(setFormData({ [key]: value }));
+    const keys = key.split(".");
+    let updatedFormData = { ...formData };
+
+    let currentLevel = updatedFormData;
+    for (let i = 0; i < keys.length - 1; i++) {
+      currentLevel[keys[i]] = currentLevel[keys[i]]
+        ? { ...currentLevel[keys[i]] }
+        : {};
+      currentLevel = currentLevel[keys[i]];
+    }
+
+    currentLevel[keys[keys.length - 1]] = value;
+
+    dispatch(setFormData(updatedFormData));
   };
 
-  const handleSubmit = () => {
-    dispatch(submitFormRequest({ propertyId, formData }));
+  const handleArrayChange = (arrayKey, index, fieldKey, value) => {
+    const newArray = formData[arrayKey]
+      ? formData[arrayKey].map((item) => ({ ...item }))
+      : [];
+    if (!newArray[index]) {
+      newArray[index] = {};
+    }
+    newArray[index][fieldKey] = value;
+    handleChangeFormData(arrayKey, newArray);
   };
-
-  // Close the dialog if the form is successfully submitted
-  if (submissionSuccess) {
-    handleClose();
-    dispatch(submitFormSuccess());
-  }
+  const handleSubmit = async (event) => {
+    // Dispatch the form submission request action
+    event.preventDefault();
+    initialData
+      ? dispatch(editFormRequest({ propertyId, formData }))
+      : dispatch(submitFormRequest({ propertyId, formData }));
+  };
 
   useEffect(() => {
-    // Set dummy data when the component mounts
-    const dummyData = {
-      full_name: "John Doe",
-      phone_number: "1234567890",
-      email: "john.doe@example.com",
-      current_address: "123 Current St, City, Country",
-      previous_addresses: "456 Previous St, City, Country",
-      bank_account_name: "John Doe",
-      account_type: "saving",
-      ifsc_code: "IFSC0001",
-      reason_for_moving: "Relocation for work",
-    };
-    dispatch(setFormData(dummyData));
-  }, [dispatch]);
+    if (submissionSuccess) {
+      dispatch(clearForm());
+      handleClose();
+    }
+  }, [submissionSuccess, handleClose, dispatch]);
 
+  useEffect(() => {
+    if (initialData) {
+      const formattedData = {
+        ...initialData,
+        date_of_birth: initialData.date_of_birth
+          ? new Date(initialData.date_of_birth).toISOString().split("T")[0]
+          : "",
+      };
+      dispatch(setFormData(formattedData)); // Set the form data with initial data
+    } else {
+      dispatch(setFormData(dummyData));
+    }
+  }, [dispatch, initialData]);
   return (
     <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle
@@ -70,7 +137,77 @@ const RentalForm = (props) => {
         Rental Application
       </DialogTitle>
       <DialogContent>
+        <label
+          style={{
+            fontSize: "18px",
+            color: "#ff700d",
+            borderBottom: "1px dashed #f07917",
+            display: "block",
+          }}
+        >
+          Personal Information
+        </label>
         <Box mt={2}>
+          <TextField
+            label="Full Name"
+            variant="outlined"
+            fullWidth
+            onChange={(e) => handleChangeFormData("full_name", e.target.value)}
+            value={formData?.full_name || ""}
+            sx={{ mb: 2 }}
+          />
+          <Box display="flex" gap={2}>
+            <TextField
+              label="Phone Number"
+              variant="outlined"
+              fullWidth
+              onChange={(e) =>
+                handleChangeFormData("phone_number", e.target.value)
+              }
+              value={formData?.phone_number || ""}
+            />
+            <TextField
+              label="Email"
+              variant="outlined"
+              fullWidth
+              onChange={(e) => handleChangeFormData("email", e.target.value)}
+              value={formData?.email || ""}
+            />
+          </Box>
+          <TextField
+            label="Date of Birth"
+            type="date"
+            variant="outlined"
+            fullWidth
+            onChange={(e) =>
+              handleChangeFormData("date_of_birth", e.target.value)
+            }
+            value={formData?.date_of_birth || ""}
+            sx={{ mb: 2, mt: 2 }}
+          />
+          <TextField
+            label="Driver License Number"
+            variant="outlined"
+            fullWidth
+            onChange={(e) =>
+              handleChangeFormData("driver_license_number", e.target.value)
+            }
+            value={formData?.driver_license_number || ""}
+            sx={{ mb: 2 }}
+          />
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Minimum Stay</InputLabel>
+            <Select
+              value={formData?.minimum_stay || ""}
+              onChange={(e) =>
+                handleChangeFormData("minimum_stay", e.target.value)
+              }
+            >
+              <MenuItem value="6 months">6 months</MenuItem>
+              <MenuItem value="1 year">1 year</MenuItem>
+              <MenuItem value="more than 1 year">More than 1 year</MenuItem>
+            </Select>
+          </FormControl>
           <label
             style={{
               fontSize: "18px",
@@ -79,165 +216,247 @@ const RentalForm = (props) => {
               display: "block",
             }}
           >
-            Personal Information
+            Residential History
           </label>
-          <Box mt={2}>
-            <TextField
-              label="Full Name"
-              variant="outlined"
-              fullWidth
-              size="large"
-              onChange={(e) => {
-                handleChangeFormData("full_name", e.target.value);
-              }}
-              value={formData?.full_name}
-              sx={{ mb: 2 }}
-            />
-            <Box display="flex" gap={2}>
+          <TextField
+            label="Current Address"
+            variant="outlined"
+            fullWidth
+            onChange={(e) =>
+              handleChangeFormData("current_address", e.target.value)
+            }
+            value={formData?.current_address || ""}
+            sx={{ mb: 2 }}
+          />
+          {formData?.previous_addresses?.map((address, index) => (
+            <Box key={index} mt={2}>
               <TextField
-                label="Phone Number"
+                label="Previous Address"
                 variant="outlined"
                 fullWidth
-                size="large"
-                onChange={(e) => {
-                  handleChangeFormData("phone_number", e.target.value);
-                }}
-                value={formData?.phone_number}
-              />
-              <TextField
-                label="Email"
-                variant="outlined"
-                fullWidth
-                size="large"
-                onChange={(e) => {
-                  handleChangeFormData("email", e.target.value);
-                }}
-                value={formData?.email}
-              />
-            </Box>
-          </Box>
-          <Box mt={3}>
-            <label
-              style={{
-                fontSize: "18px",
-                color: "#ff700d",
-                borderBottom: "1px dashed #f07917",
-                display: "block",
-              }}
-            >
-              Residential History
-            </label>
-            <Box mt={2}>
-              <TextField
-                label="Current Address"
-                variant="outlined"
-                fullWidth
-                size="large"
-                onChange={(e) => {
-                  handleChangeFormData("curerent_address", e.target.value);
-                }}
-                value={formData?.current_address}
+                onChange={(e) =>
+                  handleArrayChange(
+                    "previous_addresses",
+                    index,
+                    "address",
+                    e.target.value
+                  )
+                }
+                value={address.address || ""}
                 sx={{ mb: 2 }}
               />
               <TextField
-                label="Previous Addresses"
+                label="Landlord Name"
                 variant="outlined"
                 fullWidth
-                size="large"
-                onChange={(e) => {
-                  handleChangeFormData("previous_addresses", e.target.value);
-                }}
-                value={formData?.previous_addresses}
-              />
-            </Box>
-          </Box>
-          <Box mt={3}>
-            <label
-              style={{
-                fontSize: "18px",
-                color: "#ff700d",
-                borderBottom: "1px dashed #f07917",
-                display: "block",
-              }}
-            >
-              Financial Information
-            </label>
-            <Box mt={2}>
-              <TextField
-                label="Bank Account Name"
-                variant="outlined"
-                fullWidth
-                size="large"
-                onChange={(e) => {
-                  handleChangeFormData("bank_account_name", e.target.value);
-                }}
-                value={formData?.bank_account_name}
+                onChange={(e) =>
+                  handleArrayChange(
+                    "previous_addresses",
+                    index,
+                    "landlord_name",
+                    e.target.value
+                  )
+                }
+                value={address.landlord_name || ""}
                 sx={{ mb: 2 }}
               />
-              <Box display="flex" gap={2}>
-                <Select
-                  size="large"
-                  style={{ width: "100%" }}
-                  onChange={(value) => {
-                    handleChangeFormData("account_type", value);
-                  }}
-                  placeholder="Select Account Type"
-                  value={formData?.account_type || null}
-                  options={[
-                    { label: "Current", value: "current" },
-                    { label: "Saving", value: "saving" },
-                  ]}
-                />
-                <TextField
-                  label="IFSC Code"
-                  variant="outlined"
-                  fullWidth
-                  size="large"
-                  onChange={(e) => {
-                    handleChangeFormData("ifsc_code", e.target.value);
-                  }}
-                  value={formData?.ifsc_code}
-                />
-              </Box>
+              <TextField
+                label="Landlord Contact"
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  handleArrayChange(
+                    "previous_addresses",
+                    index,
+                    "landlord_contact",
+                    e.target.value
+                  )
+                }
+                value={address.landlord_contact || ""}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Duration of Residence"
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  handleArrayChange(
+                    "previous_addresses",
+                    index,
+                    "duration_of_residence",
+                    e.target.value
+                  )
+                }
+                value={address.duration_of_residence || ""}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Reason for Leaving"
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  handleArrayChange(
+                    "previous_addresses",
+                    index,
+                    "reason_for_leaving",
+                    e.target.value
+                  )
+                }
+                value={address.reason_for_leaving || ""}
+                sx={{ mb: 2 }}
+              />
             </Box>
-          </Box>
-          <Box mt={3}>
-            <label
-              style={{
-                fontSize: "18px",
-                color: "#ff700d",
-                borderBottom: "1px dashed #f07917",
-                display: "block",
-              }}
-            >
-              Optional Information
-            </label>
-            <TextField
-              label="Reason For Moving"
-              variant="outlined"
-              fullWidth
-              size="large"
-              multiline
-              rows={4}
-              onChange={(e) => {
-                handleChangeFormData("reason_for_moving", e.target.value);
-              }}
-              value={formData?.reason_for_moving}
-            />
-          </Box>
+          ))}
+
+          <label
+            style={{
+              fontSize: "18px",
+              color: "#ff700d",
+              borderBottom: "1px dashed #f07917",
+              display: "block",
+            }}
+          >
+            Additional Information
+          </label>
+          {formData?.previous_employers?.map((employer, index) => (
+            <Box key={index} mt={2}>
+              <TextField
+                label="Previous Employer"
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  handleArrayChange(
+                    "previous_employers",
+                    index,
+                    "employer_name",
+                    e.target.value
+                  )
+                }
+                value={employer.employer_name || ""}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Employer Contact"
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  handleArrayChange(
+                    "previous_employers",
+                    index,
+                    "employer_contact",
+                    e.target.value
+                  )
+                }
+                value={employer.employer_contact || ""}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Position"
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  handleArrayChange(
+                    "previous_employers",
+                    index,
+                    "position",
+                    e.target.value
+                  )
+                }
+                value={employer.position || ""}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Duration of Employment"
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  handleArrayChange(
+                    "previous_employers",
+                    index,
+                    "duration_of_employment",
+                    e.target.value
+                  )
+                }
+                value={employer.duration_of_employment || ""}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Monthly Income"
+                variant="outlined"
+                fullWidth
+                onChange={(e) =>
+                  handleArrayChange(
+                    "previous_employers",
+                    index,
+                    "monthly_income",
+                    e.target.value
+                  )
+                }
+                value={employer.monthly_income || ""}
+                sx={{ mb: 2 }}
+              />
+            </Box>
+          ))}
+
+          <label
+            style={{
+              fontSize: "18px",
+              color: "#ff700d",
+              borderBottom: "1px dashed #f07917",
+              display: "block",
+            }}
+          >
+            Emergency Contact
+          </label>
+          <TextField
+            label="Emergency Contact Name"
+            variant="outlined"
+            fullWidth
+            onChange={(e) =>
+              handleChangeFormData("emergency_contact.name", e.target.value)
+            }
+            value={formData?.emergency_contact?.name || ""}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Relationship"
+            variant="outlined"
+            fullWidth
+            onChange={(e) =>
+              handleChangeFormData(
+                "emergency_contact.relationship",
+                e.target.value
+              )
+            }
+            value={formData?.emergency_contact?.relationship || ""}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Phone Number"
+            variant="outlined"
+            fullWidth
+            onChange={(e) =>
+              handleChangeFormData(
+                "emergency_contact.phone_number",
+                e.target.value
+              )
+            }
+            value={formData?.emergency_contact?.phone_number || ""}
+            sx={{ mb: 2 }}
+          />
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} variant="contained" color="secondary">
+        <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
         <Button
           onClick={handleSubmit}
-          variant="contained"
           color="primary"
+          variant="contained"
           disabled={isLoading}
         >
-          {isLoading ? "Submitting..." : "Submit"}
+          {isLoading ? "Submitting..." : initialData ? "Edit" : "Submit"}
         </Button>
       </DialogActions>
     </Dialog>

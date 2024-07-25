@@ -35,13 +35,16 @@ import {
   fetchRentalApplicationsRequest,
   fetchRentalApplicationsSuccess,
   fetchRentalApplicationsFailure,
-  updateRentalApplicationStatusRequest,
-  updateRentalApplicationStatusSuccess,
-  updateRentalApplicationStatusFailure,
+  updateApplicationStatusRequest,
+  updateApplicationStatusSuccess,
+  updateApplicationStatusFailure,
+  fetchPurchaseApplicationsRequest,
+  fetchPurchaseApplicationsSuccess,
+  fetchPurchaseApplicationsFailure,
 } from "./userSlice";
 
 // API base URL
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 // Fetch user profile
 function* fetchProfileSaga() {
@@ -280,18 +283,23 @@ function* fetchDashboardDataSaga() {
 function* addReviewSaga(action) {
   try {
     const { user_name, review, suggestion, propertyId } = action.payload;
-    // const token = localStorage.getItem("token");
-    // const config = {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // };
+
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user")); // Parse the JSON string
+    const userId = user?._id; // Optional chaining to safely access the _id
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
 
     const response = yield call(
       axios.post,
-      "http://localhost:5000/api/reviews",
-      { user_name, review, suggestion, propertyId }
+      `${API_BASE_URL}/reviews"`,
+      { user_name, review, suggestion, propertyId, userId },
+      config
     );
 
     yield put(addReviewSuccess(response.data));
@@ -351,10 +359,52 @@ function* fetchRentalApplicationsSaga(action) {
   }
 }
 
-// Update rental application status
-function* updateRentalApplicationStatusSaga(action) {
+// Update application status
+function* updateApplicationStatusSaga(action) {
   try {
-    const { applicationId, status } = action.payload;
+    const { applicationId, status, isPurchase } = action.payload;
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        token: `${token}`,
+      },
+    };
+    if (!isPurchase) {
+      const response = yield call(
+        axios.put,
+        `${API_BASE_URL}/rental_form/${applicationId}/status`,
+        { status },
+        config
+      );
+      yield put(updateApplicationStatusSuccess(response.data));
+      toast.success("Rental application status updated successfully");
+    } else {
+      const response = yield call(
+        axios.put,
+        `${API_BASE_URL}/purchase_form/${applicationId}/status`,
+        { status },
+        config
+      );
+      yield put(updateApplicationStatusSuccess(response.data));
+      toast.success("Purchase application status updated successfully");
+    }
+  } catch (error) {
+    yield put(
+      updateApplicationStatusFailure(
+        error.response?.data?.message || "Failed to update application status"
+      )
+    );
+    toast.error(
+      error.response?.data?.message || "Failed to update application status"
+    );
+  }
+}
+
+// Fetch purchase applications
+function* fetchPurchaseApplicationsSaga(action) {
+  try {
+    const { propertyId } = action.payload;
     const token = localStorage.getItem("token");
     const config = {
       headers: {
@@ -363,27 +413,22 @@ function* updateRentalApplicationStatusSaga(action) {
       },
     };
     const response = yield call(
-      axios.put,
-      `${API_BASE_URL}/rental_form/${applicationId}/status`,
-      { status },
+      axios.get,
+      `${API_BASE_URL}/purchase_form/property/${propertyId}`,
       config
     );
-    yield put(updateRentalApplicationStatusSuccess(response.data));
-    toast.success("Rental application status updated successfully");
+    yield put(fetchPurchaseApplicationsSuccess(response.data));
   } catch (error) {
     yield put(
-      updateRentalApplicationStatusFailure(
-        error.response?.data?.message ||
-          "Failed to update rental application status"
+      fetchPurchaseApplicationsFailure(
+        error.response?.data?.message || "Failed to fetch rental applications"
       )
     );
     toast.error(
-      error.response?.data?.message ||
-        "Failed to update rental application status"
+      error.response?.data?.message || "Failed to fetch rental applications"
     );
   }
 }
-
 // Watcher Sagas
 export default function* userSaga() {
   yield takeLatest(fetchProfileRequest.type, fetchProfileSaga);
@@ -401,7 +446,11 @@ export default function* userSaga() {
     fetchRentalApplicationsSaga
   );
   yield takeLatest(
-    updateRentalApplicationStatusRequest.type,
-    updateRentalApplicationStatusSaga
+    updateApplicationStatusRequest.type,
+    updateApplicationStatusSaga
+  );
+  yield takeLatest(
+    fetchPurchaseApplicationsRequest.type,
+    fetchPurchaseApplicationsSaga
   );
 }

@@ -102,8 +102,14 @@ const PropertyPage = () => {
                 handleEditProperty={handleEditProperty}
                 handleDeleteProperty={() => handleDeleteProperty(property._id)}
                 applicationCount={
-                  (property.buyingApplications?.length || 0) +
+                  (property.purchaseApplications?.length || 0) +
                   (property.rentalApplications?.length || 0)
+                }
+                purchaseApplications={
+                  property.category === "sale" ||
+                  property.purchaseApplications?.length
+                    ? true
+                    : false
                 }
               />
             </Grid>

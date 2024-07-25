@@ -6,23 +6,30 @@ const initialState = {
     phone_number: "",
     email: "",
     date_of_birth: "",
-    driver_license_number: "",
     current_address: "",
-    previous_addresses: [],
-    previous_employers: [],
-
-    emergency_contact: {
-      name: "",
-      relationship: "",
-      phone_number: "",
-    },
-
-    authorization_and_consent: {
-      signature: "",
-      date: "",
-      consent_for_checks: false,
-    },
-    minimum_stay: "",
+    identification_number: "",
+    employer_name: "",
+    employer_address: "",
+    job_title: "",
+    monthly_income: "",
+    employment_duration: "",
+    employer_contact: "",
+    proof_of_income: "",
+    credit_score: "",
+    current_debts: "",
+    proof_of_funds: "",
+    pre_approval_letter: "",
+    offer_price: "",
+    down_payment_amount: "",
+    mortgage_amount: "",
+    preferred_closing_date: "",
+    contingencies: "",
+    marital_status: "",
+    dependents: "",
+    emergency_contact: "",
+    consent_for_checks: false,
+    signature: "",
+    date: "",
   },
 
   isLoading: false,
@@ -32,8 +39,8 @@ const initialState = {
   applications: [],
 };
 
-const rentalFormSlice = createSlice({
-  name: "rentalForm",
+const purchaseFormSlice = createSlice({
+  name: "purchaseForm",
   initialState,
   reducers: {
     setFormData: (state, action) => {
@@ -49,7 +56,6 @@ const rentalFormSlice = createSlice({
       state.submissionSuccess = true;
       state.formData = initialState.formData; // Clear form data after successful submission
     },
-
     submitFormFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
@@ -74,28 +80,28 @@ const rentalFormSlice = createSlice({
       state.error = action.payload;
       state.submissionSuccess = false;
     },
-    deleteApplicationRequest: (state) => {
+    deletePurchaseApplicationRequest: (state) => {
       state.isLoading = true;
     },
-    deleteApplicationSuccess: (state, action) => {
+    deletePurchaseApplicationSuccess: (state, action) => {
       state.isLoading = false;
       state.applications = state.applications.filter(
         (application) => application._id !== action.payload
       );
     },
-    deleteApplicationFailure: (state, action) => {
+    deletePurchaseApplicationFailure: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
-    fetchUserRentApplicationsRequest(state) {
+    fetchUserPurchaseApplicationsRequest(state) {
       state.isLoading = true;
       state.error = null;
     },
-    fetchUserRentApplicationsSuccess(state, action) {
+    fetchUserPurchaseApplicationsSuccess(state, action) {
       state.isLoading = false;
       state.applications = action.payload;
     },
-    fetchUserRentApplicationsFailure(state, action) {
+    fetchUserPurchaseApplicationsFailure(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
@@ -107,16 +113,16 @@ export const {
   submitFormRequest,
   submitFormSuccess,
   submitFormFailure,
-  deleteApplicationRequest,
-  deleteApplicationSuccess,
-  deleteApplicationFailure,
-  fetchUserRentApplicationsRequest,
-  fetchUserRentApplicationsSuccess,
-  fetchUserRentApplicationsFailure,
   clearForm,
   editFormRequest,
   editFormSuccess,
   editFormFailure,
-} = rentalFormSlice.actions;
+  deletePurchaseApplicationRequest,
+  deletePurchaseApplicationSuccess,
+  deletePurchaseApplicationFailure,
+  fetchUserPurchaseApplicationsRequest,
+  fetchUserPurchaseApplicationsSuccess,
+  fetchUserPurchaseApplicationsFailure,
+} = purchaseFormSlice.actions;
 
-export default rentalFormSlice.reducer;
+export default purchaseFormSlice.reducer;

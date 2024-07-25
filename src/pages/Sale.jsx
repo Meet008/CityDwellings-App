@@ -26,9 +26,14 @@ import Footer from "../components/Footer";
 import saleItems from "../assets/saleItems";
 import { Skeleton } from "antd";
 
+const toUpperCase = (string) => {
+  if (!string) return "";
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 function Sale() {
   const location = useLocation();
-  const { city, type } = location.state || {};
+  const { city, listingType, priceMax, beds } = location.state || {};
 
   const dispatch = useDispatch();
   const { properties, isLoading, filterOptions } = useSelector(
@@ -39,6 +44,20 @@ function Sale() {
     category: "sale",
     city: city || "",
     state: "",
+    listingType: listingType || "",
+    priceMin: "", // New state for minimum price
+    priceMax: priceMax || "", // New state for maximum price
+    bedrooms: beds || "",
+    bathrooms: "",
+    furnished: "",
+    parking: "",
+    yearBuilt: "",
+  };
+
+  const initialStateReset = {
+    category: "sale",
+    city: "",
+    state: "",
     listingType: "",
     priceMin: "", // New state for minimum price
     priceMax: "", // New state for maximum price
@@ -47,8 +66,8 @@ function Sale() {
     furnished: "",
     parking: "",
     yearBuilt: "",
-    type: "",
   };
+
   const [filters, setFilters] = useState(initialState);
   const [isOpenOtherFilter, setIsOpenOtherFilter] = useState(false);
 
@@ -87,10 +106,10 @@ function Sale() {
           className="row mb-4 mx-0 px-0"
           style={{
             padding: "18px",
-            background: "#00000014",
+            // background: "#00000014",
             borderRadius: "7px",
-            // border: "1px dashed #f07917",
-            // boxShadow: "0px 0px 20px -10px #ed6c02",
+            border: "1px dashed #f07917",
+            boxShadow: "0px 0px 20px -10px #ed6c02",
           }}
         >
           <div className="col-12  my-2">
@@ -121,7 +140,7 @@ function Sale() {
               >
                 {filterOptions.listingTypes?.map((type) => (
                   <MenuItem key={type} value={type}>
-                    {type}
+                    {toUpperCase(type)}
                   </MenuItem>
                 ))}
               </Select>
@@ -169,29 +188,7 @@ function Sale() {
               </Select>
             </FormControl>
           </div>
-          <div className="col-6 col-md-3 col-lg-2 my-2">
-            <FormControl fullWidth variant="outlined">
-              <InputLabel>Select Type</InputLabel>
-              <Select
-                name="type"
-                value={filters.type}
-                onChange={handleFilterChange}
-                label="Select Type"
-              >
-                <MenuItem key="residential" value="residential">
-                  Residential
-                </MenuItem>
-                <MenuItem key="residential" value="residential">
-                  Commercial
-                </MenuItem>
-                {/* {filterOptions.type?.map((type) => (
-                    <MenuItem key={type} value={type}>
-                      {type}
-                    </MenuItem>
-                  ))} */}
-              </Select>
-            </FormControl>
-          </div>
+
           {isOpenOtherFilter && (
             <>
               {" "}
@@ -317,7 +314,7 @@ function Sale() {
               </div>
               <div
                 className="text-center"
-                onClick={() => setFilters(initialState)}
+                onClick={() => setFilters(initialStateReset)}
               >
                 <img
                   src="/assets/images/refreshing.png"
@@ -536,7 +533,7 @@ function Sale() {
             className="fw-bold"
             style={{ fontSize: "22px", color: "#ff700d" }}
           >
-            Properties List
+            Property List
           </label>
         </div>
         {isLoading ? (

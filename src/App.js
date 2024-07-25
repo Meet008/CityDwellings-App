@@ -23,6 +23,7 @@ import Applications from "./components/Profile/Applications";
 import Main from "./components/Profile/Main";
 import MyProperty from "./components/Profile/MyProperty";
 import UserProfile from "./components/Profile/UserProfile";
+import UserApplications from "./components/Profile/UserApplications";
 import { ConfigProvider } from "antd";
 import Message from "./components/Profile/Messages";
 import Reviews from "./components/Profile/Reviews";
@@ -86,7 +87,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgotPassword" element={<ForgotPassword />} />
-
+            <Route path="/userProfile" element={<UserProfile />} />
+            <Route path="/userApplications" element={<UserApplications />} />
             <Route path="/profile" element={<Main />}>
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="add-property" element={<AddProperty />} />
@@ -99,7 +101,7 @@ function App() {
                 element={<EditProperty />}
               />
               <Route
-                path="applications/:propertyId"
+                path="applications/:propertyId/:purchaseApplications"
                 element={<Applications />}
               />
               <Route path="logout" element={<Logout />} />

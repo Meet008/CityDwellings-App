@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Container, useMediaQuery } from "@mui/material";
 import Navigation from "../components/Navigation";
 import HeaderCarousel from "../components/HeaderCarousel";
