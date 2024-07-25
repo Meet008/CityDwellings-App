@@ -297,7 +297,7 @@ function* addReviewSaga(action) {
 
     const response = yield call(
       axios.post,
-      `${API_BASE_URL}/reviews"`,
+      `${API_BASE_URL}/reviews`,
       { user_name, review, suggestion, propertyId, userId },
       config
     );
