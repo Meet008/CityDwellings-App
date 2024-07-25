@@ -17,7 +17,7 @@ import {
 } from "./PurchaseFormSlice";
 
 // API base URL
-const API_BASE_URL = "http://localhost:5000/api/purchase_form";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 // Submit purchase form
 function* submitPurchaseFormSaga(action) {
@@ -37,7 +37,7 @@ function* submitPurchaseFormSaga(action) {
 
     yield call(
       axios.post,
-      `${API_BASE_URL}`,
+      `${API_BASE_URL}/purchase_form`,
       { propertyId, formData, userId },
       config
     );
@@ -69,7 +69,12 @@ function* editPurchaseFormSaga(action) {
       },
     };
 
-    yield call(axios.put, `${API_BASE_URL}/${propertyId}`, formData, config);
+    yield call(
+      axios.put,
+      `${API_BASE_URL}/purchase_form/${propertyId}`,
+      formData,
+      config
+    );
 
     yield put(editFormSuccess());
     yield put(fetchUserPurchaseApplicationsRequest()); // Refresh the list of applications
@@ -98,7 +103,7 @@ function* deletePurchaseFormSaga(action) {
       },
     };
 
-    yield call(axios.delete, `${API_BASE_URL}/${id}`, config);
+    yield call(axios.delete, `${API_BASE_URL}/purchase_form/${id}`, config);
 
     yield put(deletePurchaseApplicationSuccess(id));
     toast.success("Purchase form deleted successfully");
@@ -128,7 +133,7 @@ function* fetchUserPurchaseApplicationsSaga() {
     };
     const response = yield call(
       axios.get,
-      `${API_BASE_URL}/user/${userId}`,
+      `${API_BASE_URL}/purchase_form/user/${userId}`,
       config
     );
     yield put(fetchUserPurchaseApplicationsSuccess(response.data));

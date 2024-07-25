@@ -17,12 +17,15 @@ import {
 } from "./authSlice";
 import { fetchProfileRequest } from "../Profile/userSlice"; // Import fetchUserProfile action
 
+// Base API URL from environment variable
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Worker Sagas
 function* registerUser(action) {
   try {
     const res = yield call(
       axios.post,
-      "http://localhost:5000/api/auth/register",
+      `${API_URL}/auth/register`,
       action.payload
     );
     yield put(registerSuccess(res.data));
@@ -45,11 +48,7 @@ function* registerUser(action) {
 
 function* loginUser(action) {
   try {
-    const res = yield call(
-      axios.post,
-      "http://localhost:5000/api/auth/login",
-      action.payload
-    );
+    const res = yield call(axios.post, `${API_URL}/auth/login`, action.payload);
     yield put(loginSuccess(res.data));
     yield put(fetchProfileRequest()); // Dispatch fetchUserProfile action after successful login
     toast.success("Login successful"); // Display success message using toast
@@ -74,7 +73,7 @@ function* forgotPassword(action) {
   try {
     const res = yield call(
       axios.post,
-      "http://localhost:5000/api/auth/forgot-password",
+      `${API_URL}/auth/forgot-password`,
       action.payload
     );
     yield put(forgotPasswordSuccess(res.data));
@@ -98,7 +97,7 @@ function* updatePassword(action) {
   try {
     const res = yield call(
       axios.put,
-      "http://localhost:5000/api/auth/update-password",
+      `${API_URL}/auth/update-password`,
       action.payload
     );
     yield put(updatePasswordSuccess(res.data));

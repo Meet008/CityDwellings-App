@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+
 const api = axios.create({
-  baseURL: "http://localhost:5000/api", // Backend URL
+  baseURL: API_BASE_URL, // Backend URL
   withCredentials: true,
   headers: {
     "Content-Type": "multipart/form-data",

@@ -45,7 +45,7 @@ function RentSaleProperty(props) {
     if (props.propertyImages && Array.isArray(props.propertyImages)) {
       const imageUrls = props.propertyImages.map((imagePath) => {
         const encodedFilename = encodeURIComponent(imagePath.split("/").pop());
-        return `http://localhost:5000/uploads/${encodedFilename}`;
+        return `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
       });
       setImagesForDisplay(imageUrls);
     }

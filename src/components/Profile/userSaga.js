@@ -44,7 +44,7 @@ import {
 } from "./userSlice";
 
 // API base URL
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 // Fetch user profile
 function* fetchProfileSaga() {
@@ -297,7 +297,7 @@ function* addReviewSaga(action) {
 
     const response = yield call(
       axios.post,
-      "http://localhost:5000/api/reviews",
+      `${API_BASE_URL}/reviews"`,
       { user_name, review, suggestion, propertyId, userId },
       config
     );
