@@ -8,9 +8,15 @@ function RentSaleItem(props) {
   const { itemImg } = props;
 
   let encodedImgUrl = null;
+  // if (itemImg) {
+  //   const encodedFilename = encodeURIComponent(itemImg.split("/").pop());
+  //   encodedImgUrl = `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
+  // }
+
   if (itemImg) {
-    const encodedFilename = encodeURIComponent(itemImg.split("/").pop());
-    encodedImgUrl = `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
+    // const encodedFilename = encodeURIComponent(itemImg.split("/").pop());
+    // encodedImgUrl = `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
+    encodedImgUrl = itemImg;
   }
 
   return (

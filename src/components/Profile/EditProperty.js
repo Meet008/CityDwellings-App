@@ -70,14 +70,17 @@ export default function EditProperty() {
         removedImages: [], // Reset removed images
       });
 
+      // if (propertyDetails.images && Array.isArray(propertyDetails.images)) {
+      //   const imageUrls = propertyDetails.images.map((imagePath) => {
+      //     const encodedFilename = encodeURIComponent(
+      //       imagePath.split("/").pop()
+      //     );
+      //     return `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
+      //   });
+      //   setImagesForDisplay(imageUrls);
+      // }
       if (propertyDetails.images && Array.isArray(propertyDetails.images)) {
-        const imageUrls = propertyDetails.images.map((imagePath) => {
-          const encodedFilename = encodeURIComponent(
-            imagePath.split("/").pop()
-          );
-          return `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
-        });
-        setImagesForDisplay(imageUrls);
+        setImagesForDisplay(propertyDetails.images);
       }
     }
   }, [propertyDetails]);
