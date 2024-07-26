@@ -43,8 +43,9 @@ const MyPropertyItems = ({
 }) => {
   let encodedImgUrl = null;
   if (itemImg) {
-    const encodedFilename = encodeURIComponent(itemImg.split("/").pop());
-    encodedImgUrl = `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
+    // const encodedFilename = encodeURIComponent(itemImg.split("/").pop());
+    // encodedImgUrl = `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
+    encodedImgUrl = itemImg;
   }
 
   const truncateText = (text, length) => {

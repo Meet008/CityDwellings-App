@@ -41,11 +41,21 @@ function RentSaleProperty(props) {
     propertyId: props.propertyId,
   });
 
+  // useEffect(() => {
+  //   if (props.propertyImages && Array.isArray(props.propertyImages)) {
+  //     const imageUrls = props.propertyImages.map((imagePath) => {
+  //       const encodedFilename = encodeURIComponent(imagePath.split("/").pop());
+  //       return `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
+  //     });
+  //     setImagesForDisplay(imageUrls);
+  //   }
+  //   return () => {};
+  // }, [props.propertyImages]);
+
   useEffect(() => {
     if (props.propertyImages && Array.isArray(props.propertyImages)) {
       const imageUrls = props.propertyImages.map((imagePath) => {
-        const encodedFilename = encodeURIComponent(imagePath.split("/").pop());
-        return `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
+        return imagePath;
       });
       setImagesForDisplay(imageUrls);
     }
@@ -211,7 +221,7 @@ function RentSaleProperty(props) {
                     variant="contained"
                     color="warning"
                     size="large"
-                    onClick={handleOpenPurchaseForm}
+                    onClick={handleOpenPurchaseForm} //Change here
                     disabled={!isAuthenticated}
                     style={{
                       pointerEvents: !isAuthenticated ? "none" : "auto",
@@ -244,6 +254,7 @@ function RentSaleProperty(props) {
         handleClose={handleCloseRentalForm}
         propertyId={props.propertyId}
       />
+
       <PurchaseForm
         open={openPurchaseForm}
         handleClose={handleClosePurchaseForm}

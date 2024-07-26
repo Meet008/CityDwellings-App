@@ -53,6 +53,7 @@ const generateFakeData = () => {
     hasTour: false,
     tourFile: null,
     tourId: null,
+    tourFileName: "",
   };
 };
 
@@ -109,6 +110,7 @@ const AddProperty = () => {
     setFormValues((prevValues) => ({
       ...prevValues,
       tourFile: tourFile,
+      tourFileName: tourFile ? tourFile.name : "",
     }));
   };
 
@@ -519,6 +521,14 @@ const AddProperty = () => {
                   onChange={handleTourFileChange}
                 />
               </Button>
+            )}
+            {formValues.tourFileName && (
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="subtitle1">Uploaded Tour File:</Typography>
+                <Typography variant="body1">
+                  {formValues.tourFileName}
+                </Typography>
+              </Box>
             )}
           </Box>
           <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
