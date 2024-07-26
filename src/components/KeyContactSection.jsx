@@ -2,7 +2,7 @@ import { Box, Container } from "@mui/material";
 import React from "react";
 import KeyContactCard from "./KeyContactCard";
 import Person1Img from "../assets/images/Meet.jpeg";
-import Person2Img from "../assets/images/person2.jpg";
+import Person2Img from "../assets/images/Kulwinder.png";
 
 function KeyContactSection() {
   return (
@@ -25,7 +25,7 @@ function KeyContactSection() {
           img={Person2Img}
           name="Kulwinder Kaur"
           title="Branch Manager"
-          tel="0500400300"
+          tel="4168222713"
         />
       </Container>
     </Box>
