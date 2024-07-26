@@ -15,14 +15,7 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import {
-  Language,
-  Place,
-  Phone,
-  Mail,
-  AccessTime,
-  Add,
-} from "@mui/icons-material";
+import { Language, Place, AccessTime, Add } from "@mui/icons-material";
 import { AccountBox, Home, ExitToApp } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
@@ -30,8 +23,6 @@ const Sidebar = (props) => {
   const drawerWidth = 240;
 
   const { open } = props;
-
-
 
   const [profile, setProfile] = useState({
     name: "",
