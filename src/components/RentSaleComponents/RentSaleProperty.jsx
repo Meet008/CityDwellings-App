@@ -239,7 +239,7 @@ function RentSaleProperty(props) {
           className="my-3"
         ></div>
         {props.tourId && (
-          <Itour tourId={props.tourId} filename={"index.html"} />
+          <Itour tourId={props.tourId._id} filename={"index.html"} />
         )}
       </Container>
       <ReviewForm
