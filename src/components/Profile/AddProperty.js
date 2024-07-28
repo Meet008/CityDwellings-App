@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -19,6 +19,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  FormHelperText,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { addPropertyRequest } from "./userSlice";
@@ -83,6 +84,16 @@ const AddProperty = () => {
   const [cardDetails, setCardDetails] = useState(generateFakePayment());
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const [fileError, setFileError] = useState("");
+
+  const [tourLoading, setTourLoading] = useState(false);
+  useEffect(() => {
+    if (formValues.hasTour && !formValues.tourFileName) {
+      setFileError("Please upload a tour file.");
+    } else {
+      setFileError("");
+    }
+  }, [formValues.hasTour, formValues.tourFileName]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -146,12 +157,14 @@ const AddProperty = () => {
       !Number.isInteger(Number(formValues.yearBuilt))
     )
       errors.yearBuilt = "Year Built must be a positive integer";
+    if (fileError !== "") errors = "has Error";
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const uploadTour = async (tourFile) => {
+    setTourLoading(true);
     const tourData = new FormData();
 
     tourData.append("name", tourFile.name);
@@ -185,7 +198,7 @@ const AddProperty = () => {
       if (formValues.hasTour && formValues.tourFile) {
         tourId = await uploadTour(formValues.tourFile);
       }
-
+      setTourLoading(false);
       const propertyData = new FormData();
       for (const key in formValues) {
         if (key === "images") {
@@ -333,24 +346,14 @@ const AddProperty = () => {
               }}
             >
               {imagesForDisplay.map((image, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    position: "relative",
-                    width: 100,
-                    borderRadius: 1,
-                    overflow: "hidden",
-                    border: "1px solid #ccc",
-                  }}
-                >
+                <Box key={index} sx={{ position: "relative", width: 100 }}>
                   <img
                     src={image}
                     alt={`Image ${index + 1}`}
                     style={{
                       width: "100%",
                       height: "auto",
-                      objectFit: "cover",
-                      borderRadius: "inherit",
+                      borderRadius: 4,
                     }}
                   />
                   <Button
@@ -359,15 +362,17 @@ const AddProperty = () => {
                     size="small"
                     sx={{
                       position: "absolute",
-                      top: 4,
-                      right: 4,
+                      top: -10,
+                      right: -10,
+                      borderRadius: "50%",
                       minWidth: "auto",
-                      padding: 4,
-                      backgroundColor: "rgba(255,255,255,0.8)",
+                      width: 24,
+                      height: 24,
+                      padding: 0,
                     }}
                     onClick={() => handleRemoveImage(index)}
                   >
-                    <CloseIcon />
+                    &times;
                   </Button>
                 </Box>
               ))}
@@ -522,7 +527,8 @@ const AddProperty = () => {
                 />
               </Button>
             )}
-            {formValues.tourFileName && (
+            {fileError && <FormHelperText error>{fileError}</FormHelperText>}
+            {formValues.hasTour && formValues.tourFileName && (
               <Box sx={{ mt: 2 }}>
                 <Typography variant="subtitle1">Uploaded Tour File:</Typography>
                 <Typography variant="body1">
@@ -536,9 +542,13 @@ const AddProperty = () => {
               type="submit"
               variant="contained"
               color="primary"
-              disabled={isLoading}
+              disabled={
+                isLoading ||
+                tourLoading ||
+                (formValues.hasTour && formValues.tourFileName === "")
+              }
             >
-              {isLoading ? (
+              {isLoading || tourLoading ? (
                 <CircularProgress size={24} color="inherit" />
               ) : (
                 "Submit"
