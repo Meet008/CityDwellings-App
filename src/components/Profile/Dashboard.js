@@ -97,8 +97,8 @@ const Dashboard = () => {
       offsetX: 0,
       offsetY: 0,
     },
-    labels: ["Total Properties", "Properties Rented", "Properties Sold"],
-    colors: ["#1976d2", "#f07917", "#789f57"],
+    labels: ["Unsold Properties", "Rented Properties", "Sold Properties"],
+    colors: ["#7a7d82", "#1976d2", "#f07917"],
     responsive: [
       {
         breakpoint: 480,
