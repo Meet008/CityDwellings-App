@@ -27,6 +27,12 @@ import { faker } from "@faker-js/faker";
 import api from "../../api";
 
 const generateFakeData = () => {
+  const category = faker.helpers.arrayElement(["rent", "sale"]);
+  const price =
+    category === "rent"
+      ? faker.datatype.number({ min: 400, max: 4000 })
+      : faker.datatype.number({ min: 500000, max: 1000000 });
+
   return {
     title: `${faker.address.streetName()} ${faker.address.streetSuffix()}`,
     description: faker.lorem.paragraphs(2),
@@ -39,8 +45,8 @@ const generateFakeData = () => {
       "apartments",
       "offices",
     ]),
-    category: faker.helpers.arrayElement(["rent", "sale"]),
-    price: faker.datatype.number({ min: 50000, max: 1000000 }),
+    category,
+    price,
     bedrooms: faker.datatype.number({ min: 1, max: 10 }),
     bathrooms: faker.datatype.number({ min: 1, max: 5 }),
     furnished: faker.datatype.boolean(),

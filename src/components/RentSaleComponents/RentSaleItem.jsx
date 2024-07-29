@@ -28,7 +28,7 @@ function RentSaleItem(props) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   // Determine the justifyContent based on screen width
-  const justifyContent = windowWidth <=900  ? "center" : "flex-end"; // Adjust the breakpoint as needed
+  const justifyContent = windowWidth <= 900 ? "center" : "flex-end"; // Adjust the breakpoint as needed
 
   return (
     <Box>
@@ -79,7 +79,8 @@ function RentSaleItem(props) {
               marginTop: "0.5rem",
             }}
           >
-            ${props.itemPrice} per month
+            ${props.itemPrice}{" "}
+            {props.itemURL === "rent" ? "Per Month" : "Full Price"}
           </Typography>
           <Typography
             variant="body1"

@@ -141,7 +141,8 @@ function RentSaleProperty(props) {
                 marginTop: "0.5rem",
               }}
             >
-              ${props.propertyPrice} per month
+              ${props.propertyPrice}{" "}
+              {props.category === "sale" ? "Full Price" : "Per Month"}
             </Typography>
             <Typography
               variant="body1"
