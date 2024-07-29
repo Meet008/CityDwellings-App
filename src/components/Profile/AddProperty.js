@@ -26,7 +26,62 @@ import { addPropertyRequest } from "./userSlice";
 import { faker } from "@faker-js/faker";
 import api from "../../api";
 
+// List of Canadian cities and provinces
+const canadianCities = [
+  "Toronto",
+  "Vancouver",
+  "Montreal",
+  "Calgary",
+  "Ottawa",
+  "Edmonton",
+  "Winnipeg",
+  "Halifax",
+  "Victoria",
+  "Quebec City",
+];
+
+const canadianProvinces = [
+  "Ontario",
+  "British Columbia",
+  "Quebec",
+  "Alberta",
+  "Manitoba",
+  "Nova Scotia",
+  "New Brunswick",
+  "Prince Edward Island",
+  "Saskatchewan",
+  "Newfoundland and Labrador",
+];
+
+const realEstateDescriptions = [
+  "This stunning property offers a spacious living room with large windows that flood the room with natural light. The modern kitchen comes equipped with state-of-the-art appliances, perfect for any home chef. The master bedroom features an en-suite bathroom and a walk-in closet.",
+  "Located in a prime neighborhood, this beautiful home boasts elegant interiors with hardwood floors throughout. The open-concept living and dining area is perfect for entertaining guests. The property also includes a large backyard, ideal for outdoor activities.",
+  "This charming apartment is situated in a convenient location, close to shopping centers and public transportation. It features a cozy living area, a modern bathroom, and a well-equipped kitchen with plenty of storage space. Enjoy the view from the private balcony.",
+  "A luxurious office space that offers high ceilings, ample natural light, and state-of-the-art amenities. This commercial property is ideal for businesses of all sizes, providing a professional environment with modern conference rooms and ample parking space.",
+  "A well-designed house with multiple bedrooms, a spacious garage, and a beautiful patio area perfect for outdoor entertaining. The property includes a large kitchen with updated appliances and a family room with a fireplace.",
+  "This contemporary property includes an open floor plan with a large living area, a dining room, and an updated kitchen with stainless steel appliances. The private backyard is perfect for relaxing and includes a deck for barbecues.",
+  "An exquisite home featuring hardwood floors, a gourmet kitchen, and a large backyard located in a peaceful and friendly neighborhood. The spacious master suite includes a private bath and a walk-in closet.",
+  "A modern apartment offering a comfortable living space with secure parking and easy access to local parks and recreation areas. The unit features a large living area, a modern kitchen, and a well-appointed bathroom.",
+  "A prime commercial property with a strategic location, ample parking space, and fully equipped meeting rooms. This office space is perfect for corporate offices, offering a professional setting with modern amenities.",
+  "A cozy rental property with a welcoming atmosphere, close to schools and shopping centers. The property features a spacious living area, modern amenities, and a well-maintained garden.",
+];
+
+// Function to generate a Canadian postal code
+const generatePostalCode = () => {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const digits = "0123456789";
+  return `${faker.helpers.arrayElement(letters)}${faker.helpers.arrayElement(
+    digits
+  )}${faker.helpers.arrayElement(letters)} ${faker.helpers.arrayElement(
+    digits
+  )}${faker.helpers.arrayElement(letters)}${faker.helpers.arrayElement(
+    digits
+  )}`;
+};
+
 const generateFakeData = () => {
+  faker.locale = "en";
+
   const category = faker.helpers.arrayElement(["rent", "sale"]);
   const price =
     category === "rent"
@@ -35,11 +90,11 @@ const generateFakeData = () => {
 
   return {
     title: `${faker.address.streetName()} ${faker.address.streetSuffix()}`,
-    description: faker.lorem.paragraphs(2),
+    description: faker.helpers.arrayElement(realEstateDescriptions),
     address: faker.address.streetAddress(),
-    city: faker.address.city(),
-    state: faker.address.state(),
-    postalCode: faker.address.zipCode(),
+    city: faker.helpers.arrayElement(canadianCities),
+    state: faker.helpers.arrayElement(canadianProvinces),
+    postalCode: generatePostalCode(),
     listingType: faker.helpers.arrayElement([
       "houses",
       "apartments",
@@ -47,13 +102,13 @@ const generateFakeData = () => {
     ]),
     category,
     price,
-    bedrooms: faker.datatype.number({ min: 1, max: 10 }),
-    bathrooms: faker.datatype.number({ min: 1, max: 5 }),
+    bedrooms: faker.datatype.number({ min: 1, max: 5 }),
+    bathrooms: faker.datatype.number({ min: 1, max: 3 }),
     furnished: faker.datatype.boolean(),
     parking: faker.datatype.boolean(),
     area: faker.datatype.number({ min: 500, max: 5000 }),
     yearBuilt: faker.datatype.number({
-      min: 1900,
+      min: 1960,
       max: new Date().getFullYear(),
     }),
     images: [], // This will remain empty as we are not generating fake images here
