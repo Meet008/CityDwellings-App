@@ -221,13 +221,19 @@ function RentSaleProperty(props) {
                     variant="contained"
                     color="warning"
                     size="large"
-                    onClick={handleOpenPurchaseForm} //Change here
+                    onClick={
+                      props.category === "sale"
+                        ? handleOpenPurchaseForm
+                        : handleOpenRentalForm
+                    } //Change here
                     disabled={!isAuthenticated}
                     style={{
                       pointerEvents: !isAuthenticated ? "none" : "auto",
                     }}
                   >
-                    Rent This Property
+                    {props.category === "sale"
+                      ? "Buy This Property"
+                      : "Rent This Property"}
                   </Button>
                 </div>
               </Tooltip>

@@ -110,9 +110,9 @@ const PurchaseForm = ({ open, handleClose, propertyId, initialData }) => {
       console.log("Formatted Data:", formattedData);
       dispatch(setFormData(formattedData));
     } else {
-      dispatch(setFormData({}));
+      dispatch(setFormData(dummyData));
     }
-  }, [dispatch, initialData]);
+  }, [dispatch, initialData, open]);
   const formatDateString = (dateString) => {
     // Parse the date in ISO format and format it to 'YYYY-MM-DD'
     return moment(dateString).format("YYYY-MM-DD");

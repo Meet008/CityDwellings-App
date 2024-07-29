@@ -110,13 +110,6 @@ const RentalForm = ({ open, handleClose, propertyId, initialData }) => {
   };
 
   useEffect(() => {
-    if (submissionSuccess) {
-      dispatch(clearForm());
-      handleClose();
-    }
-  }, [submissionSuccess, handleClose, dispatch]);
-
-  useEffect(() => {
     if (initialData) {
       const formattedData = {
         ...initialData,
@@ -128,7 +121,15 @@ const RentalForm = ({ open, handleClose, propertyId, initialData }) => {
     } else {
       dispatch(setFormData(dummyData));
     }
-  }, [dispatch, initialData]);
+  }, [dispatch, initialData, open]);
+
+  useEffect(() => {
+    if (submissionSuccess) {
+      dispatch(clearForm());
+      handleClose();
+    }
+  }, [submissionSuccess, handleClose, dispatch]);
+
   return (
     <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle
