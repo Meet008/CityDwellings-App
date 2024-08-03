@@ -231,12 +231,22 @@ const AddProperty = () => {
     tourData.append("name", tourFile.name);
     tourData.append("description", formValues.title);
     tourData.append("tourFile", tourFile);
-
     try {
       const res = await api.post("tours/tours", tourData);
       return res.data._id; // Use the returned data to get the tour ID
     } catch (err) {
-      throw new Error("Failed to upload tour");
+      setTourLoading(false);
+
+      // Extract and display the error message from the response
+      let errorMessage = "Failed to upload tour";
+
+      if (err.response && err.response.data && err.response.data.error) {
+        errorMessage = err.response.data.error;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      throw new Error(errorMessage);
     }
   };
 
