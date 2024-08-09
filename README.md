@@ -1,5 +1,5 @@
 
-# City Dwellings - Real Estate Management Website
+# CityDwellings - Real Estate Management Website
 
 Welcome to **City Dwellings**, a comprehensive real estate management platform where users can buy, sell, and rent properties with ease. The website is designed with a user-centric approach, offering a variety of features to enhance the real estate experience for both buyers and sellers.
 
