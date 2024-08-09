@@ -101,7 +101,7 @@ const UserApplications = () => {
   const isLoading = tabValue === 0 ? isLoadingRent : isLoadingPurchase;
 
   const convertUTCtoLocalDate = (utcDate) => {
-    console.log(moment.utc(utcDate).local().format("YYYY-MM-DD"));
+   
     return moment.utc(utcDate).local().format("YYYY-MM-DD");
   };
 

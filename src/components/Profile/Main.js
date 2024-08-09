@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Box,
@@ -14,8 +14,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import Sidebar from "./Sidebar";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { fetchProfileRequest } from "./userSlice";
 
 const MemoizedSidebar = React.memo(Sidebar);
 
@@ -40,12 +38,6 @@ const Main = () => {
     const pathsWithoutBackButton = ["/", "/profile/dashboard"];
     return !pathsWithoutBackButton.includes(location.pathname);
   };
-
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   console.log("called from here MAin");
-  //   dispatch(fetchProfileRequest());
-  // }, [dispatch]);
 
   return (
     <Box sx={{ display: "flex" }}>

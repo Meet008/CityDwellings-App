@@ -15,7 +15,6 @@ import {
   CardContent,
   CardActions,
   Divider,
-  useMediaQuery,
 } from "@mui/material";
 import {
   fetchRentalApplicationsRequest,
@@ -24,7 +23,6 @@ import {
 } from "./userSlice";
 
 import { useParams } from "react-router-dom";
-import { useTheme } from "@mui/material/styles";
 
 const ApplicationsPage = () => {
   const dispatch = useDispatch();
@@ -35,12 +33,8 @@ const ApplicationsPage = () => {
   const [applicationToUpdate, setApplicationToUpdate] = useState(null);
   const [updateStatus, setUpdateStatus] = useState(null);
   const [loadingFlag, setLoadingFlag] = useState("loading");
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
-    console.log("useEffect triggered");
-
     if (!propertyId || !purchaseApplications) {
       console.error("propertyId or purchaseApplications is missing");
       return;
@@ -58,11 +52,9 @@ const ApplicationsPage = () => {
 
   useEffect(() => {
     if (!isLoading) {
-      console.log("came in false loading");
       if (applications.length === 0) {
         setLoadingFlag("noApplications");
       } else {
-        console.log("set loaded");
         setLoadingFlag("loaded");
       }
     }

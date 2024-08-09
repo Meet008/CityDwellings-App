@@ -25,7 +25,7 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import CloseIcon from "@mui/icons-material/Close";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+
 import { useDispatch, useSelector } from "react-redux";
 import { registerRequest } from "./authSlice";
 import { useNavigate } from "react-router-dom";
@@ -357,13 +357,10 @@ export default function SignUp() {
 
   const navigate = useNavigate();
 
-  const { isAuthenticated, error, loading, token } = useSelector(
-    (state) => state.auth
-  );
+  const { isAuthenticated, error, token } = useSelector((state) => state.auth);
 
   const { user } = useSelector((state) => state.user);
   useEffect(() => {
-    console.log("Auth state:", { isAuthenticated, token, user });
     if (isAuthenticated && token && user && user.userType === "seller") {
       navigate("/profile/dashboard");
     }
@@ -404,7 +401,7 @@ export default function SignUp() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("clicked");
+
     if (activeStep === steps.length - 1) {
       dispatch(registerRequest(formData));
     } else {
@@ -437,7 +434,6 @@ export default function SignUp() {
       const fakeUser = generateFakeUser();
       try {
         await dispatch(registerRequest(fakeUser));
-        console.log(`Fake user ${i + 1} added successfully`);
       } catch (error) {
         console.error(`Error adding fake user ${i + 1}:`, error);
       }

@@ -32,7 +32,6 @@ const authSlice = createSlice({
       state.token = "";
     },
     loginSuccess: (state, action) => {
-      console.log("Login success:", action.payload);
       state.loading = false;
       state.isAuthenticated = true;
       state.token = action.payload.token;

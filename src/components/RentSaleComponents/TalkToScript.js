@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet";
 
 const TawkToScript = ({ propertyId, chatId }) => {
   useEffect(() => {
-    console.log("its mounted");
     const script = document.createElement("script");
     script.async = true;
     script.src = `https://embed.tawk.to/${propertyId}/${chatId}`;
@@ -12,7 +11,6 @@ const TawkToScript = ({ propertyId, chatId }) => {
     document.body.appendChild(script);
 
     return () => {
-      console.log("its not mounted");
       document.body.removeChild(script);
     };
   }, [propertyId, chatId]);
