@@ -1,7 +1,7 @@
 
 # CityDwellings - Real Estate Management Website
 
-Welcome to **City Dwellings**, a comprehensive real estate management platform where users can buy, sell, and rent properties with ease. The website is designed with a user-centric approach, offering a variety of features to enhance the real estate experience for both buyers and sellers.
+Welcome to **CityDwellings**, a comprehensive real estate management platform where users can easily buy, sell, and rent properties. The website is designed with a user-centric approach, offering a variety of features to enhance the real estate experience for both buyers and sellers.
 
 ## Features
 
@@ -72,8 +72,8 @@ We welcome contributions to make City Dwellings even better! To contribute, plea
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+This project is licensed under the MIT License. Please take a look at the [LICENSE](LICENSE) file for more details.
 
 ## Contact
 
-For any questions or support, please reach out to the project maintainer at [your-email@example.com](mailto:your-email@example.com).
+For any questions or support, please contact the project maintainer at [meetchothani008@gmail.com](mailto:meetchothani008@gmail.com).
