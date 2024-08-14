@@ -1,17 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Container,
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Grid,
-  Tooltip,
-} from "@mui/material";
+import { Box, Container, Typography, Button, Tooltip } from "@mui/material";
 import ImageGallerySlider from "../ImageGallerySlider";
 import { orange } from "@mui/material/colors";
 import PropertyIcons from "../PropertyIcons";
@@ -20,14 +8,10 @@ import PurchaseForm from "./PurchaseForm.jsx";
 import Itour from "./Itour";
 import ReviewForm from "./ReviewForm.js";
 import { Info as InfoIcon, Add as AddIcon } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 function RentSaleProperty(props) {
-  const { isAuthenticated, error, loading, token } = useSelector(
-    (state) => state.auth
-  );
-
-  const { user } = useSelector((state) => state.user);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const [imagesForDisplay, setImagesForDisplay] = useState([]);
 
