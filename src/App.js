@@ -1,6 +1,6 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Provider } from "react-redux";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import store from "./components/App/store";
 import { Helmet } from "react-helmet";
 import Login from "./components/Auth/Login";
@@ -29,6 +29,7 @@ import Message from "./components/Profile/Messages";
 import Reviews from "./components/Profile/Reviews";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import Logout from "./components/Auth/Logout";
+import PrivateRoutes from "./pages/PrivateRoutes";
 
 const theme = createTheme({
   typography: {
@@ -64,6 +65,9 @@ const TawkToScript = () => (
 }
 
 function App() {
+  const sellerRoles = ["seller"];
+  const buyerRoles = ["buyer"];
+
   return (
     <Provider store={store}>
       <ConfigProvider
@@ -87,9 +91,30 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgotPassword" element={<ForgotPassword />} />
-            <Route path="/userProfile" element={<UserProfile />} />
-            <Route path="/userApplications" element={<UserApplications />} />
-            <Route path="/profile" element={<Main />}>
+            <Route
+              path="/userProfile"
+              element={
+                <PrivateRoutes
+                  element={<UserProfile />}
+                  allowedRoles={buyerRoles}
+                />
+              }
+            />
+            <Route
+              path="/userApplications"
+              element={
+                <PrivateRoutes
+                  element={<UserApplications />}
+                  allowedRoles={buyerRoles}
+                />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoutes element={<Main />} allowedRoles={sellerRoles} />
+              }
+            >
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="add-property" element={<AddProperty />} />
               <Route path="my-properties" element={<MyProperty />}></Route>
@@ -106,7 +131,8 @@ function App() {
               />
               <Route path="logout" element={<Logout />} />
             </Route>
-            <Route path="/upload" element={<UploadForm />} />
+            {/* <Route path="/upload" element={<UploadForm />} /> */}
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </ThemeProvider>
       </ConfigProvider>

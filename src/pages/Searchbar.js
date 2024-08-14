@@ -7,6 +7,7 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Tooltip,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -65,6 +66,9 @@ const SearchBarForm = () => {
           width: "100%",
           height: "100%",
           backgroundColor: "rgba(0, 0, 0, 0.5)", // Light black overlay
+          display: "flex", // Add flexbox to the overlay
+          justifyContent: "center", // Center content horizontally
+          alignItems: "center", // Center content vertically
         }}
       />
       <Box
@@ -90,7 +94,13 @@ const SearchBarForm = () => {
           <Box>
             <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
               <InputLabel
-                sx={{ color: "orange", "&.Mui-focused": { color: "orange" } }}
+                sx={{
+                  color: "orange",
+                  fontWeight: "bold",
+                  "&.Mui-focused": { color: "orange", fontWeight: "bold" },
+                  fontSize: "0.9rem",
+                  lineHeight: "1.1rem",
+                }}
               >
                 Select City
               </InputLabel>
@@ -98,21 +108,36 @@ const SearchBarForm = () => {
                 value={filters.city}
                 onChange={(e) => handleFilterChange("city", e.target.value)}
                 label="Select City"
-                sx={{ backgroundColor: "white" }}
+                sx={{
+                  backgroundColor: "white",
+                  height: "40px",
+                  fontSize: "0.9rem",
+                  lineHeight: "1.1rem",
+                }}
               >
                 {filterOptions.cities?.map((city) => (
-                  <MenuItem key={city} value={city}>
+                  <MenuItem
+                    key={city}
+                    value={city}
+                    sx={{
+                      fontSize: "0.9rem",
+                      padding: "6px 12px",
+                    }}
+                  >
                     {city}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-            <Box display="flex" gap={2} mb={2}>
+            <Box display="flex" gap={2}>
               <FormControl variant="outlined" sx={{ flex: 1 }}>
                 <InputLabel
                   sx={{
                     color: "orange",
-                    "&.Mui-focused": { color: "orange" },
+                    fontWeight: "bold",
+                    "&.Mui-focused": { color: "orange", fontWeight: "bold" },
+                    fontSize: "0.9rem",
+                    lineHeight: "1.1rem",
                   }}
                 >
                   Select Type
@@ -122,13 +147,23 @@ const SearchBarForm = () => {
                   onChange={(e) =>
                     handleFilterChange("listingType", e.target.value)
                   }
-                  label=""
+                  label="Select Type"
                   sx={{
                     backgroundColor: "white",
+                    height: "40px",
+                    fontSize: "0.9rem",
+                    lineHeight: "1.1rem",
                   }}
                 >
                   {filterOptions.listingTypes?.map((type) => (
-                    <MenuItem key={type} value={type}>
+                    <MenuItem
+                      key={type}
+                      value={type}
+                      sx={{
+                        fontSize: "0.9rem",
+                        padding: "6px 12px",
+                      }}
+                    >
                       {toUpperCase(type)}
                     </MenuItem>
                   ))}
@@ -136,7 +171,13 @@ const SearchBarForm = () => {
               </FormControl>
               <FormControl variant="outlined" sx={{ flex: 1 }}>
                 <InputLabel
-                  sx={{ color: "orange", "&.Mui-focused": { color: "orange" } }}
+                  sx={{
+                    color: "orange",
+                    fontWeight: "bold",
+                    "&.Mui-focused": { color: "orange", fontWeight: "bold" },
+                    fontSize: "0.9rem",
+                    lineHeight: "1.1rem",
+                  }}
                 >
                   Max Price
                 </InputLabel>
@@ -146,7 +187,12 @@ const SearchBarForm = () => {
                     handleFilterChange("priceMax", e.target.value)
                   }
                   label="Max Price"
-                  sx={{ backgroundColor: "white" }}
+                  sx={{
+                    backgroundColor: "white",
+                    height: "40px",
+                    fontSize: "0.9rem",
+                    lineHeight: "1.1rem",
+                  }}
                 >
                   <MenuItem value="">Any</MenuItem>
                   <MenuItem value="25000">25,000</MenuItem>
@@ -159,7 +205,13 @@ const SearchBarForm = () => {
               </FormControl>
               <FormControl variant="outlined" sx={{ flex: 1 }}>
                 <InputLabel
-                  sx={{ color: "orange", "&.Mui-focused": { color: "orange" } }}
+                  sx={{
+                    color: "orange",
+                    fontWeight: "bold",
+                    "&.Mui-focused": { color: "orange", fontWeight: "bold" },
+                    fontSize: "0.9rem",
+                    lineHeight: "1.1rem",
+                  }}
                 >
                   Beds
                 </InputLabel>
@@ -167,7 +219,12 @@ const SearchBarForm = () => {
                   value={filters.beds}
                   onChange={(e) => handleFilterChange("beds", e.target.value)}
                   label="Beds"
-                  sx={{ backgroundColor: "white" }}
+                  sx={{
+                    backgroundColor: "white",
+                    height: "40px",
+                    fontSize: "0.9rem",
+                    lineHeight: "1.1rem",
+                  }}
                 >
                   <MenuItem value="">Any</MenuItem>
                   <MenuItem value="1">1</MenuItem>
@@ -177,18 +234,35 @@ const SearchBarForm = () => {
                   <MenuItem value="5">5</MenuItem>
                 </Select>
               </FormControl>
-
-              <Button
-                variant="text"
-                sx={{ alignSelf: "center" }}
-                onClick={handleSearch}
-              >
-                <img
-                  src="/assets/images/search.png"
-                  style={{ width: "42px" }}
-                  alt="Search"
-                />
-              </Button>
+              <Tooltip title="Search" arrow>
+                <Button
+                  variant="text"
+                  sx={{ alignSelf: "center", padding: 0, minWidth: 0 }}
+                  onClick={handleSearch}
+                >
+                  <img
+                    src="/assets/images/search.png"
+                    style={{ width: "42px" }}
+                    alt="Search"
+                  />
+                </Button>
+              </Tooltip>
+              <Tooltip title="Reset Filters" arrow>
+                <Button
+                  variant="text"
+                  sx={{ alignSelf: "center", padding: 0, minWidth: 0 }}
+                  onClick={() => setFilters(initialState)}
+                >
+                  <img
+                    src="/assets/images/undo.png"
+                    style={{
+                      width: "42px",
+                      transform: "rotate(0deg)",
+                    }}
+                    alt="Reset"
+                  />
+                </Button>
+              </Tooltip>
             </Box>
           </Box>
         )}

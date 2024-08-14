@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -8,7 +8,6 @@ import {
   TextField,
   Box,
   useMediaQuery,
-  FormControl,
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
@@ -17,7 +16,6 @@ import { useTheme } from "@mui/material/styles";
 import {
   setFormData,
   submitFormRequest,
-  submitFormSuccess,
   clearForm,
   editFormRequest,
 } from "./PurchaseFormSlice"; // Adjust the import path as necessary
@@ -99,7 +97,6 @@ const PurchaseForm = ({ open, handleClose, propertyId, initialData }) => {
 
   useEffect(() => {
     if (initialData) {
-      console.log("Initial Date of Birth:", initialData.date_of_birth);
       const formattedData = {
         ...initialData,
         date_of_birth: initialData.date_of_birth
@@ -107,21 +104,17 @@ const PurchaseForm = ({ open, handleClose, propertyId, initialData }) => {
           : "",
         date: initialData.date ? formatDateString(initialData.date) : "",
       };
-      console.log("Formatted Data:", formattedData);
+
       dispatch(setFormData(formattedData));
     } else {
-      dispatch(setFormData({}));
+      dispatch(setFormData(dummyData));
     }
-  }, [dispatch, initialData]);
+  }, [dispatch, initialData, open]);
   const formatDateString = (dateString) => {
     // Parse the date in ISO format and format it to 'YYYY-MM-DD'
     return moment(dateString).format("YYYY-MM-DD");
   };
 
-  const parseDateString = (dateString) => {
-    // Parse the date string in 'YYYY-MM-DD' format to a moment object
-    return moment(dateString, "YYYY-MM-DD").toISOString();
-  };
   return (
     <Dialog open={open} onClose={handleClose} fullScreen={fullScreen}>
       <DialogTitle

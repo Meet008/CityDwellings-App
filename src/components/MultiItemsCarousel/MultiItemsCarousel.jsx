@@ -59,7 +59,7 @@ function MultiItemsCarousel() {
           itemClass="carousel-item-padding-40-px"
       >
           {
-              cardsItems.map( (item, i) => <CardItem key={i} item={item} title={item.title} address={item.address} price={item.price} image={item.img} url={item.url} itemBedrooms={item.bedrooms} itemBathrooms={item.bathrooms} itemLivingrooms={item.livingrooms} /> )
+              cardsItems.map( (item, i) => <CardItem key={i} item={item} title={item.title} address={item.address} price={item.price} image={item.img} url={"/sale"} itemBedrooms={item.bedrooms} itemBathrooms={item.bathrooms} itemLivingrooms={item.livingrooms} /> )
           }
       </Carousel>
     </Box>

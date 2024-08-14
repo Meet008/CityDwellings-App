@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Box, Typography, Button, Divider } from "@mui/material";
 import { orange } from "@mui/material/colors";
@@ -18,6 +18,17 @@ function RentSaleItem(props) {
     // encodedImgUrl = `${process.env.REACT_APP_UPLOAD_URL}/${encodedFilename}`;
     encodedImgUrl = itemImg;
   }
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  // Update window width on resize
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  // Determine the justifyContent based on screen width
+  const justifyContent = windowWidth <= 900 ? "center" : "flex-end"; // Adjust the breakpoint as needed
 
   return (
     <Box>
@@ -68,7 +79,8 @@ function RentSaleItem(props) {
               marginTop: "0.5rem",
             }}
           >
-            ${props.itemPrice} per month
+            ${props.itemPrice}{" "}
+            {props.itemURL === "rent" ? "Per Month" : "Full Price"}
           </Typography>
           <Typography
             variant="body1"
@@ -107,15 +119,17 @@ function RentSaleItem(props) {
             to={`/${props.itemURL}property/${props.itemId}`}
             style={{
               display: "flex",
-              justifyContent: "center",
+              justifyContent: justifyContent,
             }}
           >
             <img
               src={encodedImgUrl}
               alt="property img"
               style={{
-                height: "auto",
+                height: "250px",
+                width: "500px",
                 maxWidth: "75%",
+                objectFit: "cover",
               }}
             />
           </Link>

@@ -159,7 +159,7 @@ const Navigation = () => {
                     textDecoration: "none",
                   }}
                 >
-                  City Dwellings
+                  CityDwellings
                 </Typography>
               </Box>
             </Link>
@@ -299,7 +299,7 @@ const Navigation = () => {
                       textDecoration: "none",
                     }}
                   >
-                    City Dwellings
+                    CityDwellings
                   </Typography>
                 </Box>
               </Box>

@@ -3,8 +3,7 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,11 +11,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import axios from "axios";
+
 import { useDispatch, useSelector } from "react-redux";
 import { loginRequest } from "./authSlice";
 import { useNavigate } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -38,17 +36,16 @@ export default function SignIn() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+
     dispatch(loginRequest({ email, password }));
   };
 
-  const { isAuthenticated, error, loading, token } = useSelector(
+  const { isAuthenticated, loading, token } = useSelector(
     (state) => state.auth
   );
 
   const { user } = useSelector((state) => state.user);
   useEffect(() => {
-    console.log("Auth state:", { isAuthenticated, token, user });
     if (isAuthenticated && token && user && user.userType === "seller") {
       navigate("/profile/dashboard");
     }

@@ -19,7 +19,6 @@ const UploadForm = () => {
 
     try {
       const res = await api.post("tours/tours", formData);
-      console.log(res.data);
     } catch (err) {
       console.error(err);
     }

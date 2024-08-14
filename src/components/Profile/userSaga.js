@@ -172,7 +172,6 @@ function* fetchPropertyDetailsSaga(action) {
       },
     };
 
-    console.log("api call", `${API_BASE_URL}/property/${propertyId}`);
     const response = yield call(
       axios.get,
       `${API_BASE_URL}/property/${propertyId}`,
@@ -315,7 +314,6 @@ function* addReviewSaga(action) {
 function* fetchReviewsSaga() {
   try {
     const token = localStorage.getItem("token");
-    console.log("token", token);
     const config = {
       headers: {
         "Content-Type": "application/json",

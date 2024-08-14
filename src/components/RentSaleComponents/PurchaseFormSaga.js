@@ -23,7 +23,6 @@ const API_BASE_URL = process.env.REACT_APP_API_URL;
 function* submitPurchaseFormSaga(action) {
   try {
     const { propertyId, formData } = action.payload;
-    console.log(propertyId, formData);
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
     const userId = user?._id;

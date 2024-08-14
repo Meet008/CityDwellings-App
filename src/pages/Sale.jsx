@@ -11,6 +11,7 @@ import {
   Typography,
   Divider,
   Button,
+  Tooltip,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -303,24 +304,28 @@ function Sale() {
                 </Button>
               </div>
               <div>
-                <img
-                  src="/assets/images/search.png"
-                  style={{ width: "42px" }}
-                  className="me-2"
-                  onClick={() => {
-                    setFilters({ ...filters });
-                  }}
-                />
+                <Tooltip title="Search" arrow>
+                  <img
+                    src="/assets/images/search.png"
+                    style={{ width: "42px" }}
+                    className="me-2"
+                    onClick={() => {
+                      setFilters({ ...filters });
+                    }}
+                  />
+                </Tooltip>
               </div>
               <div
                 className="text-center"
                 onClick={() => setFilters(initialStateReset)}
               >
-                <img
-                  src="/assets/images/refreshing.png"
-                  style={{ width: "42px", transform: "rotate(253deg)" }}
-                  className="me-2"
-                />
+                <Tooltip title="Reset Filters" arrow>
+                  <img
+                    src="/assets/images/refreshing.png"
+                    style={{ width: "42px", transform: "rotate(253deg)" }}
+                    className="me-2"
+                  />
+                </Tooltip>
               </div>
             </div>
           </div>

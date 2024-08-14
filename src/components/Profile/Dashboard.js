@@ -35,7 +35,7 @@ const Dashboard = () => {
   // // const pieSeries = []; // Example data
   // const pieSeries = [44, 55, 13]; // Example data
 
-  const { isLoading, error } = useSelector((state) => state.user);
+  const { isLoading } = useSelector((state) => state.user);
 
   const [city, setCity] = useState("toronto");
 
@@ -50,7 +50,6 @@ const Dashboard = () => {
   };
 
   const updateBookingStatusSeries = useCallback(() => {
-    console.log("Updating booking status series", series);
     const clonedSeries = deepClone(series);
     setBookingStatusSeries(clonedSeries);
   }, [series]);
@@ -97,8 +96,8 @@ const Dashboard = () => {
       offsetX: 0,
       offsetY: 0,
     },
-    labels: ["Total Properties", "Properties Rented", "Properties Sold"],
-    colors: ["#1976d2", "#f07917", "#789f57"],
+    labels: ["Unsold Properties", "Rented Properties", "Sold Properties"],
+    colors: ["#7a7d82", "#1976d2", "#f07917"],
     responsive: [
       {
         breakpoint: 480,
