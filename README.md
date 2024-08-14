@@ -1,71 +1,79 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# CityDwellings - Real Estate Management Website
 
-## Available Scripts
+Welcome to **CityDwellings**, a comprehensive real estate management platform where users can easily buy, sell, and rent properties. The website is designed with a user-centric approach, offering a variety of features to enhance the real estate experience for both buyers and sellers.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+### 🏡 Property Management
+- **Buy, Sell, Rent Properties:** Seamlessly manage your properties, whether you're a buyer or seller.
+- **Extensive Filtering Options:** Find your dream property with advanced filters based on location, price, type, and more.
+- **Newly Added Properties:** Stay updated with the latest property listings.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 📱 Responsive Design
+- **Device Compatibility:** Fully responsive design that works across all devices—laptops, PCs, tablets, and mobiles.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### ⭐ Property Reviews
+- **User Reviews:** Buyers can leave reviews on listed properties, helping others make informed decisions.
 
-### `npm test`
+### 💰 Mortgage Calculator
+- **Free Mortgage Calculator:** Calculate your mortgage easily based on the full property price.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🖥️ Virtual Tour
+- **360° Property View:** Experience properties like never before with realistic virtual tours.
 
-### `npm run build`
+### 🤖 Chatbot Support
+- **Customer Support:** Get instant help with our integrated chatbot.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 📋 Applications Management
+- **Submit Rental/Buyer Applications:** Users can submit applications to sellers directly through the platform.
+- **Seller Review:** Sellers can approve or deny applications based on the provided information.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 📊 Seller Dashboard
+- **Analytical Charts:** Visualize your property's performance with monthly sales analytics and overall status (sold, rented, unsold).
+- **Review Management:** Sellers can view and manage reviews left by buyers on their properties.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 👥 User Profiles
+- **User Registration and Updates:** Easily register and update your profile as a buyer or seller.
 
-### `npm run eject`
+## Tech Stack
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Frontend:** React.js, Material-UI
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB
+- **Hosting:** Vercel for website hosting ([Visit the website](https://city-dwellings-app.vercel.app/))
+- **Cloud Storage:** AWS for storing and fetching property images and VR tours
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Installation
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+To run this project locally, follow these steps:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/city-dwellings.git
+   ```
+2. Install dependencies:
+   ```bash
+   cd city-dwellings
+   npm install
+   ```
+3. Set up environment variables:
+   - Create a `.env` file in the root directory and add your MongoDB URI, AWS credentials, and other necessary configurations.
 
-## Learn More
+4. Start the development server:
+   ```bash
+   npm start
+   ```
+5. Visit `http://localhost:3000` to view the website locally.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Contributing
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+We welcome contributions to make City Dwellings even better! To contribute, please fork the repository, create a new branch, and submit a pull request. Make sure to follow our coding standards and add relevant tests for new features.
 
-### Code Splitting
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+This project is licensed under the MIT License. Please take a look at the [LICENSE](LICENSE) file for more details.
 
-### Analyzing the Bundle Size
+## Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# CityDwellings-App
+For any questions or support, please contact the project maintainer at [meetchothani008@gmail.com](mailto:meetchothani008@gmail.com).
