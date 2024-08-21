@@ -1,6 +1,6 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Provider } from "react-redux";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import store from "./components/App/store";
 import { Helmet } from "react-helmet";
 import Login from "./components/Auth/Login";
@@ -30,6 +30,7 @@ import Reviews from "./components/Profile/Reviews";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import Logout from "./components/Auth/Logout";
 import PrivateRoutes from "./pages/PrivateRoutes";
+import Notify from "./components/Notify";
 
 const theme = createTheme({
   typography: {
@@ -67,6 +68,9 @@ const TawkToScript = () => (
 function App() {
   const sellerRoles = ["seller"];
   const buyerRoles = ["buyer"];
+
+  const location = useLocation();
+  const isFirstVisit = !localStorage.getItem("visited");
 
   return (
     <Provider store={store}>
@@ -134,6 +138,7 @@ function App() {
             {/* <Route path="/upload" element={<UploadForm />} /> */}
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
+          {isFirstVisit && location.pathname === "/" && <Notify />}
         </ThemeProvider>
       </ConfigProvider>
       <Notifications />
