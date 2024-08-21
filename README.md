@@ -50,11 +50,11 @@ To run this project locally, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/city-dwellings.git
+   https://github.com/Meet008/CityDwellings-App.git
    ```
 2. Install dependencies:
    ```bash
-   cd city-dwellings
+   cd CityDwellings-App
    npm install
    ```
 3. Set up environment variables:
