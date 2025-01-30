@@ -64,7 +64,7 @@ function KeyContactCard(props) {
           <Typography sx={{ marginRight: "5px" }}>or call:</Typography>
           <Button
             component="a"
-            href="tel:0900800700"
+            href="mailto:dobariyaumangi04@gmail.com"
             sx={{
               color: "warning.main",
               fontSize: 16,
