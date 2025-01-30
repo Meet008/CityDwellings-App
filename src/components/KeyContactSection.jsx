@@ -1,8 +1,8 @@
 import { Box, Container } from "@mui/material";
 import React from "react";
 import KeyContactCard from "./KeyContactCard";
-import Person1Img from "../assets/images/Meet.jpeg";
-import Person2Img from "../assets/images/Kulwinder.png";
+import Person1Img from "../assets/images/Meet_headshot.png";
+import Person2Img from "../assets/images/Umangi_headshot.jpeg";
 
 function KeyContactSection() {
   return (
@@ -23,9 +23,9 @@ function KeyContactSection() {
         />
         <KeyContactCard
           img={Person2Img}
-          name="Kulwinder Kaur"
+          name="Umangi Chothani"
           title="Branch Manager"
-          tel="4168222713"
+          tel="8000370933"
         />
       </Container>
     </Box>
