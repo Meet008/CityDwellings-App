@@ -83,7 +83,7 @@ function App() {
         }}
       >
         <ThemeProvider theme={theme}>
-          {/* <TawkToScript /> */}
+          <TawkToScript />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/sale" element={<Sale />} />
